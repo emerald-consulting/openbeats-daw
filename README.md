@@ -3,7 +3,7 @@
 
 ## Description
 
-**Open Beats**, is a Digital Audio Workstation (DAW) that aims to allow artists to collaborate with others on music synchronously and remotely. The project is currently beginning development for [Alan Hunt's CSE 611 class](https://catalog.buffalo.edu/courses/index.php?abbr=CSE&num=611)
+**Open Beats**, is a Digital Audio Workstation (DAW) that aims to allow artists to collaborate with others on music synchronously and remotely. The project is currently beginning development for [Alan Hunt's CSE 611 class](https://catalog.buffalo.edu/courses/index.php?abbr=CSE&num=611).
 
 This repository contains the code for a Open Beats, the Digital Audio Workstation. The code for the API that serves the social media application can be found [here](https://github.com/rychrome/openbeats).
 ## Getting Started
