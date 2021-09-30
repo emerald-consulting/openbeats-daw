@@ -4,10 +4,11 @@ import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Service.CreateUser;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import lombok.extern.slf4j.Slf4j;
+
 
 @RestController
 @RequestMapping("/")
@@ -18,10 +19,10 @@ public class OpenBeatsRestController {
     private CreateUser createUser;
 
     @PostMapping("/createUser")
-    public User createUser(@RequestBody User user){
+    public String createUser(@RequestBody User user){
         log.info("Inside create User method of User Controller");
-        log.info("This is the value: "+user.isEmailVerified());
-        return  createUser.saveUser(user);
+         return createUser.saveUser(user);
+
     }
 
 
