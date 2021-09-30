@@ -23,12 +23,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web:2.5.4'
     implementation 'org.springframework.session:spring-session-core:2.5.2'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
     compileOnly 'org.projectlombok:lombok:1.18.20'
     developmentOnly 'org.springframework.boot:spring-boot-devtools:2.5.4'
     runtimeOnly 'mysql:mysql-connector-java:8.0.25'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
+    testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
