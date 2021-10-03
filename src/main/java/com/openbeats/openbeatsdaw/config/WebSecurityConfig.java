@@ -19,6 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/**").permitAll()
+                .antMatchers("http://localhost:3000/").permitAll()
                 .antMatchers("/csrf").permitAll()
                 .anyRequest().authenticated()
                 .and().formLogin();

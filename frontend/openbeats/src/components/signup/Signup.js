@@ -3,14 +3,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 
 const Signup = () => {
-  const handleFormSubmit = (e) => {
+ const handleFormSubmit = (e) => {
       e.preventDefault();
 
       let email = e.target.elements.email?.value;
       let password = e.target.elements.password?.value;
+      fetch('/createUser', {
+                  method: 'POST',
+                  headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json'
+                  },
+                  body: JSON.stringify({emailId: e.target.elements.email?.value,username : e.target.elements.fname?.value,firstName:e.target.elements.fname?.value,lastName:e.target.elements.lname?.value,preferredName:e.target.elements.fname?.value,subscriptionType:'free',emailVerified:false,password:e.target.elements.password?.value})
+              }).then((response) => response.json());
 
       console.log(email, password);
   };
+
   return (
       <div className='h-screen flex bg-gray-bg1 flex-col'>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-3 px-5'>
