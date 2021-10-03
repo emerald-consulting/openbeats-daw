@@ -27,19 +27,18 @@ public class UserManagementService implements UserDetailsService {
     PasswordEncoder passwordEncoder;
 
     @ResponseStatus(HttpStatus.CREATED)
-    public String saveUser(User user) {
+    public User saveUser(User user) throws Exception{
         List<User> users = userRepository.findAll();
 
         for (User tempUser : users) {
             log.info("UserName : "+tempUser.getUsername());
             log.info(String.valueOf(user.getUsername().equals(tempUser.getUsername())));
-            if(user.getUsername().equals(tempUser.getUsername()) || user.getEmailId().equals(tempUser.getEmailId())) return "User Already Exists";
+            if(user.getEmailId().equals(tempUser.getEmailId())) throw  new Exception("User Already Exists");
         }
 
         String encodedPassword=passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
-        userRepository.save(user);
-        return "Successful!!";
+        return userRepository.save(user);
 
     }
 
