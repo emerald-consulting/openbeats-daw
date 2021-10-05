@@ -3,11 +3,15 @@ package com.openbeats.openbeatsdaw.controller;
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
+import org.springframework.core.env.Environment;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -18,11 +22,14 @@ public class OpenBeatsRestController {
     @Autowired
     private UserManagementService createUser;
 
+    @Autowired
+    private Environment env;
+
     @PostMapping("/createUser")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest request) {
          log.info("Inside create User method of User Controller");
         try {
-            User tempUser= createUser.saveUser(user);
+            User tempUser= createUser.saveUser(user,getSiteURL(request));
             tempUser.setPassword("");
             return ResponseHandler.generateResponse("User account has been created Sucessfully.", HttpStatus.OK,tempUser);
         } catch (Exception e) {
@@ -39,6 +46,26 @@ public class OpenBeatsRestController {
     @GetMapping("/")
     public String home() {
         return ("<h1>Welcome</h1>");
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<Object> verifyUser(@Param("code") String code) {
+        log.info("Inside user verification Method.");
+        if (createUser.verify(code)) {
+            log.info("User verified Successfully.");
+            return ResponseHandler.generateResponse("User has been verified Sucessfully.", HttpStatus.OK,null);
+        } else {
+            log.info("User verified Unsuccessfully.");
+            return ResponseHandler.generateResponse("User verification was UnSuccessful", HttpStatus.OK,null);
+        }
+    }
+
+
+    private String getSiteURL(HttpServletRequest request) {
+        String siteURL = request.getRequestURL().toString();
+        log.info(siteURL);
+        String path = env.getProperty("frontend.address");
+        return siteURL.replace(request.getServletPath(), "");
     }
 
 
