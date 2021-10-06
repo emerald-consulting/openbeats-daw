@@ -41,4 +41,9 @@ public class User {
 
     @Column(name="is_email_verified")
     private boolean emailVerified;
+
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+
 }
