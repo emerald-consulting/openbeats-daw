@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -49,22 +50,26 @@ public class OpenBeatsRestController {
     }
 
     @GetMapping("/verify")
-    public ResponseEntity<Object> verifyUser(@Param("code") String code) {
+    public RedirectView verifyUser(@Param("code") String code) {
         log.info("Inside user verification Method.");
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
-            return ResponseHandler.generateResponse("User has been verified Sucessfully.", HttpStatus.OK,null);
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("http://localhost:3000/signup");
+            return redirectView;
+
         } else {
             log.info("User verified Unsuccessfully.");
-            return ResponseHandler.generateResponse("User verification was UnSuccessful", HttpStatus.OK,null);
+            RedirectView redirectView = new RedirectView();
+            redirectView.setUrl("https://google.com");
+            return redirectView;
+
         }
     }
-
 
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         log.info(siteURL);
-        String path = env.getProperty("frontend.address");
         return siteURL.replace(request.getServletPath(), "");
     }
 
