@@ -61,7 +61,7 @@ public class OpenBeatsRestController {
         } else {
             log.info("User verified Unsuccessfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("https://google.com");
+            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com");
             return redirectView;
 
         }
