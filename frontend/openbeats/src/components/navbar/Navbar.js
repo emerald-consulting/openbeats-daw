@@ -2,7 +2,7 @@ import React,{ forwardRef} from "react";
 // import { render } from "react-dom";
 import { Link } from "react-router-dom";
 import logo from '../openbeats_notype-45.png';
-import About from "../about/About";
+import { Link as Scroll } from "react-scroll";
 
 const Navbar = () => {
 
@@ -17,13 +17,13 @@ const Navbar = () => {
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
       
-        <Link className="p-2 mr-7" style={{fontSize:28}}  to="/about" >
+        <Scroll className="p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="about" >
           About
-        </Link>
+        </Scroll>
         
-        <Link className="p-2 mr-7" style={{fontSize:28}}  to="/dashboard">
-          Paid plans
-        </Link>
+        <Scroll className="p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="pricing">
+          Pricing
+        </Scroll>
 
         <Link className="p-2 mr-7" style={{fontSize:28}}  to="/login">
           Login

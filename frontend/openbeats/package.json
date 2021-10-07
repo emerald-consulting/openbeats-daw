@@ -11,10 +11,13 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.22.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-loading-overlay": "^1.0.1",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
+    "react-scroll": "^1.8.4",
     "web-vitals": "^1.1.2",
     "webfontloader": "^1.6.28"
   },
@@ -47,5 +50,5 @@
     "postcss": "^7.0.38",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.16"
   },
-  "proxy": "http://localhost:8655"
+  "proxy": "http://localhost:8080"
 }

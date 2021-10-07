@@ -1,26 +1,73 @@
-import React from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
+import axios from "axios"
+import LoadingOverlay from 'react-loading-overlay';
+
 
 const Signup = () => {
- const handleFormSubmit = (e) => {
-      e.preventDefault();
+    const [error, setError] = useState(null);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [message, setMessage] = useState(null);
+    const [user, setUser] = useState({});
+    
+    
+    const handleFormSubmit = (e) => {
+        
+        
+        setError(null)
+        setMessage(null)
+        setUser({})
+        e.preventDefault();
 
-      let email = e.target.elements.email?.value;
-      let password = e.target.elements.password?.value;
-      fetch('/createUser', {
-                  method: 'POST',
-                  headers: {
-                      'Accept': 'application/json',
-                      'Content-Type': 'application/json'
-                  },
-                  body: JSON.stringify({emailId: e.target.elements.email?.value,username : e.target.elements.fname?.value,firstName:e.target.elements.fname?.value,lastName:e.target.elements.lname?.value,preferredName:e.target.elements.fname?.value,subscriptionType:'free',emailVerified:false,password:e.target.elements.password?.value})
-              }).then((response) => response.json());
-
-      console.log(email, password);
+        let email = e.target.elements.email?.value;
+        let password = e.target.elements.password?.value;
+        let cpassword = e.target.elements.cpassword?.value;
+        if(password != cpassword){
+            setError("Passwords do not match. Please try again")
+            return
+        }
+        setIsLoaded(true);
+        let firstName=e.target.elements.fname?.value;
+        let lastName=e.target.elements.lname?.value;
+        let preferredName=e.target.elements.fname?.value;
+        let subscriptionType='free';
+        let emailVerified=false;
+        let username=firstName;
+        let formdata = JSON.stringify({
+            emailId:email,
+            username: username,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            preferredName: preferredName,
+            subscriptionType: subscriptionType,
+            emailVerified: emailVerified,
+            })
+        axios.post("/createUser", formdata,{headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }}).then((response) => {
+            if(response.data.status==207){
+                setError(response.data.message)
+            }
+            setMessage(response.data.message)
+            setUser(response.data.data)
+            setIsLoaded(false)
+         })
+        .catch((error)=>{
+            console.log(error);
+            setError(error)
+            setIsLoaded(false)
+        });
   };
 
   return (
+    <LoadingOverlay
+    active={isLoaded}
+    spinner
+    text='Please wait...'
+    >
       <div className='h-screen flex bg-gray-bg1 flex-col'>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-3 px-5'>
               <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
@@ -34,6 +81,7 @@ const Signup = () => {
                           type='text'
                           className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='fname'
+                          required
                           placeholder='First Name'
                       />
                       <div className="px-1"></div>
@@ -41,6 +89,7 @@ const Signup = () => {
                           type='text'
                           className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='lname'
+                          required
                           placeholder='Last Name'
                       />
                   </div>
@@ -50,6 +99,7 @@ const Signup = () => {
                           type='email'
                           className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='email'
+                          required
                           placeholder='Email'
                       />
                   </div>
@@ -59,6 +109,9 @@ const Signup = () => {
                           type='password'
                           className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='password'
+                          name='password'
+                          required
+                          minLength={8}
                           placeholder='Password'
                       />
                   </div>
@@ -68,19 +121,27 @@ const Signup = () => {
                           type='password'
                           className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='cpassword'
+                          name="cpassword"
+                          required
+                          minLength={8}
                           placeholder='Confirm Password'
-                      />
+                        />
                   </div>
 
-                  <div className='flex justify-center items-center mt-6'>
+                  <div className='flex justify-center items-center m-2'>
                       <button
                           className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded`}
                       >
-                          Sign-Up
+                            <p>Sign-Up</p>
                       </button>
                       <div className='p-4'>Already a member? Login <Link to='/login' className='underline hover:text-gray-400'>here</Link></div>
                   </div>
               </form>
+              <div className="flex justify-center items-center m-2">
+                <div className="px-4 text-blue-700">{error?"":"Success! Email verification link sent"}</div>
+                <div className="px-4 text-red-700">{error?"Error! "+error:""}</div>
+              </div>
+              
           </div>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-3 px-5 flex justify-center items-center mt-6 flex-col'>
             <div>or sign-up using</div>
@@ -91,6 +152,7 @@ const Signup = () => {
             </div>
           </div>
       </div>
+    </LoadingOverlay>
   );
 };
 

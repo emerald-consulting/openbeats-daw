@@ -9,6 +9,7 @@ import Dashboard from "./components/dashboard/Dashboard";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { faCheckSquare, fas , faUserEdit, faUser } from '@fortawesome/free-solid-svg-icons'
+import Confirmation from "./components/signup/Confirmation";
 library.add(fab, faCheckSquare, fas ,faUserEdit, faUser)
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="/signup" component={Signup} />
         <Route path="/about" component={About} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/confirmation" component={Confirmation} />
       </Switch>
     </>
   );
