@@ -46,7 +46,22 @@ const Login = () => {
                 setUser(response.data.data)
                 setIsLoggedIn(true)
                 setIsLoaded(false)
-                history.push("/dashboard");
+                // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
+                axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Basic '+ encodedString
+            }}).then((response) => {
+                if(response.data.status==207){
+                    setError(response.data.message);
+                    setIsLoaded(false)
+                }
+                else if(response.data){
+                    console.log(response.data);
+                    setIsLoaded(false)
+                    history.push("/dashboard");
+                }
+            })
+                
             }
             
             setIsLoaded(false)
