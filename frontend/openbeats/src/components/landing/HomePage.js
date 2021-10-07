@@ -25,8 +25,13 @@ const HomePage = () => {
       <div className="bg-green-200  h-screen w-full" id='about'>
         <About />
       </div>
-      <div className="bg-green-200  h-screen w-full" id='pricing'>
-        <div className="text-4xl pt-2 font-mono">Pricing</div>
+      <div className="bg-gr4 h-screen pt-40 pl-40 " id='pricing'>
+        <div className="text-4xl   font-mono">
+          Pricing
+        </div>
+        <p className="pt-2">Enjoy premium version at just $14.99 per month!!</p>
+        <p>Aren't you EXCITED to create music? </p>
+        <p className="text-2xl">I am!!</p>
       </div>
       <Footer/>
     </div>
