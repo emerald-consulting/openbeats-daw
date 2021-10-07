@@ -28,7 +28,7 @@ public class OpenBeatsRestController {
 
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest request) {
-         log.info("Inside create User method of User Controller");
+        log.info("Inside create User method of User Controller");
         try {
             User tempUser= createUser.saveUser(user,getSiteURL(request));
             tempUser.setPassword("");
