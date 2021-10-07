@@ -3,6 +3,7 @@ package com.openbeats.openbeatsdaw.Service;
 
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.UserRepository;
+import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import com.openbeats.openbeatsdaw.model.MyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
@@ -32,7 +33,6 @@ public class UserManagementService implements UserDetailsService {
 
     @Autowired
     PasswordEncoder passwordEncoder;
-
 
     @Autowired
     private JavaMailSender mailSender;
@@ -106,9 +106,10 @@ public class UserManagementService implements UserDetailsService {
 
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByUsername(username);
-        user.orElseThrow(()-> new UsernameNotFoundException("Invalid Username:"+username));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<User> user = userRepository.findByEmailId(email);
+        user.orElseThrow(()-> new UsernameNotFoundException("User does not exist"));
+
         return user.map(MyUserDetails::new).get();
     }
 
