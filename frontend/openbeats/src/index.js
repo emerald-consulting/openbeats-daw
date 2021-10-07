@@ -4,6 +4,13 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
+import WebFont from 'webfontloader';
+
+WebFont.load({
+   google: {
+     families: ['Titillium Web:300,400,700', 'sans-serif','Roboto']
+   }
+});
 
 ReactDOM.render(
   <React.StrictMode>

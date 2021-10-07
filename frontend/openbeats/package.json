@@ -15,7 +15,8 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "webfontloader": "^1.6.28"
   },
   "scripts": {
     "start": "craco start",
@@ -46,5 +47,5 @@
     "postcss": "^7.0.38",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.16"
   },
-  "proxy":"http://localhost:8655"
+  "proxy": "http://localhost:8655"
 }

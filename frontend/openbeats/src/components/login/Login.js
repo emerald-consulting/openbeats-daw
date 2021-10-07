@@ -12,8 +12,8 @@ const Login = () => {
       console.log(email, password);
   };
   return (
-      <div className='h-screen flex bg-gray-bg1 flex-col'>
-          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16'>
+      <div className='h-screen flex bg-green-300 flex-col'>
+          <div className='bg-green-300 w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16'>
               <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
                   Log in to your account
               </h1>
@@ -48,7 +48,7 @@ const Login = () => {
                   </div>
               </form>
           </div>
-          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16 flex justify-center items-center mt-6 flex-col'>
+          <div className=' bg-green-300 w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-10 px-16 flex justify-center items-center mt-6 flex-col'>
             <div>or login using</div>
             <div className='flex flex-row'>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
