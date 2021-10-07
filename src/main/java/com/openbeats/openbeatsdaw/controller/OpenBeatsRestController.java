@@ -7,12 +7,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @RestController
@@ -45,6 +47,15 @@ public class OpenBeatsRestController {
         return ResponseHandler.generateResponse("Login success", HttpStatus.OK,true);
     }
 
+    @GetMapping("/getUserDetails")
+    public ResponseEntity<Object> userDetails(@RequestParam String emailId){
+        UserDetails userDetails = createUser.loadUserByUsername(emailId);
+        if(userDetails == null){
+            return ResponseHandler.generateResponse("success", HttpStatus.MULTI_STATUS,userDetails);
+        }
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,userDetails);
+    }
+
     @GetMapping("/user")
     public String user() {
         return ("<h1>Welcome User</h1>");
@@ -61,7 +72,7 @@ public class OpenBeatsRestController {
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com/login");
+            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com/confirmation");
             return redirectView;
 
         } else {
