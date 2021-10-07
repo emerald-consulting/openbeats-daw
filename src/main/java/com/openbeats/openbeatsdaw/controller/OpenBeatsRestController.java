@@ -39,6 +39,12 @@ public class OpenBeatsRestController {
         }
     }
 
+    @GetMapping("/login")
+    public ResponseEntity<Object> login(){
+        log.info("Received login request");
+        return ResponseHandler.generateResponse("Login success", HttpStatus.OK,true);
+    }
+
     @GetMapping("/user")
     public String user() {
         return ("<h1>Welcome User</h1>");

@@ -1,7 +1,10 @@
 package com.openbeats.openbeatsdaw.config;
 
+import com.openbeats.openbeatsdaw.Service.UserManagementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +22,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    UserManagementService userManagementService;
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userManagementService);
+    }
+
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -28,13 +39,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
         http.cors()
-                .and().csrf().disable().authorizeRequests()
-                .antMatchers("/**").permitAll()
-                .antMatchers("http://localhost:3000/").permitAll()
-                .antMatchers("/csrf").permitAll()
-                .anyRequest().authenticated()
-                .and().formLogin();
+                .and().authorizeRequests()
+                .antMatchers("/createUser").permitAll()
+                .antMatchers("/verify").permitAll()
+                .antMatchers("/").permitAll()
+                .anyRequest().authenticated().and().httpBasic()
+                .and().logout()
+                .and().csrf().disable();
     }
 
 
