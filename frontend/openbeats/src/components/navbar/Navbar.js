@@ -7,7 +7,7 @@ import { Link as Scroll } from "react-scroll";
 const Navbar = () => {
 
   return (
-    <div  >  
+    <div id='navbar' >  
     <nav className=" flex flex-row ">
       <Link className=" flex flex-row  " to="/">
          <img className="pl-10 h-20" src={logo} alt={"logo"} ></img>

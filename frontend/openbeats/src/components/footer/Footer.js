@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import logo from '../openbeats_notype-45.png';
-import { Link } from "react-router-dom";
+import { Link } from "react-scroll";
 
 const styles={
    fontSize: 13
@@ -14,7 +14,7 @@ const Footer = () => {
   return (
     <div className="mt-5 ml-10 flex felx-row ">
         <div className="">
-          <Link className=" flex flex-row  " to="/">
+          <Link className=" flex flex-row"  spy={true} smooth={true} to="navbar">
             <img className="pl-20 h-12" src={logo} alt={"logo"} ></img>
             <h1 class="text-4xl font-mono">openbeats</h1>
           </Link>

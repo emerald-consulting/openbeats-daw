@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
 
-
 const Signup = () => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -44,15 +43,18 @@ const Signup = () => {
             subscriptionType: subscriptionType,
             emailVerified: emailVerified,
             })
-        axios.post("/createUser", formdata,{headers: {
+        axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/createUser", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }}).then((response) => {
             if(response.data.status==207){
                 setError(response.data.message)
             }
-            setMessage(response.data.message)
-            setUser(response.data.data)
+            else{
+                setMessage(response.data.message)
+                setUser(response.data.data)
+            }
+            
             setIsLoaded(false)
          })
         .catch((error)=>{
@@ -132,14 +134,14 @@ const Signup = () => {
                       <button
                           className={`bg-gr2 hover:bg-gr3 text-white font-bold py-2 px-4 rounded`}
                       >
-                            <p>Sign-Up</p>
+                            <p className={'text-white'}>Sign-Up</p>
                       </button>
                       <div className='p-4'>Already a member? Login <Link to='/login' className='underline hover:text-gray-400'>here</Link></div>
                   </div>
               </form>
               <div className="flex justify-center items-center m-2">
-                <div className="px-4 text-blue-700">{error?"":"Success! Email verification link sent"}</div>
-                <div className="px-4 text-red-700">{error?"Error! "+error:""}</div>
+                <div className="px-4 text-blue-700">{message?"Success! Email verification link sent":""}</div>
+                <div className="px-4 text-color-err">{error?"Error! "+error:""}</div>
               </div>
               
           </div>

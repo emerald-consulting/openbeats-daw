@@ -15,20 +15,9 @@ const LogNavbar = () => {
         
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
-      
-        <Link className="mr-7" style={{fontSize:14}}  to="/about" >
-          About
-        </Link>
-        
-        <Link className=" mr-7" style={{fontSize:14}}  to="/dashboard">
-          Paid plans
-        </Link>
 
         <Link className=" mr-7" style={{fontSize:14}}  to="/login">
-          Login
-        </Link>
-        <Link className=" pr-7" style={{fontSize:14}} to="/signup">
-          SignUp
+          Logout
         </Link>
 
       </div>

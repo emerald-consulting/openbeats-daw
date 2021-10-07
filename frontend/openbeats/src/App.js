@@ -23,7 +23,6 @@ function App() {
         <Route path="/about" component={About} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/confirmation" component={Confirmation} />
-        <Route path="/test" component={Test} />
       </Switch>
     </>
   );
