@@ -1,6 +1,10 @@
 import React, { useRef } from "react";
+import logo from '../openbeats_notype-45.png';
+import { Link } from "react-router-dom";
 
-
+const styles={
+   fontSize: 13
+};
 const About = () => {
     const titleRef = useRef()
     function handleBackClick() {

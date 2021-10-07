@@ -7,7 +7,7 @@ const LogNavbar = () => {
 
   return (
     <div>  
-    <nav className=" flex flex-row bg-green-300">
+    <nav className=" flex flex-row ">
       <Link className=" flex flex-row " to="/">
          <img className="mt-1 pl-10 h-10" src={logo} alt={"logo"} ></img>
          {/* <h1 class="text-6xl pt-2 font-mono">openbeats</h1> */}

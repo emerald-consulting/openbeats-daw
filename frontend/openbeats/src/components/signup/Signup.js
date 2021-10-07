@@ -69,7 +69,7 @@ const Signup = () => {
     text='Please wait...'
     >
       <div className='h-screen flex bg-gray-bg1 flex-col'>
-          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-3 px-5'>
+          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-3 px-5'>
               <h1 className='text-2xl font-medium text-primary mt-4 mb-12 text-center'>
                   Ready to take a free trial?
               </h1>
@@ -79,7 +79,7 @@ const Signup = () => {
                       {/* <label htmlFor='email'>Email</label> */}
                       <input
                           type='text'
-                          className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='fname'
                           required
                           placeholder='First Name'
@@ -87,7 +87,7 @@ const Signup = () => {
                       <div className="px-1"></div>
                       <input
                           type='text'
-                          className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='lname'
                           required
                           placeholder='Last Name'
@@ -97,7 +97,7 @@ const Signup = () => {
                       {/* <label htmlFor='email'>Email</label> */}
                       <input
                           type='email'
-                          className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='email'
                           required
                           placeholder='Email'
@@ -107,7 +107,7 @@ const Signup = () => {
                       {/* <label htmlFor='password'>Password</label> */}
                       <input
                           type='password'
-                          className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='password'
                           name='password'
                           required
@@ -119,7 +119,7 @@ const Signup = () => {
                       {/* <label htmlFor='password'>Password</label> */}
                       <input
                           type='password'
-                          className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                           id='cpassword'
                           name="cpassword"
                           required
@@ -130,7 +130,7 @@ const Signup = () => {
 
                   <div className='flex justify-center items-center m-2'>
                       <button
-                          className={`bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded`}
+                          className={`bg-gr2 hover:bg-gr3 text-white font-bold py-2 px-4 rounded`}
                       >
                             <p>Sign-Up</p>
                       </button>
@@ -143,7 +143,7 @@ const Signup = () => {
               </div>
               
           </div>
-          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-primaryBorder shadow-default py-3 px-5 flex justify-center items-center mt-6 flex-col'>
+          <div className='w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-3 px-5 flex justify-center items-center mt-6 flex-col'>
             <div>or sign-up using</div>
             <div className='flex flex-row'>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div>

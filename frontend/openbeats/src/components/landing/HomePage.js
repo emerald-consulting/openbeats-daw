@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "../navbar/Navbar";
 import About from "../about/About";
 import gif from '../landing-gif.gif';
+import Footer from "../footer/Footer";
 
 const HomePage = () => {
 
@@ -20,6 +21,7 @@ const HomePage = () => {
       <div className="bg-green-200  h-screen w-full" id='pricing'>
         <div className="text-4xl pt-2 font-mono">Pricing</div>
       </div>
+      <Footer/>
     </div>
     
   );

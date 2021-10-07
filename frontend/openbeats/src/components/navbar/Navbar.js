@@ -7,9 +7,9 @@ import { Link as Scroll } from "react-scroll";
 const Navbar = () => {
 
   return (
-    <div>  
-    <nav className="p-2 flex flex-row bg-white-300">
-      <Link className=" flex flex-row " to="/">
+    <div  >  
+    <nav className=" flex flex-row bg-blue-300">
+      <Link className=" flex flex-row  " to="/">
          <img className="pl-10 h-20" src={logo} alt={"logo"} ></img>
          <h1 class="text-6xl pt-2 font-mono">openbeats</h1>
       </Link>
@@ -17,11 +17,11 @@ const Navbar = () => {
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
       
-        <Scroll className="p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="about" >
+        <Scroll className="cursor-pointer hover:block p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="about" >
           About
         </Scroll>
         
-        <Scroll className="p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="pricing">
+        <Scroll className="cursor-pointer	 p-2 mr-7" style={{fontSize:28}} spy={true} smooth={true} to="pricing">
           Pricing
         </Scroll>
 
