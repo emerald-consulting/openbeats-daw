@@ -55,13 +55,13 @@ public class OpenBeatsRestController {
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://localhost:3000/signup");
+            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com/login");
             return redirectView;
 
         } else {
             log.info("User verified Unsuccessfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("https://google.com");
+            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com");
             return redirectView;
 
         }
