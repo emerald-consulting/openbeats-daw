@@ -4,6 +4,7 @@ import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userManagementService);
+        auth.authenticationProvider(authProviderDB());
     }
 
     @Bean
@@ -35,6 +36,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authProviderDB() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
+        authenticationProvider.setUserDetailsService(userManagementService);
+        return authenticationProvider;
     }
 
     @Override
