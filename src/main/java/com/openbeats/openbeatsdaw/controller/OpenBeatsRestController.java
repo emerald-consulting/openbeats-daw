@@ -7,13 +7,18 @@ import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -83,6 +88,23 @@ public class OpenBeatsRestController {
 
         }
     }
+
+    @RequestMapping("/spotifyOauth")
+    @ResponseBody
+    public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+
+        return principal.getAttributes();
+    }
+
+
+    @PostMapping("/callOuath")
+    public String callOauth()
+    {
+
+        log.info("Inside call outh");
+       return "Success";
+    }
+
 
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
