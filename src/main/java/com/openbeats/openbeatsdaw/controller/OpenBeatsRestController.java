@@ -1,6 +1,7 @@
 package com.openbeats.openbeatsdaw.controller;
 
 import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import org.springframework.core.env.Environment;
@@ -16,12 +17,17 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -34,6 +40,9 @@ public class OpenBeatsRestController {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    AWSStorageService service;
 
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest request) {
@@ -112,6 +121,22 @@ public class OpenBeatsRestController {
     @ResponseBody
     public Authentication currentUserName(Authentication authentication) {
         return authentication;
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<Object> uploadFile(@RequestParam(value = "file") MultipartFile file,
+                                             @RequestParam(value = "bucket")String bucket_name){
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.uploadFile(file,bucket_name));
+    }
+
+    @PostMapping("/createWorkspace")
+    public ResponseEntity<Object> createBucket(@RequestParam(value = "bucketName")String bucketName){
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.createBucket(bucketName));
+    }
+
+    @PostMapping("/deleteWorkspace")
+    public ResponseEntity<Object> deleteBucket(@RequestParam(value = "bucketName")String bucketName){
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.deleteBucket(bucketName));
     }
 
     private String getSiteURL(HttpServletRequest request) {

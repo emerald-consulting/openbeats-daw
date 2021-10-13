@@ -1,7 +1,7 @@
-import React,{ forwardRef} from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import logo from '../openbeats_notype-45.png';
-import About from "../about/About";
+// import About from "../about/About";
 
 const LogNavbar = () => {
 

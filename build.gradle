@@ -14,8 +14,13 @@ configurations {
     }
 }
 
+
 repositories {
     mavenCentral()
+}
+
+ext {
+    set('springCloudVersion', "Hoxton.SR12")
 }
 
 dependencies {
@@ -34,8 +39,26 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.5.4'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    // AWS dependencies
+    implementation platform('software.amazon.awssdk:bom:2.15.0')
+    implementation 'software.amazon.awssdk:kinesis:2.17.34'
+    implementation group: 'software.amazon.awssdk', name: 's3', version: '2.17.37'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.11.0'
+    implementation group: 'commons-logging', name: 'commons-logging', version: '1.2'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.12.65'
+
+    implementation 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 test {
     useJUnitPlatform()
 }
+
+

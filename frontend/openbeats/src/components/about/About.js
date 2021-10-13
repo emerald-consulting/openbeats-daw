@@ -1,10 +1,10 @@
 import React, { useRef } from "react";
 import pic from '../Picture1.png';
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 
-const styles={
-   fontSize: 13
-};
+// const styles={
+//    fontSize: 13
+// };
 const About = () => {
     const titleRef = useRef()
     function handleBackClick() {
@@ -23,9 +23,9 @@ const About = () => {
             <p className="pt-2"> Start a Studio session, Invite your friends, Collaborate live and more.. </p>
           </div>
         </div>
-        <div className="">
+        {/* <div className="">
           <img src={pic}></img>
-        </div>
+        </div> */}
         </div>
     </div>
     

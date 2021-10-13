@@ -7,9 +7,9 @@ const styles={
 };
 const Footer = () => {
     const titleRef = useRef()
-    function handleBackClick() {
-        titleRef.current.scrollIntoView({ behavior: 'smooth' })
-        }
+    // function handleBackClick() {
+    //     titleRef.current.scrollIntoView({ behavior: 'smooth' })
+    //     }
 
   return (
     <div className="mt-5 ml-10 flex felx-row ">
