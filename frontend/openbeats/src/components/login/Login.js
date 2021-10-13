@@ -9,10 +9,10 @@ const Login = () => {
     const [error, setError] = useState(null);
       const [isLoaded, setIsLoaded] = useState(false);
       const [message, setMessage] = useState(null);
-      const [ setUser] = useState({});
-      const [ setIsLoggedIn] = useState(false);
-    //   const [user, setUser] = useState({});
-    //   const [isLoggedIn, setIsLoggedIn] = useState(false);
+//      const [ setUser] = useState({});
+//      const [ setIsLoggedIn] = useState(false);
+       const [user, setUser] = useState({});
+       const [isLoggedIn, setIsLoggedIn] = useState(false);
 
       let history = useHistory();
 
@@ -41,7 +41,7 @@ const Login = () => {
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response)
-            if(response.data.status===207){
+            if(response.data.status==207){
                 setError(response.data.message)
             }
             else if(response.data.message){
@@ -54,7 +54,7 @@ const Login = () => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response) => {
-                if(response.data.status===207){
+                if(response.data.status==207){
                     setError(response.data.message);
                     setIsLoaded(false)
                 }
@@ -128,7 +128,7 @@ const Login = () => {
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
               <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'spotify']} /></div>
+              <div className='p-4 hover:text-blue-400'><a href="http://localhost:8655/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>

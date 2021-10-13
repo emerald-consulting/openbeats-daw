@@ -149,7 +149,7 @@ const Signup = () => {
             <div>or sign-up using</div>
             <div className='flex flex-row'>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'spotify']} /></div>
+              <div className='p-4 hover:text-gray-400'><a href="http://localhost:8655/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>
