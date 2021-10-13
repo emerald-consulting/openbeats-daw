@@ -9,8 +9,11 @@ const Login = () => {
     const [error, setError] = useState(null);
       const [isLoaded, setIsLoaded] = useState(false);
       const [message, setMessage] = useState(null);
-      const [user, setUser] = useState({});
-      const [isLoggedIn, setIsLoggedIn] = useState(false);
+      const [ setUser] = useState({});
+      const [ setIsLoggedIn] = useState(false);
+    //   const [user, setUser] = useState({});
+    //   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
       let history = useHistory();
 
   const handleFormSubmit = (e) => {
@@ -38,7 +41,7 @@ const Login = () => {
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response)
-            if(response.data.status==207){
+            if(response.data.status===207){
                 setError(response.data.message)
             }
             else if(response.data.message){
@@ -51,7 +54,7 @@ const Login = () => {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response) => {
-                if(response.data.status==207){
+                if(response.data.status===207){
                     setError(response.data.message);
                     setIsLoaded(false)
                 }

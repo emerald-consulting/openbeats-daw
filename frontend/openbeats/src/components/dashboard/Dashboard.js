@@ -1,5 +1,5 @@
 import React from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 
 import LogNavbar from "../logNavbar/LogNavbar";
@@ -10,7 +10,7 @@ const Dashboard = () => {
       <div>
         
       <LogNavbar/>
-      <div className='flex flex-row  '>
+      <div className='flex flex-row bg-gr4  '>
         
         <div className="bg-gr4 m-10 rounded-md">
           <div className="flex flex-col">
@@ -24,8 +24,8 @@ const Dashboard = () => {
             <div className="p-2 m-1 bg-gr3 rounded ">emai id</div>
           </div>
         </div>
-        <div className="p-10"><h1 class="text-2xl pt-2 font-mono">Sessions</h1>
-        <div className="flex flex-row bg-white-50 w-full  m-auto  shadow-default py-5">
+        <div className="p-10"><h1 class="text-2xl pt-2 bg-gr2 font-mono">Sessions</h1>
+        <div className="flex flex-row bg-gr1 w-full  m-auto  shadow-default py-5">
           
           <div className="bg-gr4 m-1 flex flex-col w-96 rounded  shadow-default py-10 px-16">
             Saved sessions
