@@ -8,7 +8,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticatedPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.web.bind.annotation.*;
@@ -92,6 +94,7 @@ public class OpenBeatsRestController {
     @RequestMapping("/spotifyOauth")
     @ResponseBody
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
+        Object p1=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return principal.getAttributes();
     }
@@ -105,6 +108,11 @@ public class OpenBeatsRestController {
        return "Success";
     }
 
+    @RequestMapping(value = "/spotifyOauth1", method = RequestMethod.GET)
+    @ResponseBody
+    public Authentication currentUserName(Authentication authentication) {
+        return authentication;
+    }
 
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();

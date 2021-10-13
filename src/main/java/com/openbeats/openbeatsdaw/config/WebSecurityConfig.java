@@ -57,19 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected CorsConfigurationSource corsConfigurationSource() {
-        final CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(Collections.unmodifiableList(Arrays.asList("*")));
-        configuration.setAllowedMethods(Collections.unmodifiableList(Arrays.asList("*")));
-        configuration.addAllowedHeader("*");
-        // setAllowCredentials(true) is important, otherwise:
-        // The value of the 'Access-Control-Allow-Origin' header in the response must not be the wildcard '*' when the request's credentials mode is 'include'.
-        configuration.setAllowCredentials(true);
-        // setAllowedHeaders is important! Without it, OPTIONS preflight request
-        // will fail with 403 Invalid CORS request
-
-        configuration.setAllowedHeaders(Collections.unmodifiableList((Arrays.asList("Authorization", "Cache-Control", "Content-Type"))));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**",  new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
 
@@ -80,7 +69,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().authorizeRequests()
                 .antMatchers("/createUser").permitAll()
                 .antMatchers("/verify").permitAll()
-                .antMatchers("/spotifyOauth").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
                 .and().oauth2Login()
