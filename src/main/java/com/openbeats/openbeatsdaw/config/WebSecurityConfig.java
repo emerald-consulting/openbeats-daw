@@ -79,10 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/verify").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
-                .and().oauth2Login()
-                .userInfoEndpoint()
-                .userService(customOAuth2UserService)
-                .and().successHandler(oAuth2AuthenticationSuccessHandler)
                 .and().logout()
                 .and().csrf().disable();
 

@@ -113,4 +113,12 @@ public class UserManagementService implements UserDetailsService {
         return user.map(MyUserDetails::new).get();
     }
 
+    public Optional<User> findUser(String email) {
+        return userRepository.findByEmailId(email);
+    }
+
+    public User saveProfilePic(User usr){
+        return userRepository.save(usr);
+    }
+
 }
