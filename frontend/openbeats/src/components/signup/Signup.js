@@ -43,7 +43,7 @@ const Signup = () => {
             subscriptionType: subscriptionType,
             emailVerified: emailVerified,
             })
-        axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/createUser", formdata,{headers: {
+        axios.post("http://localhost:8655/createUser", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }}).then((response) => {

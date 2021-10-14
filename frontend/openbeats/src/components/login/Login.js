@@ -32,7 +32,7 @@ const Login = () => {
       const encodedString = Buffer.from(encodeString).toString('base64');
     
 
-      axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login",{headers: {
+      axios.get("http://localhost:8655/userlogin",{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -50,7 +50,7 @@ const Login = () => {
                 setIsLoggedIn(true)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
-                axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
+                axios.get("http://localhost:8655/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response) => {

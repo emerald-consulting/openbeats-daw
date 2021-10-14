@@ -78,12 +78,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/createUser").permitAll()
                 .antMatchers("/verify").permitAll()
                 .antMatchers("/").permitAll()
+                .antMatchers("/login*").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
+                .and().formLogin() // enable form based login
+                .loginPage("/login").defaultSuccessUrl("/formLoginSuccess")
+                .and().logout()
                 .and().oauth2Login()
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService)
                 .and().successHandler(oAuth2AuthenticationSuccessHandler)
-                .and().logout()
                 .and().csrf().disable();
 
     }
@@ -116,36 +119,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // @formatter:off
 
-            if(client.equals("spotify"))
-                return ClientRegistration
-                        .withRegistrationId("spotify")
-                        .clientId("dcacba0fd9fe4b10886bff0215a2d94a")
-                        .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
-                        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                        .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
-                        .scope("user-read-private", "user-read-email")
-                        .authorizationUri("https://accounts.spotify.com/authorize")
-                        .tokenUri("https://accounts.spotify.com/api/token")
-                        .userInfoUri("https://api.spotify.com/v1/me")
-                        .userNameAttributeName("display_name")
-                        .clientName("spotify")
-                        .build();
-            else
-                return ClientRegistration
-                        .withRegistrationId("apple")
-                        .clientId("dcacba0fd9fe4b10886bff0215a2d94a")
-                        .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
-                        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                        .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
-                        .scope("user-read-private", "user-read-email")
-                        .authorizationUri("https://accounts.spotify.com/authorize")
-                        .tokenUri("https://accounts.spotify.com/api/token")
-                        .userInfoUri("https://api.spotify.com/v1/me")
-                        .userNameAttributeName("display_name")
-                        .clientName("spotify")
-                        .build();
+        if(client.equals("spotify"))
+            return ClientRegistration
+                    .withRegistrationId("spotify")
+                    .clientId("dcacba0fd9fe4b10886bff0215a2d94a")
+                    .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
+                    .scope("user-read-private", "user-read-email")
+                    .authorizationUri("https://accounts.spotify.com/authorize")
+                    .tokenUri("https://accounts.spotify.com/api/token")
+                    .userInfoUri("https://api.spotify.com/v1/me")
+                    .userNameAttributeName("display_name")
+                    .clientName("spotify")
+                    .build();
+        else
+            return ClientRegistration
+                    .withRegistrationId("apple")
+                    .clientId("dcacba0fd9fe4b10886bff0215a2d94a")
+                    .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
+                    .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                    .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
+                    .scope("user-read-private", "user-read-email")
+                    .authorizationUri("https://accounts.spotify.com/authorize")
+                    .tokenUri("https://accounts.spotify.com/api/token")
+                    .userInfoUri("https://api.spotify.com/v1/me")
+                    .userNameAttributeName("display_name")
+                    .clientName("spotify")
+                    .build();
         // @formatter:on
     }
 
