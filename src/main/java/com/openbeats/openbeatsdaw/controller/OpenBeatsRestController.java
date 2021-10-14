@@ -82,16 +82,6 @@ public class OpenBeatsRestController {
     @GetMapping("/userlogin")
     public ResponseEntity<Object> login(){
         log.info("Received login request");
-//        Authentication authentication = authenticationManager.authenticate(
-//                new UsernamePasswordAuthenticationToken(
-//                        loginRequest.getEmail(),
-//                        loginRequest.getPassword()
-//                )
-//        );
-//
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//
-//        String token = tokenProvider.createToken(authentication);
 
         return ResponseHandler.generateResponse("Login success", HttpStatus.OK,true);
 
