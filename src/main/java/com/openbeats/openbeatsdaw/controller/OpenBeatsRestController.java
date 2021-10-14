@@ -5,12 +5,16 @@ import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
+import com.openbeats.openbeatsdaw.Utils.LoginRequest;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
+import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -41,11 +45,20 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 public class OpenBeatsRestController {
 
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     @Autowired
     private UserManagementService createUser;
 
     @Autowired
     private Environment env;
+
+
+    @Autowired
+    private TokenProvider tokenProvider;
+
 
     @Autowired
     AWSStorageService service;
@@ -66,10 +79,12 @@ public class OpenBeatsRestController {
         }
     }
 
-    @GetMapping("/login")
+    @GetMapping("/userlogin")
     public ResponseEntity<Object> login(){
         log.info("Received login request");
+
         return ResponseHandler.generateResponse("Login success", HttpStatus.OK,true);
+
     }
 
     @GetMapping("/getUserDetails")
@@ -112,8 +127,11 @@ public class OpenBeatsRestController {
     @RequestMapping("/spotifyOauth")
     @ResponseBody
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
-        Object p1=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+//        Object p1=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Authentication authentication =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication();
         return principal.getAttributes();
     }
 
