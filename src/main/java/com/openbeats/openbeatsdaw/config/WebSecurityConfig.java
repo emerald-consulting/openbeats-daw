@@ -78,10 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/createUser").permitAll()
                 .antMatchers("/verify").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers("/login*").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
                 .and().formLogin() // enable form based login
-                .loginPage("/login").defaultSuccessUrl("/formLoginSuccess")
+                .loginPage("/login")
                 .and().logout()
                 .and().oauth2Login()
                 .userInfoEndpoint()
