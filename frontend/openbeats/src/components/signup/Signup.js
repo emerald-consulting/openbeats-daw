@@ -136,7 +136,7 @@ const Signup = () => {
                       >
                             <p className={'text-white'}>Sign-Up</p>
                       </button>
-                      <div className='p-4'>Already a member? Login <Link to='/login' className='underline hover:text-gray-400'>here</Link></div>
+                      <div className='p-4'>Already a member? Login <Link to='/signin' className='underline hover:text-gray-400'>here</Link></div>
                   </div>
               </form>
               <div className="flex justify-center items-center m-2">

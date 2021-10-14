@@ -1,38 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router"
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
 const Login = () => {
+    const [state, dispatch] = useContext(UserContext);
     const [error, setError] = useState(null);
-      const [isLoaded, setIsLoaded] = useState(false);
-      const [message, setMessage] = useState(null);
-//      const [ setUser] = useState({});
-//      const [ setIsLoggedIn] = useState(false);
-       const [user, setUser] = useState({});
-       const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [message, setMessage] = useState(null);
 
-      let history = useHistory();
+    let history = useHistory();
 
-  const handleFormSubmit = (e) => {
-    setError(null)
-    setMessage(null)
-    setIsLoggedIn(false)
-    setUser({})
-      e.preventDefault();
-      setIsLoaded(true);
-      
+    const handleFormSubmit = (e) => {
+        setError(null)
+        setMessage(null)
+        e.preventDefault();
+        setIsLoaded(true);
+        
 
-      let email = e.target.elements.email?.value;
-      let password = e.target.elements.password?.value;
+        let email = e.target.elements.email?.value;
+        let password = e.target.elements.password?.value;
 
-      let encodeString = ''+email+':'+password;
-      const encodedString = Buffer.from(encodeString).toString('base64');
-    
+        let encodeString = ''+email+':'+password;
+        const encodedString = Buffer.from(encodeString).toString('base64');
+        
 
-      axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login",{headers: {
+        axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login",{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -44,12 +40,10 @@ const Login = () => {
             if(response.data.status==207){
                 setError(response.data.message)
             }
-            else if(response.data.message){
-                setMessage(response.data.message)
-                setUser(response.data.data)
-                setIsLoggedIn(true)
+            // else if(response.data.message){
+            else if(response.data){
+                // setMessage(response.data.message)
                 setIsLoaded(false)
-                // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
                 axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
@@ -59,7 +53,10 @@ const Login = () => {
                     setIsLoaded(false)
                 }
                 else if(response.data){
-                    console.log(response.data);
+                    dispatch({
+                        type: "LOAD_USER",
+                        payload: response.data.data
+                      });
                     setIsLoaded(false)
                     history.push("/dashboard");
                 }
@@ -136,5 +133,6 @@ const Login = () => {
       </LoadingOverlay>
   );
 };
+
 
 export default Login;
