@@ -1,27 +1,31 @@
-import React from "react";
+import React, { useContext } from "react";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
+import UserContextProvider, {UserContext} from "../../model/user-context/UserContext";
 
 import LogNavbar from "../logNavbar/LogNavbar";
 
 const Dashboard = () => {
 
+  const [state, dispatch] = useContext(UserContext);
+
     return (
-      <div>
+      <div className='h-screen'>
         
       <LogNavbar/>
-      <div className='flex flex-row bg-gr4  '>
+      <div className='flex flex-row bg-gr4'>
         
         <div className="bg-gr4 m-10 rounded-md">
           <div className="flex flex-col">
-            <div className="p-2 m-1 bg-gr3 rounded ">
-              image
+            <div className="p-2 m-1 bg-gr3 rounded " style={{borderRadius: '50%'}}>
+              <img style={{borderRadius: '50%'}} src="https://cdn-icons-png.flaticon.com/256/149/149071.png"/>
+              
               {/* userEdit    class="fas fa-user-edit"icon={['fas', 'fa-user-edit']}  icon="coffee" size="xs"*/}
-              <div className='p-4 '><svg icon="coffee" ></svg></div>
+              
               {/* <Image source={require('../openbeats_notype-45.png')} style={{width: 400, height: 400, borderRadius: 400/ 2}} /> */}
             </div>
-            <div className="p-2 m-1 bg-gr3 rounded ">Name</div>
-            <div className="p-2 m-1 bg-gr3 rounded ">emai id</div>
+            <div className="p-2 m-1 bg-gr3 rounded ">{state.user.firstName}</div>
+            <div className="p-2 m-1 bg-gr3 rounded ">{state.user.emailId}</div>
           </div>
         </div>
         <div className="p-10"><h1 class="text-2xl pt-2 bg-gr2 font-mono">Sessions</h1>

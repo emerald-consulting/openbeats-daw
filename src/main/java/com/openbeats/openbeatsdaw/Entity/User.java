@@ -45,5 +45,10 @@ public class User {
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
 
+    @Lob
+    @Basic(fetch = FetchType.LAZY)
+    @Column(name = "profile_picture")
+    private byte[] profilePicture;
+
 
 }

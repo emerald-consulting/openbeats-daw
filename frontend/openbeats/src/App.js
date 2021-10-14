@@ -6,7 +6,9 @@ import Signup from "./components/signup/Signup";
 import About from "./components/about/About";
 import Dashboard from "./components/dashboard/Dashboard";
 import Test from "./components/test/Test";
-import Audio from "./components/daw/audio/Audio";
+// import Audio from "./components/daw/audio/Audio";
+import Pianoui from "./components/daw/pianoui/Pianoui";
+import Daw from "./components/daw/Daw";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -19,13 +21,13 @@ function App() {
     <>
       <Switch>
         <Route exact path="/" component={HomePage} />
-        <Route path="/login" component={Login} />
+        <Route path="/signin" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/about" component={About} />
         <Route path="/dashboard" component={Dashboard} />
         <Route path="/confirmation" component={Confirmation} />
         <Route path="/test" component={Test} />
-        <Route path="/daw" component={Audio} />
+        <Route path="/daw" component={Daw} />
       </Switch>
     </>
   );
