@@ -151,7 +151,7 @@ public class OpenBeatsRestController {
     {
 
         log.info("Inside call outh");
-       return "Success";
+        return "Success";
     }
 
     @RequestMapping(value = "/spotifyOauth1", method = RequestMethod.GET)
@@ -169,8 +169,11 @@ public class OpenBeatsRestController {
     @PostMapping("/createWorkspace")
     public ResponseEntity<Object> createBucket(@RequestParam(value = "sessionName")String sessionName,
                                                @RequestParam(value = "email") String email) throws Exception {
+        if(email.equals("undefined") || !email.contains("@")){
+            return ResponseHandler.generateResponse("Email id is not valid", HttpStatus.BAD_REQUEST,false);
+        }
         String new_bucket_name = System.currentTimeMillis() + sessionName;
-        boolean isSuccess = sessionMgmtService.saveSession(email,new_bucket_name);
+        boolean isSuccess = sessionMgmtService.saveSession(email,new_bucket_name,sessionName);
         if(!isSuccess){
             return ResponseHandler.generateResponse("failed to create session", HttpStatus.EXPECTATION_FAILED,isSuccess);
         }
@@ -190,7 +193,7 @@ public class OpenBeatsRestController {
             log.info("No session found");
             return ResponseHandler.generateResponse("Unable to find and delete session info", HttpStatus.EXPECTATION_FAILED,false);
         }else{*/
-            //Session temp = sessionToDelete.get();
+        //Session temp = sessionToDelete.get();
         boolean isSuccess = sessionMgmtService.deleteSession(sessionToDelete);
         if(!isSuccess){
             log.info("Could not delete");
@@ -245,10 +248,6 @@ public class OpenBeatsRestController {
         log.info(siteURL);
         return siteURL.replace(request.getServletPath(), "");
     }
-
-
-
-
 
 
 }

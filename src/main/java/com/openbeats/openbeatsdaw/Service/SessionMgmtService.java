@@ -17,12 +17,12 @@ public class SessionMgmtService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    public boolean saveSession(String email, String sessionName) {
+    public boolean saveSession(String email, String sessionName,String userSessionName) {
         List<Session> existingSessions = sessionRepository.findByUserEmail(email);
 
         if(existingSessions.size() < 3){
             Session sessiontoAdd = new Session();
-            sessiontoAdd.setSessionName(sessionName);
+            sessiontoAdd.setSessionName(userSessionName);
             sessiontoAdd.setBucketName(sessionName);
             sessiontoAdd.setUserEmail(email);
 

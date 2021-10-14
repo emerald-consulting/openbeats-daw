@@ -5,27 +5,49 @@ import gif from '../landing-gif.gif';
 import LogNavbar from '../logNavbar/LogNavbar';
 
 
+const TrackComp = () => {
+    const [rows, setRows]= useState([1])
+    const handleClickR = index => {
+        const list = [...rows];
+        list.splice(index, 1);
+        setRows(list);
+    }
+    const handleClickA = () => {
+        let last=rows.at(-1)
+        last=last+1
+        setRows([...rows, last]);
+    }
+    return(
+        <div>
+            Yes
+        {
+            rows.map((x,i) => {
+                return (
+                    <div id={x} className="flex flex-row mr-2" style={{height:'50%',width:'50%'}}> row
+                        <div className="rounded bg-gr2" style={{width:'40%'}}>
+                            Track 1
+                        </div>
+                        <div style={{width:'60%'}} className="rounded bg-gr2">
+                            waveform
+                        </div>
+                        <button onClick={()=>handleClickR(i)}>Remove</button>
+                        
+                    </div>
+                )
+            })
+        }
+        <button onClick={()=>handleClickA()}>Add</button>
+    </div>
+    )
+}
 
 const Test = () => {
-
-    const []= useState()
-    const handleChange = e => {
-
-    }
+    
     return (
 
         <div>
-            <div className="flex flex-row mr-2" style={{height:'50%',width:'50%'}}> row
-                <div className="rounded bg-gr2" style={{width:'40%'}}>
-                    Track 1
-                </div>
-                <div style={{width:'60%'}} className="rounded bg-gr2">
-                    waveform
-                </div>
-                <button onChange={handleChange}>Remove</button>
-                
-            </div>
-            <button onChange={handleChange}>Add</button>
+            
+            <TrackComp />
         </div>
 
 

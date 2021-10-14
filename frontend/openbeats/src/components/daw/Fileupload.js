@@ -50,39 +50,31 @@ const Fileupload = () => {
     if (selectedFile) {
        
       return (
-        <div>
-          <h2>File Details:</h2>
-           
-<p>File Name: {selectedFile.name}</p>
-
-           
-<p>File Type: {selectedFile.type}</p>
-
-           
-<p>
-            Last Modified:{" "}
-            {selectedFile.lastModifiedDate.toDateString()}
-          </p>
+        <div className="text-wh text-xs">
+          <h2 >File Details:</h2>
+           <p>File Name: {selectedFile.name}</p>
+           <p>File Type: {selectedFile.type}</p>
+           <p>Last Modified:{" "} {selectedFile.lastModifiedDate.toDateString()}  </p>
 
         </div>
       );
     } else {
       return (
-        <div>
-          <br />
+        <div className="text-wh text-xs">
+          {/* <br /> */}
           <h4>Choose before Pressing the Upload button</h4>
         </div>
       );
     }
   };
     return (
-        <div>
-            <div><input type="file" onChange={onFileChange} />
-                <button onClick={onFileUpload} className="rounded bg-gr3">
-                  Upload!
+        <div  className="">
+            <div><input className="text-xs " style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
+                <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
+                  <p className="text-xs">Upload!</p>
                 </button>
             </div>
-            <div>
+            <div >
                 {fileData()}
             </div>
         </div>

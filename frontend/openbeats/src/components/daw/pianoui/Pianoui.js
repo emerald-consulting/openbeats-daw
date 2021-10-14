@@ -26,7 +26,7 @@ const AppCall = () => {
 
   return (
     <div>
-      <div className="rounded bg-gr1"> <ResponsivePiano /> </div>
+      <div className="rounded"> <ResponsivePiano /> </div>
 
     </div>
   );
@@ -64,7 +64,7 @@ function ResponsivePiano(props) {
             <Piano
               noteRange={noteRange}
               width={containerWidth}
-              height={containerHeight}
+              // height={containerHeight}
               playNote={playNote}
               stopNote={stopNote}
               disabled={isLoading}
