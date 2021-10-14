@@ -28,7 +28,7 @@ const Login = () => {
         const encodedString = Buffer.from(encodeString).toString('base64');
         
 
-      axios.get("http://localhost:8655/userlogin",{headers: {
+      axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -45,7 +45,7 @@ const Login = () => {
                 // setMessage(response.data.message)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
-                axios.get("http://localhost:8655/getUserDetails?emailId="+email,{headers: {
+                axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response) => {
@@ -126,7 +126,7 @@ const Login = () => {
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
               <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-blue-400'><a href="http://localhost:8655/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
+              <div className='p-4 hover:text-blue-400'><a href="http://openbeats-daw.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>

@@ -125,7 +125,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
+                    .redirectUri("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")
