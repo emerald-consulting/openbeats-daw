@@ -23,29 +23,25 @@ public class AWSStorageService {
 
     public String uploadFile(MultipartFile multipartFile,String bucket_name){
         File fileObj = convertMultipartFileToFile(multipartFile);
-        String filename = System.currentTimeMillis()+"_"+ multipartFile.getOriginalFilename();
+        String filename = multipartFile.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucket_name,filename,fileObj));
         fileObj.delete();
-        return "File uploaded:"+filename;
+        return filename;
     }
 
-    public String createBucket(String bucket_name){
+    public String createBucket(String new_bucket_name){
         Bucket b = null;
-        String new_bucket_name = System.currentTimeMillis() + bucket_name;
-        System.out.println("Bucket  Name:"+new_bucket_name);
         if (s3Client.doesBucketExistV2(new_bucket_name)) {
-            System.out.format("Bucket %s already exists.\n", new_bucket_name);
             b = getBucket(new_bucket_name);
         } else {
             try {
                 b = s3Client.createBucket(new_bucket_name);
-                System.out.println("Bucket created");
             } catch (AmazonS3Exception e) {
                 System.err.println(e.getErrorMessage());
             }
         }
         assert b != null;
-        return "Bucket Created:"+b.getName();
+        return b.getName();
     }
 
     private File convertMultipartFileToFile(MultipartFile file){

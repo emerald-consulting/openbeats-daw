@@ -1,12 +1,15 @@
 package com.openbeats.openbeatsdaw.controller;
 
+import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
+import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.Authentication;
@@ -22,6 +25,9 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +49,9 @@ public class OpenBeatsRestController {
 
     @Autowired
     AWSStorageService service;
+
+    @Autowired
+    SessionMgmtService sessionMgmtService;
 
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest request) {
@@ -130,20 +139,88 @@ public class OpenBeatsRestController {
     }
 
     @PostMapping("/createWorkspace")
-    public ResponseEntity<Object> createBucket(@RequestParam(value = "bucketName")String bucketName){
-        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.createBucket(bucketName));
+    public ResponseEntity<Object> createBucket(@RequestParam(value = "sessionName")String sessionName,
+                                               @RequestParam(value = "email") String email) throws Exception {
+        String new_bucket_name = System.currentTimeMillis() + sessionName;
+        boolean isSuccess = sessionMgmtService.saveSession(email,new_bucket_name);
+        if(!isSuccess){
+            return ResponseHandler.generateResponse("failed to create session", HttpStatus.EXPECTATION_FAILED,isSuccess);
+        }
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.createBucket(new_bucket_name));
     }
 
     @PostMapping("/deleteWorkspace")
-    public ResponseEntity<Object> deleteBucket(@RequestParam(value = "bucketName")String bucketName){
-        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.deleteBucket(bucketName));
+    public ResponseEntity<Object> deleteBucket(@RequestParam(value = "sessionName")String sessionName,
+                                               @RequestParam(value = "email") String email){
+        Session sessionToDelete = sessionMgmtService.findSession(email,sessionName);
+
+        if( sessionToDelete == null){
+            return ResponseHandler.generateResponse("Unable to find and delete session info", HttpStatus.EXPECTATION_FAILED,false);
+        }
+        //log.debug("Session found",sessionToDelete.getSessionName());
+        /*if(sessionToDelete.isEmpty()){
+            log.info("No session found");
+            return ResponseHandler.generateResponse("Unable to find and delete session info", HttpStatus.EXPECTATION_FAILED,false);
+        }else{*/
+            //Session temp = sessionToDelete.get();
+        boolean isSuccess = sessionMgmtService.deleteSession(sessionToDelete);
+        if(!isSuccess){
+            log.info("Could not delete");
+            return ResponseHandler.generateResponse("Unable to find and delete session info", HttpStatus.EXPECTATION_FAILED,false);
+        }
+
+
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,service.deleteBucket(sessionName));
     }
+
+    @GetMapping("/getSessionDetails")
+    public ResponseEntity<Object> getSessionList(@RequestParam String emailId){
+        List<Session> sessionList = sessionMgmtService.getAllUserSessions(emailId);
+        return ResponseHandler.generateResponse("success", HttpStatus.OK,sessionList);
+    }
+
+    @GetMapping("/getImage")
+    public ResponseEntity<byte[]> fromDatabaseAsResEntity(@RequestParam("email") String email)
+            throws SQLException {
+
+        Optional<User> userDetails = createUser.findUser(email);
+        byte[] imageBytes = null;
+        if (userDetails.isPresent()) {
+            imageBytes = userDetails.get().getProfilePicture();
+        }
+
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(imageBytes);
+    }
+
+    @PostMapping("/uploadProfilePic")
+    public ResponseEntity<Object> uploadProfilePic(@RequestParam("email") String email,
+                                                   @RequestParam(value = "image") MultipartFile image) throws IOException {
+
+        Optional<User> user = createUser.findUser(email);
+
+        if(!user.isEmpty()){
+            User usr = user.get();
+            log.info("user email is:"+usr.getEmailId());
+
+            usr.setProfilePicture(image.getBytes());
+            User usr_response = createUser.saveProfilePic(usr);
+            return ResponseHandler.generateResponse("success", HttpStatus.OK,usr_response);
+        }else {
+            return ResponseHandler.generateResponse("fail", HttpStatus.BAD_REQUEST,false);
+        }
+
+    }
+
 
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         log.info(siteURL);
         return siteURL.replace(request.getServletPath(), "");
     }
+
+
+
+
 
 
 }
