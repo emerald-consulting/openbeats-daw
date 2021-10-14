@@ -16,7 +16,7 @@ const LogNavbar = () => {
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
 
-        <Link className=" mr-7" style={{fontSize:14}}  to="/signin">
+        <Link className="mr-7" style={{fontSize:14}}  to="/signin">
           Logout
         </Link>
 
