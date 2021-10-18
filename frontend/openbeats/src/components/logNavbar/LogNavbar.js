@@ -1,10 +1,13 @@
-import React from "react";
+import React, {useContext} from "react";
 import { Link } from "react-router-dom";
 import logo from '../openbeats_notype-45.png';
 // import About from "../about/About";
+import { useHistory } from "react-router"
+import { UserContext } from "../../model/user-context/UserContext";
 
 const LogNavbar = () => {
-
+  const [state, dispatch] = useContext(UserContext);
+  
   return (
     <div>  
     <nav className=" flex flex-row ">
@@ -15,8 +18,10 @@ const LogNavbar = () => {
         
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
-
-        <Link className="mr-7" style={{fontSize:14}}  to="/signin">
+        <Link className="text-wh mr-7" style={{fontSize:14}}  to="/dashboard">
+          {state.user.firstName}
+        </Link>
+        <Link className="text-wh mr-7" style={{fontSize:14}}  to="/signin">
           Logout
         </Link>
 

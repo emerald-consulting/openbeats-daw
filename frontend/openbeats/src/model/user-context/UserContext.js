@@ -5,7 +5,7 @@ export const UserContext = createContext();
 const initialState = {
   user: {
     "userid":13,
-    "username":"testName",
+    "username":"",
     "password":"$2a$10$JPiZveE9IowoPsrQSyky5ec928qQhpR2xZbne1JqE4iJXouTP0oEe",
     "firstName":"testName",
     "lastName":"L",
@@ -19,6 +19,9 @@ const initialState = {
     "accountNonExpired":true,
     "credentialsNonExpired":true
   },
+  userImage:null,
+  sessions:[],
+  passcode:"",
   loading: false,
   error: null
 };
@@ -29,6 +32,18 @@ const reducer = (state, action) => {
       return {
         user: action.payload
       };
+    case "CREATE_SESSION":
+        return {
+          sessions: action.payload
+        };
+    case "STORE_PASSCODE":
+      return {
+        passcode: action.payload
+      };
+    case "STORE_IMAGE":
+        return {
+          userImage: action.payload
+        };
     case "DEL_CONTACT":
       return {
         contacts: state.contacts.filter(

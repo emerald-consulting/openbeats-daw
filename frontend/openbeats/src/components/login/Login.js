@@ -26,6 +26,11 @@ const Login = () => {
 
         let encodeString = ''+email+':'+password;
         const encodedString = Buffer.from(encodeString).toString('base64');
+
+        dispatch({
+            type: "STORE_PASSCODE",
+            payload: password
+          });
         
 
       axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
@@ -48,16 +53,17 @@ const Login = () => {
                 axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
-            }}).then((response) => {
-                if(response.data.status==207){
-                    setError(response.data.message);
+            }}).then((response1) => {
+                if(response1.data.status==207){
+                    setError(response1.data.message);
                     setIsLoaded(false)
                 }
-                else if(response.data){
+                else if(response1.data){
                     dispatch({
                         type: "LOAD_USER",
-                        payload: response.data.data
+                        payload: response1.data.data
                       });
+                    
                     setIsLoaded(false)
                     history.push("/dashboard");
                 }
