@@ -1,217 +1,255 @@
-const DATA = [
-    { letter: 'Q',
-      keycode: 81,
+import ReactDOM from 'react-dom'
+import React from 'react';
+import './style.css';
+
+const keysPressed=new Array();
+
+const firstSoundsGroup = [
+    { key: 'Z',
+      keyCode: 90,
       id: 'Open-HH',
        url: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3'
     },
-    { letter: 'W',
-      keycode: 87,
+    { key: 'X',
+      keyCode: 88,
       id: 'Closed-HH',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3'
     },
-    { letter: 'E',
-      keycode: 69,
+    { key: 'C',
+      keyCode: 67,
       id: 'Kick-and-Hat',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3'
     },
-    { letter: 'A',
-      keycode: 65,
+    { key: 'V',
+      keyCode: 86,
       id: 'Punchy-Kick',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3'
     },
-    { letter: 'S',
-      keycode: 83,
+    { key: 'B',
+      keyCode: 66,
       id: 'Kick',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3'
     },
-    { letter: 'D',
-      keycode: 68,
+    { key: 'N',
+      keyCode: 78,
       id: 'Snare',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3'
     },
-    { letter: 'Z',
-      keycode: 90,
+    { key: 'M',
+      keyCode: 77,
       id: 'Side-Stick',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3'
     },
-    { letter: 'X',
-      keycode: 88,
+    { key: ',',
+      keyCode: 188,
       id: 'Clap',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3'
     },
-    { letter: 'C',
-      keycode: 67,
+    { key: '.',
+      keyCode: 190,
       id: 'Shaker',
       url: 'https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3'
-    },
+    }
   ];
-  
-  const onStyle = {transform: "scale(0.95)", boxShadow: "1px 1px 4px 4px cyan, -1px -1px 4px 4px cyan"};
-  const offStyle = {transform: "scale(1)", boxShadow: "none"};
-  
-  class Pad extends React.Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        playing: false
-      };
-      this.handleKeyPress = this.handleKeyPress.bind(this);
-      this.onPlay = this.onPlay.bind(this);
-    }
-    
-    componentDidMount() {
-      document.addEventListener('keydown', this.handleKeyPress);
-    }
-    
-    componentWillUnmount() {
-      document.removeEventListener('keydown', this.handleKeyPress);
-    }
-    
-    handleKeyPress (e) {
-      if (e.keyCode === this.props.pad.keycode) {
-        this.onPlay();
+
+
+
+
+  const secondSoundsGroup = [
+      { key: 'Z',
+           keyCode: 90,
+           id: 'Open-HH',
+            url: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3'
+         },
+         { key: 'X',
+           keyCode: 88,
+           id: 'Closed-HH',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3'
+         },
+         { key: 'C',
+           keyCode: 67,
+           id: 'Kick-and-Hat',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3'
+         },
+         { key: 'V',
+           keyCode: 86,
+           id: 'Punchy-Kick',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3'
+         },
+         { key: 'B',
+           keyCode: 66,
+           id: 'Kick',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3'
+         },
+         { key: 'N',
+           keyCode: 78,
+           id: 'Snare',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3'
+         },
+         { key: 'M',
+           keyCode: 77,
+           id: 'Side-Stick',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3'
+         },
+         { key: ',',
+           keyCode: 188,
+           id: 'Clap',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3'
+         },
+         { key: '.',
+           keyCode: 190,
+           id: 'Shaker',
+           url: 'https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3'
+         }
+    ];
+
+  const soundsName = {
+    heaterKit: "Heater Kit",
+    smoothPianoKit: "Smooth Piano Kit"
+  };
+
+  const soundsGroup = {
+    heaterKit: firstSoundsGroup,
+    smoothPianoKit: secondSoundsGroup
+  }
+
+  const KeyboardKey = ({ play, deactivateAudio, sound: { id, key, url, keyCode } }) => {
+    const handleKeydown = (e) => {
+      if(keyCode === e.keyCode) {
+        const audio = document.getElementById(key);
+        play(key, id);
+        deactivateAudio(audio)
       }
     }
-    
-    onPlay () {
-      if(this.props.power) {
-        const sound = document.getElementById(this.props.pad.letter);
-        sound.currentTime = 0;
-        sound.volume = this.props.volume;
-        sound.play();
-        this.props.updateDisplay(this.props.pad.id);
-        this.setState({playing: true})
-        setTimeout(() => {
-          this.setState({playing: false})
-        }, 100);
+
+    React.useEffect(() => {
+        document.addEventListener('keydown', handleKeydown);
+    }, [])
+
+    return (
+    <div className="outer-drum-pad">
+      <button value="test" id={keyCode} className="drum-pad" onClick={() => play(key, id)}>
+        <audio className="clip" src={url} id={key} />
+        {key}
+      </button>
+    </div>
+    );
+  }
+
+  const Keyboard = ({ sounds, play, power, deactivateAudio }) =>  (
+    <div className="keyboard">
+      {power
+        ? sounds.map((sound) => <KeyboardKey sound={sound} play={play} deactivateAudio={deactivateAudio} />)
+        : sounds.map((sound) => <KeyboardKey sound={{...sound, url: "#" }} play={play} deactivateAudio={deactivateAudio} />)
+      }
+    </div>
+  );
+
+  const DumControle = ({ stop, name, power, volume, handleVolumeChange, changeSoundGroup }) => (
+    <div className="controle">
+      <button onClick={stop}>Turn Power {power ? 'OFF' : 'ON'}</button>
+      <h2>Volume: %{Math.round(volume * 100)}</h2>
+      <input
+        max="1"
+        min="0"
+        step='0.01'
+        type="range"
+        value={volume}
+        onChange={handleVolumeChange}
+        />
+
+    </div>
+  );
+
+  const App = () => {
+    const [power, setPower] = React.useState(true);
+    const [volume, setVolume] = React.useState(1);
+    const [soundName, setSoundName] = React.useState("");
+    const [soundType, setSoundType] = React.useState("heaterKit");
+    const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
+
+    const styleActiveKey = (key) => {
+      key.parentElement.style.backgroundColor = "#000000"
+      key.parentElement.style.color = "#ffffff"
+    }
+
+    const deActivatedKey = (audio) => {
+      audio.parentElement.style.backgroundColor = "#ffffff"
+      audio.parentElement.style.color = "#000000"
+    }
+
+   const deactivateAudio = (audio) => {
+     setTimeout(() => {
+       audio.parentElement.style.backgroundColor = "#ffffff"
+       audio.parentElement.style.color = "#000000"
+     }, 300)
+   }
+
+    const play = (key, sound) => {
+      keysPressed.push(key);
+      console.log(keysPressed);
+      setSoundName(sound)
+      const audio = document.getElementById(key);
+      styleActiveKey(audio);
+      audio.currentTime = 0;
+      audio.play();
+      deactivateAudio(audio)
+    }
+
+    const stop = () => {
+       setPower(!power)
+    }
+
+    const changeSoundGroup = () => {
+      setSoundName("")
+      if(soundType === "heaterKit"){
+          setSoundType("smoothPianoKit");
+          setSounds(soundsGroup.smoothPianoKit);
+      } else {
+          setSoundType("heaterKit");
+          setSounds(soundsGroup.heaterKit);
       }
     }
-    
-    render () {
-      const style = !this.props.power ? {background: '#476b68'} : this.state.playing ? onStyle : offStyle;
-      return (
-        <div style={style} className="outer-drum-pad">
-          <div className="drum-pad"
-               id={this.props.pad.id}
-               onClick={this.onPlay}
-          >
-            <audio id={this.props.pad.letter} 
-                   src={this.props.pad.url}
-                   className="clip"
-              >
-            </audio>
-            {this.props.pad.letter}
-          </div>
+
+    const handleVolumeChange = e => {
+      setVolume(e.target.value)
+    }
+
+    const setKeyVolume = () => {
+      const audioes = sounds.map(sound => document.getElementById(sound.key));
+      audioes.forEach(audio => {
+        if(audio) {
+          audio.volume = volume;
+        }
+      })
+    }
+
+    return (
+      <div id="drum-machine">
+        {setKeyVolume()}
+        <div className="wrapper">
+          <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} />
+          <DumControle
+            stop={stop}
+            power={power}
+            volume={volume}
+            name={soundName || soundsName[soundType]}
+            handleVolumeChange={handleVolumeChange}
+           />
         </div>
-      )
-    }
-  }
-  
-  class SidePanel extends React.Component {
-    constructor(props){
-      super(props);
-    }
-    
-    render () {
-      
-      const style = this.props.power ? {background: "#0ad82c"} : {background: "#063d0f", boxShadow: "none"};
-      
-      return (
-        <div className="side-panel">
-          <div className="label">Drum Machine 3000</div>
-          <div style={this.props.colorStyle} className="display" id="display">{this.props.currentSound}</div>
-          <div>
-            <p>Power</p>
-            <button style={style} onClick={this.props.togglePower}></button>
-          </div>
-          <div>
-            <p>Volume</p>
-            <input value={this.props.volumeInput} 
-                   type="range"
-                   min="1" 
-                   max="100" 
-                   onChange={this.props.changeVolume}>
-            </input>
-          </div>
-          <div className="speakers">
-            <hr/>
-            <hr/>
-            <hr/>
-            <hr/>
-            <hr/>
-          </div>
-        </div>
-      )
-    } 
-  }
-  
-  class App extends React.Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        currentSound: '',
-        power: true,
-        volumeInput: 50,
-        volume: 0.5
-      }  
-      this.updateDisplay = this.updateDisplay.bind(this);
-      this.togglePower = this.togglePower.bind(this);
-      this.changeVolume = this.changeVolume.bind(this);
-    }
-    
-    updateDisplay (id) {
-      this.setState({currentSound: id});
-    }
-    
-    togglePower () {
-      const message = !this.state.power && 'Welcome';
-      this.setState({power: !this.state.power, 
-                     currentSound: message});
-      setTimeout(()=> {
-        this.setState({ currentSound: ''});
-      }, 1500);
-    }
-    
-    changeVolume (e) {
-      const volume = e.target.value / 100;
-      const message = "Volume: " + e.target.value;
-      this.setState({volume: volume, 
-                     volumeInput: e.target.value,
-                     currentSound: message})
-    }
-    
-    render () {
-      
-      const colorStyle = this.state.power ? {background: '#1ec8ce'} : {background: '#476b68'};
-      
-      const pads = this.props.data.map((pad, i) => {
-        return <Pad key={i} 
-                    pad={pad} 
-                    updateDisplay={this.updateDisplay} 
-                    power={this.state.power} 
-                    volume={this.state.volume} 
-                    style={colorStyle}
-                 />
-        });
-        
-      return (
-        <div className="container">
-          <div className="machine">
-            <div className="pads">
-              {pads}
-            </div>
-            <SidePanel volumeInput={this.state.volumeInput}
-                       togglePower={this.togglePower}
-                       changeVolume={this.changeVolume}
-                       currentSound={this.state.currentSound}   
-                       power={this.state.power}
-                       colorStyle={colorStyle}
-              />
-          </div>
-        </div>
-      )
-    }
-  }
-  
-  const app = document.querySelector('#drum-machine');
-  ReactDOM.render(<App data={DATA}/>, app);
+      </div>
+    )
+  };
+
+//  ReactDOM.render(<App />, document.querySelector("#app"))
+const AppCall = () => {
+
+  return (
+    <div>
+      <div className="rounded"> <App /> </div>
+
+    </div>
+  );
+}
+
+export default AppCall;

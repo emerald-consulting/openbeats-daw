@@ -48,7 +48,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        String  targetUrl="http://localhost:3000/dashboard";
+        String  targetUrl="http://openbeats-daw.us-east-2.elasticbeanstalk.com/dashboard";
 
 
         String token = tokenProvider.createToken(authentication);
