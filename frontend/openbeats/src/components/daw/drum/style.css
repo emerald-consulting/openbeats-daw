@@ -7,12 +7,13 @@ body {
 }
 
 h2 {
-  font-size: 28px
+  font-size: 24px;
+  color: rgba(160, 157, 157);
 }
 
 #drum-machine {
-  margin: 5px;
-  height: 50vh;
+  margin: 0px;
+  height: 30vh;
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -23,11 +24,11 @@ h2 {
      max-width: 400px;
       width: 100%;
       display: flex;
-      background: #111;
-      margin: 50px;
-      padding: 20px;
+      /* background: #111; */
+      margin: 0px;
+      padding: 15px;
       border-radius: 5px;
-      box-shadow: 5px 5px 8px 3px #333;
+      box-shadow: 5px 5px 8px 3px rgb(19, 138, 9);
 }
 
 .keyboard {
@@ -44,25 +45,25 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px;
+  margin: 1px;
 }
 
 .keyboard .outer-drum-pad .drum-pad {
    width: 97%;
    height: 97%;
    background: radial-gradient(#333, #070707);
-   border-radius: 50%;
+   border-radius: 47%;
    text-align: center;
    vertical-align: middle;
-   line-height: 120px;
+   /* line-height: 120px; */
    font-size: 24px;
-   color: rgba(255, 255, 255, 0);
+   color: rgb(255, 255, 255,0);
    cursor: pointer;
    &:hover {
      color: rgba(255, 255, 255, 1);
-   }
+   };
    background-color: rgb(255, 255, 255);
-   color: rgb(0, 0, 0);
+   color: rgb(120, 120, 120);
 }
 
 @media(min-width: 768px){
@@ -91,12 +92,12 @@ h2 {
 .controle > button,
 .controle > input,
 .controle > h2{
-  margin-bottom: 10px
+  margin-bottom: 5px
 }
 
 .controle button{
   border: none;
-  color: #ffffff;
+  color: #7a7474;
   cursor: pointer;
   font-size: 20px;
   padding: 8px 10px;

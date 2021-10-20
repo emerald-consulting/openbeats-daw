@@ -84,15 +84,13 @@ const Daw = () => {
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
                 <div className="flex flex-row" style={{}}>
-                    <div className=" mr-1 " style={{width:'40%'}}>
-                        
+                    <div className=" mr-1 h-10vh " style={{width:'40%'}}>
+                        <Drum/>
                     </div>
                     <div className=" h-100vh" style={{width:'60%'}}>
                         <Pianoui/>
                     </div>
-                    <div className=" h-100vh" style={{width:'60%'}}>
-                                            <Drum/>
-                                        </div>
+
                 </div>
             </div>
         </div>

@@ -142,7 +142,7 @@ const Dashboard = () => {
                       </div>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`text-white bg-gr4  hover:bg-gr2 py-2 px-4 rounded`}>
+                          <button className={`text-white bg-gr4  hover:bg-gr3 py-2 px-4 rounded`}>
                               Create new Session
                           </button>
                           
@@ -162,7 +162,7 @@ const Dashboard = () => {
                       </div>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`bg-gr4 text-white hover:bg-gr2 py-2 px-4 rounded`}>
+                          <button className={`bg-gr4 text-white hover:bg-gr3 py-2 px-4 rounded`}>
                               Join Session
                           </button>
                           

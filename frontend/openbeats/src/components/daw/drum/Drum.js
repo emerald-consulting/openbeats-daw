@@ -146,7 +146,7 @@ const firstSoundsGroup = [
   );
 
   const DumControle = ({ stop, name, power, volume, handleVolumeChange, changeSoundGroup }) => (
-    <div className="controle">
+    <div className="controle pl-5">
       <button onClick={stop}>Turn Power {power ? 'OFF' : 'ON'}</button>
       <h2>Volume: %{Math.round(volume * 100)}</h2>
       <input
@@ -169,7 +169,7 @@ const firstSoundsGroup = [
     const [sounds, setSounds] = React.useState(soundsGroup[soundType]);
 
     const styleActiveKey = (key) => {
-      key.parentElement.style.backgroundColor = "#000000"
+      key.parentElement.style.backgroundColor = "#ffff00"
       key.parentElement.style.color = "#ffffff"
     }
 
@@ -180,8 +180,8 @@ const firstSoundsGroup = [
 
    const deactivateAudio = (audio) => {
      setTimeout(() => {
-       audio.parentElement.style.backgroundColor = "#ffffff"
-       audio.parentElement.style.color = "#000000"
+       audio.parentElement.style.backgroundColor = "#ff00ff"
+       audio.parentElement.style.color = "#666666"
      }, 300)
    }
 
