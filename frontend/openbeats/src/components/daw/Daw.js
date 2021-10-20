@@ -1,6 +1,7 @@
 import React from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui from './pianoui/Pianoui'
+import Drum from './drum/Drum'
 import Fileupload from './Fileupload'
 import Dynamicdiv from '../dynamicdiv/Dynamicdiv'
 import { Button, PlayerIcon } from 'react-player-controls'
@@ -89,6 +90,9 @@ const Daw = () => {
                     <div className=" h-100vh" style={{width:'60%'}}>
                         <Pianoui/>
                     </div>
+                    <div className=" h-100vh" style={{width:'60%'}}>
+                                            <Drum/>
+                                        </div>
                 </div>
             </div>
         </div>
