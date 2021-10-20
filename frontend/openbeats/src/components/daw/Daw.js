@@ -51,7 +51,7 @@ const Daw = () => {
             
             <div className="flex flex-col h-screen">
                 <LogNavbar/>
-                <div className="flex flex-row   " style={{height:'60%'}}>
+                <div className="flex flex-row" style={{height:'60%'}}>
                     <div className="  mr-1 flex flex-col " style={{width:'15%'}}>
                         <div className="flex flex-row mb-1">
                             <PlayerIcon.Play className="w-10 ml-5 p-1 mt-1 bg-gr4 rounded"  />
@@ -82,7 +82,7 @@ const Daw = () => {
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
-                <div className="flex flex-row  " style={{height:'40%'}}>
+                <div className="flex flex-row" style={{}}>
                     <div className=" mr-1 " style={{width:'40%'}}>
                         
                     </div>

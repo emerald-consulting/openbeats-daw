@@ -118,7 +118,7 @@ const Dashboard = () => {
           <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
-              <div className="bg-gr2 flex flex-col w-96 rounded  shadow-default py-10 px-16">
+              <div className="bg-gr2 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
                 <h1 className="text-2xl text-wh">Saved sessions</h1>
                 <Link className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}}  to="/about" >
                   session 1
