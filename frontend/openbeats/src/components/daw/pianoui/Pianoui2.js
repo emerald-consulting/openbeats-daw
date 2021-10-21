@@ -131,8 +131,14 @@ class AppCall extends React.Component {
     });
   };
 
+  recordedNotes =() => (<div className="mt-5 text-xs bg-gr4">
+  <p>Recorded notes</p>
+  <div>{JSON.stringify(this.state.recording.events)}</div>
+</div>)
+
   render() {
     return (
+      <div className="flex flex-col">
       <div className="flex flex-row" style={{height:'100%'}} >
           <div className="mt-5 flex flex-col pr-2">
             <button className="rounded bg-gr4 p-1 mb-1" onClick={this.onClickPlay}>Play</button>
@@ -160,8 +166,11 @@ class AppCall extends React.Component {
             />
           </div>
  
-        {/* <div className="mt-5">
-          <strong>Recorded notes</strong>
+        
+      </div>
+      {this.state.recording.events[0]?this.recordedNotes():""}
+      {/* <div className="mt-5 text-xs bg-gr4">
+          <p>Recorded notes</p>
           <div>{JSON.stringify(this.state.recording.events)}</div>
         </div> */}
       </div>

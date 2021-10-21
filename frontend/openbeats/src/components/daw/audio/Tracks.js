@@ -53,7 +53,7 @@ function Tracks() {
         {files.map((file, index) => (
           <Grid key={index} item>
             <AudioPlayer file={file} />
-            <IconButton onClick={()=>remove(index)} className="float-right"><CancelIcon /></IconButton>
+            <IconButton onClick={()=>remove(index) } style={{marginTop: '-60px', position:'relative'}} className="float-right"><CancelIcon /></IconButton>
           </Grid>
         ))}
       </Grid>
