@@ -17,9 +17,9 @@ class Waveform extends Component {
     this.waveform = WaveSurfer.create({
     //   barWidth: 2,
       cursorWidth: 1,
-      container: '#waveform',
+      container: '#waveform'+this.props.id,
       backend: 'WebAudio',
-      height: 55,
+      height: 40,
       progressColor: '#2D5BFF',
       responsive: true,
       waveColor: '#EFEFEF',
@@ -39,9 +39,9 @@ class Waveform extends Component {
         this.waveform = WaveSurfer.create({
             // barWidth: 0.5,
             cursorWidth: 1,
-            container: '#waveform',
+            container: '#waveform'+this.props.id,
             backend: 'WebAudio',
-            height: 55,
+            height: 40,
             progressColor: '#2D5BFF',
             responsive: true,
             waveColor: '#EFEFEF',
@@ -69,7 +69,7 @@ class Waveform extends Component {
         <button onClick={this.handlePlay} className="PlayButton">
           {!this.state.playing ? '▷' : '||'}
         </button>
-        <div id="waveform" className="Wave"/>
+        <div id={"waveform"+this.props.id} className="Wave"/>
         <audio id={"track"+this.props.id} src={this.state.url} />
       </div>
     );

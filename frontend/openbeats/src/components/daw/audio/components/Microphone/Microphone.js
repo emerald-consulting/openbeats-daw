@@ -57,7 +57,7 @@ export default function Microphone({ pushFile }) {
       container: "#wavesurfer-id",
       waveColor: "grey",
       progressColor: "tomato",
-      height: 140,
+      height: 40,
       cursorWidth: 1,
       cursorColor: "lightgrey",
       barWidth: 2,
@@ -136,14 +136,14 @@ export default function Microphone({ pushFile }) {
 
   return (
     <>
-      <Grid container justify="center">
+      <Grid  justify="left" className='bg-gr4 hover:bg-gr3'>
         <Grid item>
           <IconButton onClick={handleClickOpen}>
             <MicIcon className={classes.icon} />
           </IconButton>
         </Grid>
       </Grid>
-      <Dialog maxWidth="sm" open={open} onClose={handleCancel}>
+      <Dialog maxWidth="lg" open={open} onClose={handleCancel}>
         <DialogTitle className={classes.flex}>Record</DialogTitle>
         <DialogContent>
           {tempFile ? (

@@ -3,14 +3,14 @@
   flex-direction: row;  
   align-items: center;
   justify-content: center;
-  height: 30px; 
+  height: 40px; 
   width: 100%;
   background: transparent;
 }
 
 .Wave{
   width: 100%;
-  height: 55px;
+  height: 40px;
 }
 
 .PlayButton{

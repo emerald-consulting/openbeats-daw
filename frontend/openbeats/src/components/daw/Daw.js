@@ -54,8 +54,8 @@ const Daw = () => {
             
             <div className="flex flex-col">
                 <LogNavbar/>
-                <div className="flex flex-row " style={{}}>
-                    <div className="flex flex-col" style={{width:'80%',height:'100%'}}>
+                <div className="flex flex-row" style={{}}>
+                    <div className="flex flex-col" style={{width:'85%',height:'100%'}}>
                         <div className="flex flex-row">
                             {/*           empty      buttons upload         */}
                         </div>
@@ -64,17 +64,17 @@ const Daw = () => {
                           <Tracks />
                         </div>
                     </div>
-                    <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
-                        <p className="text-2xl rounded p-3 " style={{textAlign:'center'}}>Collaborators</p>
+                    <div className="  mb-0.5" style={{width:'15%',height:'100%'}}>
+                        <p className="text-2xl border p-4 " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
                 <div className="flex flex-row" style={{}}>
-                    <div className="  " style={{width:'40%',whiteSpace:"break-spaces"}}>
+                    <div className="  " style={{width:'30%',whiteSpace:"break-spaces"}}>
                         <Drum/>
                     </div>
-                    <div className=" h-100vh" style={{width:'60%'}}>
+                    <div className="" style={{width:'70%'}}>
                         <Pianoui2/>
                     </div>
 

@@ -2,15 +2,18 @@ import React, { useState } from "react";
 
 import Grid from "@material-ui/core/Grid";
 
-import NavBar from "./components/NavBar/NavBar";
+
 import Microphone from "./components/Microphone/Microphone";
 import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
+import Fileupload from "../Fileupload";
 
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'
 
 const divStyle = {
   overflowY: 'scroll', height: '400px', maxWidth: '100%', overflowX: 'hidden'
 };
+
+//
 
 function Tracks() {
   const [files, setFiles] = useState([null]);
@@ -29,14 +32,16 @@ function Tracks() {
   return (
     <div style={divStyle}>
       {/* <NavBar /> */}
-      <Microphone pushFile={pushFile} />
-      <div>
-          <label for={"file-upload"} className="rounded border m-2 p-0.5 cursor-pointer">
-              File +</label> 
-          <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-      </div>
-                            
-      <Grid container direction="column" spacing={3}>
+      <div className="flex flex-row box border">
+        <Microphone style={{}} pushFile={pushFile} />
+        <div className="p-5 ml-0.5 bg-gr4 hover:bg-gr3">
+            <label for={"file-upload"} className=" cursor-pointer">
+                File +</label> 
+            <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
+        </div>
+        <Fileupload />
+      </div>                 
+      <Grid container direction="column" spacing={1}>
         {files.map((file, index) => (
           <Grid key={index} item>
             <AudioPlayer file={file} />

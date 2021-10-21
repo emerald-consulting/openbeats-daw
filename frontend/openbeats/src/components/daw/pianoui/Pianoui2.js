@@ -133,32 +133,33 @@ class AppCall extends React.Component {
 
   render() {
     return (
-      <div>
-        <div className="mt-5">
-          <SoundfontProvider
-            instrumentName="acoustic_grand_piano"
-            audioContext={audioContext}
-            hostname={soundfontHostname}
-            render={({ isLoading, playNote, stopNote }) => (
-              <PianoWithRecording
-                recording={this.state.recording}
-                setRecording={this.setRecording}
-                noteRange={noteRange}
-                width={300}
-                playNote={playNote}
-                stopNote={stopNote}
-                disabled={isLoading}
-                keyboardShortcuts={keyboardShortcuts}
-              />
-            )}
-          />
-        </div>
-        <div className="mt-5">
-          <button onClick={this.onClickPlay}>Play</button>
-          <button onClick={this.onClickStop}>Stop</button>
-          <button onClick={this.onClickClear}>Clear</button>
-          <button onClick={()=>download()}>Download</button>
-        </div>
+      <div className="flex flex-row" style={{height:'100%'}} >
+          <div className="mt-5 flex flex-col pr-2">
+            <button className="rounded bg-gr4 p-1 mb-1" onClick={this.onClickPlay}>Play</button>
+            <button className="rounded bg-gr4 p-1 mb-1"  onClick={this.onClickStop}>Stop</button>
+            <button className="rounded bg-gr4 p-1 mb-1"  onClick={this.onClickClear}>Clear</button>
+            <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button>
+          </div>
+          <div className="" style={{width:'100%'}}  >
+            <SoundfontProvider 
+              instrumentName="acoustic_grand_piano"
+              audioContext={audioContext}
+              hostname={soundfontHostname}
+              render={({ isLoading, playNote, stopNote }) => (
+                <PianoWithRecording 
+                  recording={this.state.recording}
+                  setRecording={this.setRecording}
+                  noteRange={noteRange}
+                  width={'600'}
+                  playNote={playNote}
+                  stopNote={stopNote}
+                  disabled={isLoading}
+                  keyboardShortcuts={keyboardShortcuts}
+                />
+              )}
+            />
+          </div>
+ 
         {/* <div className="mt-5">
           <strong>Recorded notes</strong>
           <div>{JSON.stringify(this.state.recording.events)}</div>

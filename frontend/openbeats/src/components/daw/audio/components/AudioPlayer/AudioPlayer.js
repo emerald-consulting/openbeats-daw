@@ -33,8 +33,10 @@ const faces = [
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: 600,
-    minWidth: 240,
+    maxWidth: '100%',
+    height:'30',
+    // minWidth: 240,
+    background:'#68BC76',
     margin: "auto",
     transition: "0.3s",
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
@@ -151,7 +153,7 @@ function AudioPlayer({ file }) {
 
   return (
     <>
-      <Card className={classes.card}>
+      <Card className={classes.card } >
         <Grid container direction="column">
           <Grid item>
             <List className={classes.list}>

@@ -29,7 +29,7 @@ const TrackComp = () => {
                 return (
                     <div id={x} className="flex flex-row mr-1 mb-0.5"  > 
                         {/* style={{height:'50%',width:'50%'}} const   selectedFile     */}
-                        <div className=" flex flex-row bg-gr4 p-1  mr-0.5" style={{width:'30%'}}>
+                        <div className=" flex flex-row bg-gr4 p-1 pt-4 mr-0.5" style={{width:'30%'}}>
                             Track {i+1}
                             {/* selectedFile.name goes in track name */}
                             <div>

@@ -61,7 +61,7 @@ const Fileupload = () => {
       );
     } else {
       return (
-        <div className="text-wh text-xs">
+        <div className="text-wh text-xs hidden">
           {/* <br /> */}
           <h4>Choose before Pressing the Upload button</h4>
         </div>
@@ -70,9 +70,10 @@ const Fileupload = () => {
   };
     return (
         <div  className="">
-            <div><input className="text-xs " style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-                <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
-                  <p className="text-xs">Upload!</p>
+            <div justify="right">
+              <input className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
+                <button onClick={onFileUpload}  className=" bg-gr4 p-5 ml-0.5 " >
+                  <p className="text">Upload!</p>
                 </button>
             </div>
             <div >
