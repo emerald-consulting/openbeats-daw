@@ -48,6 +48,7 @@ const PlayerButton = ({ style, children, ...props }) => (
 
 const Daw = () => {
     return (
+      // <div><LogNavbar/>
         <div className="" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',height:'h-screen',backgroundRepeat:'no-repeat' }} >
             
             <div className="flex flex-col">
@@ -75,11 +76,11 @@ const Daw = () => {
                         </div>
                     </div>
                     <div className="  mr-1 p-1" style={{width:'65%'}}>
-                        <Dynamicdiv/>
+                        <Dynamicdiv />
                     </div>
                     <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
                         <p className="text-2xl rounded p-3 " style={{textAlign:'center'}}>Collaborators</p>
-                        <Dynamicdiv/>
+                        {/* <Dynamicdiv/> */}
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
@@ -94,6 +95,7 @@ const Daw = () => {
                 </div>
             </div>
         </div>
+        // </div>
     )
 }
 

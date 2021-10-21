@@ -1,8 +1,15 @@
-import React,{useState} from 'react'
+import React,{useState, useContext} from 'react'
 import axios from "axios"
+import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
+
 
 const Fileupload = () => {
     const [selectedFile, setSelectedFile] = useState(null);
+    // const [state, dispatch] = useContext(UserContext);
+    // dispatch({
+    //   type: "STORE_AUDIO",
+    //   payload: selectedFile
+    // });
   const onFileChange = event => {
     
     // Update the state
@@ -13,13 +20,7 @@ const Fileupload = () => {
     
     // Create an object of formData
     const formData = new FormData();
-  
-    // Update the formData object
-    // formData.append(
-    //   "myFile",
-    //   selectedFile,
-    //   selectedFile.name
-    // );
+
     formData.append(
       'file',selectedFile
     );

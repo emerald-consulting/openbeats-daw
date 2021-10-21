@@ -1,54 +1,107 @@
-import React ,{useState} from "react";
+
 import { Link } from "react-router-dom";
 import logo from '../openbeats_notype-45.png';
 import gif from '../landing-gif.gif';
 import LogNavbar from '../logNavbar/LogNavbar';
 
+import React, { Component } from 'react';
+import WaveSurfer from 'wavesurfer.js';
 
-const TrackComp = () => {
-    const [rows, setRows]= useState([1])
-    const handleClickR = index => {
-        const list = [...rows];
-        list.splice(index, 1);
-        setRows(list);
-    }
-    const handleClickA = () => {
-        let last=rows.at(-1)
-        last=last+1
-        setRows([...rows, last]);
-    }
-    return(
-        <div>
-            Yes
-        {
-            rows.map((x,i) => {
-                return (
-                    <div id={x} className="flex flex-row mr-2" style={{height:'50%',width:'50%'}}> row
-                        <div className="rounded bg-gr2" style={{width:'40%'}}>
-                            Track 1
-                        </div>
-                        <div style={{width:'60%'}} className="rounded bg-gr2">
-                            waveform
-                        </div>
-                        <button onClick={()=>handleClickR(i)}>Remove</button>
-                        
-                    </div>
-                )
-            })
-        }
-        <button onClick={()=>handleClickA()}>Add</button>
-    </div>
-    )
-}
+import './Waveform.css';
 
-const Test = () => {
-    
+class Waveform extends Component {  
+  state = {
+    playing: false,
+  };
+
+  componentDidMount() {
+    const track = document.querySelector('#track');
+
+    this.waveform = WaveSurfer.create({
+      barWidth: 3,
+      cursorWidth: 1,
+      container: '#waveform',
+      backend: 'WebAudio',
+      height: 80,
+      progressColor: '#2D5BFF',
+      responsive: true,
+      waveColor: '#EFEFEF',
+      cursorColor: 'transparent',
+    });
+
+    this.waveform.load(track);
+  };
+  
+  handlePlay = () => {
+    this.setState({ playing: !this.state.playing });
+    this.waveform.playPause();
+  };
+  
+  render() {
+    const url = 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3';
+
     return (
+      <div className="WaveformContianer">
+        <button onClick={this.handlePlay} className="PlayButton">
+          {!this.state.playing ? 'Play' : 'Pause'}
+        </button>
+        <div id="waveform" className="Wave"/>
+        <audio id="track" src={url} />
+      </div>
+    );
+  }
+};
 
-        <div>
+export default Waveform;
+
+
+
+
+
+// const TrackComp = () => {
+//     const [rows, setRows]= useState([1])
+//     const handleClickR = index => {
+//         const list = [...rows];
+//         list.splice(index, 1);
+//         setRows(list);
+//     }
+//     const handleClickA = () => {
+//         let last=rows.at(-1)
+//         last=last+1
+//         setRows([...rows, last]);
+//     }
+//     return(
+//         <div>
+//             Yes
+//         {
+//             rows.map((x,i) => {
+//                 return (
+//                     <div id={x} className="flex flex-row mr-2" style={{height:'50%',width:'50%'}}> row
+//                         <div className="rounded bg-gr2" style={{width:'40%'}}>
+//                             Track 1
+//                         </div>
+//                         <div style={{width:'60%'}} className="rounded bg-gr2">
+//                             waveform
+//                         </div>
+//                         <button onClick={()=>handleClickR(i)}>Remove</button>
+                        
+//                     </div>
+//                 )
+//             })
+//         }
+//         <button onClick={()=>handleClickA()}>Add</button>
+//     </div>
+//     )
+// }
+
+// const Test = () => {
+    
+//     return (
+
+//         <div>
             
-            <TrackComp />
-        </div>
+//             <TrackComp />
+//         </div>
 
 
 /* <div>
@@ -118,12 +171,12 @@ const Test = () => {
 
     </view>
 </view>
-</div> */
+</div>
         
     );
-};
+};  */
 
-export default Test;
+// export default Test;
 
 
 

@@ -6,6 +6,12 @@
   font-size: 24px;
 } */
 
+html{
+
+  scrollbar-color: #6969dd #e0e0e0;
+  scrollbar-width: thin;
+}
+
 h2 {
   font-size: 24px;
   color: rgba(160, 157, 157);

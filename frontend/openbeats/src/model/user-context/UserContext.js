@@ -23,7 +23,8 @@ const initialState = {
   sessions:[],
   passcode:"",
   loading: false,
-  error: null
+  error: null,
+  selectedFile: null
 };
 
 const reducer = (state, action) => {
@@ -41,9 +42,13 @@ const reducer = (state, action) => {
         passcode: action.payload
       };
     case "STORE_IMAGE":
-        return {
-          userImage: action.payload
-        };
+      return {
+        userImage: action.payload
+      };
+    case "STORE_AUDIO":
+      return {
+        selectedFile: action.payload
+      };
     case "DEL_CONTACT":
       return {
         contacts: state.contacts.filter(
