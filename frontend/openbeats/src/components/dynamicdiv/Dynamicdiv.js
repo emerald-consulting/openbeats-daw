@@ -14,7 +14,7 @@ const TrackComp = () => {
         setRows([...rows, last]);
     }
     return(
-        <div style={{overflowY:'scroll', position:'relative',height:'350px'}}>
+        <div style={{overflowY:'scroll',height:'370px'}}>
             
         {
             rows.map((x,i) => {
@@ -34,7 +34,7 @@ const TrackComp = () => {
             })
         }
         <button onClick={()=>handleClickA()} className="rounded bg-gr3 p-2 mt-0.5">Add</button>
-    </div>
+        </div>
     )
 }
 

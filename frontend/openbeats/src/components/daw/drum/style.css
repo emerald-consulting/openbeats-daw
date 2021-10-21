@@ -2,9 +2,9 @@
   margin: 0;
 }
 
-body {
+/* body {
   font-size: 24px;
-}
+} */
 
 h2 {
   font-size: 24px;
@@ -13,22 +13,24 @@ h2 {
 
 #drum-machine {
   margin: 0px;
-  height: 30vh;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
+  /* height: 30vh; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* flex-direction: column; */
+  /* justify-content: center; */
 }
 
 .wrapper {
-     max-width: 400px;
-      width: 100%;
+     /* max-width: 400px; */
+      /* width: 40%; */
       display: flex;
       /* background: #111; */
-      margin: 0px;
+      margin-left: 10px;
+      margin-right: 10px;
       padding: 15px;
       border-radius: 5px;
-      box-shadow: 5px 5px 8px 3px rgb(19, 138, 9);
+      box-shadow: 5px 5px 8px 3px ;
+      /* rgb(19, 138, 9) */
 }
 
 .keyboard {
@@ -68,7 +70,7 @@ h2 {
 
 @media(min-width: 768px){
   .wrapper {
-      width: 680px;
+      /* width: 680px; */
   }
 }
 

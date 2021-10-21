@@ -155,6 +155,7 @@ const firstSoundsGroup = [
         step='0.01'
         type="range"
         value={volume}
+        
         onChange={handleVolumeChange}
         />
 
@@ -245,10 +246,10 @@ const firstSoundsGroup = [
 const AppCall = () => {
 
   return (
-    <div>
-      <div className="rounded"> <App /> </div>
+  
+      <div className=""> <App /> </div>
 
-    </div>
+  
   );
 }
 

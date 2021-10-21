@@ -26,7 +26,7 @@ const AppCall = () => {
 
   return (
     <div>
-      <div className="rounded"> <ResponsivePiano /> </div>
+      <div className="rounded" style={{boxShadow:'0px 5px 8px 3px'}}> <ResponsivePiano /> </div>
 
     </div>
   );

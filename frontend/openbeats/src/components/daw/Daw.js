@@ -48,11 +48,11 @@ const PlayerButton = ({ style, children, ...props }) => (
 
 const Daw = () => {
     return (
-        <div className="" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }} >
+        <div className="" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',height:'h-100vh',backgroundRepeat:'no-repeat' }} >
             
-            <div className="flex flex-col h-screen">
+            <div className="flex flex-col">
                 <LogNavbar/>
-                <div className="flex flex-row" style={{height:'60%'}}>
+                <div className="flex flex-row" style={{}}>
                     <div className="  mr-1 flex flex-col " style={{width:'15%'}}>
                         <div className="flex flex-row mb-1">
                             <PlayerIcon.Play className="w-10 ml-5 p-1 mt-1 bg-gr4 rounded"  />
@@ -77,17 +77,17 @@ const Daw = () => {
                     <div className="  mr-1 p-1" style={{width:'65%'}}>
                         <Dynamicdiv/>
                     </div>
-                    <div className="  mb-0.5" style={{width:'20%'}}>
+                    <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
                         <p className="text-2xl rounded p-3 " style={{textAlign:'center'}}>Collaborators</p>
                         <Dynamicdiv/>
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
                 <div className="flex flex-row" style={{}}>
-                    <div className=" mr-1 h-10vh " style={{width:'40%'}}>
+                    <div className="  " style={{width:'40%',whiteSpace:"break-spaces"}}>
                         <Drum/>
                     </div>
-                    <div className=" h-100vh" style={{width:'60%'}}>
+                    <div className="" style={{width:'60%'}}>
                         <Pianoui/>
                     </div>
 
