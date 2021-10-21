@@ -49,7 +49,7 @@ const PlayerButton = ({ style, children, ...props }) => (
 const Daw = () => {
     return (
       // <div><LogNavbar/>
-        <div className="" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',height:'h-screen',backgroundRepeat:'no-repeat' }} >
+        <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
             
             <div className="flex flex-col">
                 <LogNavbar/>

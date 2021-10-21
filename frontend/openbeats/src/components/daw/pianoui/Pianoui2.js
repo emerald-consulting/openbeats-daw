@@ -79,7 +79,7 @@ class AppCall extends React.Component {
   };
 
   onClickPlay = () => {
-    startRecording();
+    //startRecording();
     this.setRecording({
       mode: 'PLAYING',
     });
@@ -108,7 +108,7 @@ class AppCall extends React.Component {
 
     // let blob = new Blob(this.currentEvents, { 'type' : 'audio/webm;codecs=opus' });
     // window.open(URL.createObjectURL(blob));
-    stopRecording();
+    //stopRecording();
   };
 
   onClickStop = () => {

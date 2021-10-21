@@ -9,6 +9,7 @@ class Waveform extends Component {
     playing: false,
     url : 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3'
   };
+  
 
   componentDidMount() {
     const track = document.querySelector("#track"+this.props.id);
@@ -27,10 +28,14 @@ class Waveform extends Component {
 
     this.waveform.load(track);
   };
-  componentDidUpdate() {
-    if(this.props.source) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
+  componentDidUpdate(prevProps) {
+    if(this.props.source != prevProps.source) // Check if it's a new user, you can also use some unique property, like the ID  (this.props.user.id !== prevProps.user.id)
     {
+        this.waveform.destroy()
         const track = document.querySelector("#track"+this.props.id);
+        var blobUrl = URL.createObjectURL(this.props.source)
+        var srcElement = document.getElementsByTagName("audio")[0];
+        srcElement.src=blobUrl
         this.waveform = WaveSurfer.create({
             barWidth: 2,
             cursorWidth: 1,
@@ -43,8 +48,11 @@ class Waveform extends Component {
             cursorColor: 'transparent',
           });
         this.waveform.load(track);
-        this.waveform.load(this.props.source);
+        this.waveform.load(blobUrl);
     }
+  }
+  componentWillUnmount(){
+    this.waveform.destroy()
   } 
   
   handlePlay = () => {
@@ -62,7 +70,7 @@ class Waveform extends Component {
           {!this.state.playing ? '▷' : '||'}
         </button>
         <div id="waveform" className="Wave"/>
-        <audio id={"track"+this.props.id} src={this.props.source ? this.props.source :this.state.url} />
+        <audio id={"track"+this.props.id} src={this.state.url} />
       </div>
     );
   }
