@@ -15,11 +15,11 @@ class Waveform extends Component {
     const track = document.querySelector("#track"+this.props.id);
 
     this.waveform = WaveSurfer.create({
-      barWidth: 2,
+    //   barWidth: 2,
       cursorWidth: 1,
       container: '#waveform',
       backend: 'WebAudio',
-      height: 80,
+      height: 55,
       progressColor: '#2D5BFF',
       responsive: true,
       waveColor: '#EFEFEF',
@@ -37,18 +37,18 @@ class Waveform extends Component {
         var srcElement = document.getElementsByTagName("audio")[0];
         srcElement.src=blobUrl
         this.waveform = WaveSurfer.create({
-            barWidth: 2,
+            // barWidth: 0.5,
             cursorWidth: 1,
             container: '#waveform',
             backend: 'WebAudio',
-            height: 80,
+            height: 55,
             progressColor: '#2D5BFF',
             responsive: true,
             waveColor: '#EFEFEF',
             cursorColor: 'transparent',
           });
         this.waveform.load(track);
-        this.waveform.load(blobUrl);
+        // this.waveform.load(blobUrl);
     }
   }
   componentWillUnmount(){

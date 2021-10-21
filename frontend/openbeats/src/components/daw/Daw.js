@@ -54,29 +54,13 @@ const Daw = () => {
             <div className="flex flex-col">
                 <LogNavbar/>
                 <div className="flex flex-row" style={{}}>
-                    <div className="  mr-1 flex flex-col " style={{width:'15%'}}>
-                        <div className="flex flex-row mb-1">
-                            <PlayerIcon.Play className="w-10 ml-5 p-1 mt-1 bg-gr4 rounded"  />
-                            <PlayerIcon.Pause className="w-10 ml-1 p-1 mt-1 rounded bg-gr4"/>
-                            <PlayerIcon.Previous className="w-10 ml-1 mt-1 p-1 rounded bg-gr4"/>
-                            <PlayerIcon.Next className="w-10 ml-1 mt-1 p-1 rounded bg-gr4"/>
-                        </div>
+                    <div className="flex flex-col" style={{width:'80%',height:'100%'}}>
                         <div className="flex flex-row">
-                            
-                            <PlayerIcon.SoundOn className="w-10 ml-16 p-1 rounded bg-gr4"/>
-                            <PlayerIcon.SoundOff className="w-10 ml-1 p-1 rounded bg-gr4"/>
-                            {/* <PlayerIcon.Stop/> */}
+                            {/*           empty      buttons upload         */}
                         </div>
                         <div>
-                            <RecordView/>
+                          <Dynamicdiv/>
                         </div>
-
-                        <div className="p-5" style={{whiteSpace:"break-spaces", wordWrap:'break-word'}}>
-                            <Fileupload/>
-                        </div>
-                    </div>
-                    <div className="  mr-1 p-1" style={{width:'65%'}}>
-                        <Dynamicdiv />
                     </div>
                     <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
                         <p className="text-2xl rounded p-3 " style={{textAlign:'center'}}>Collaborators</p>
@@ -100,3 +84,39 @@ const Daw = () => {
 }
 
 export default Daw
+
+
+/*
+
+                <div className="flex flex-row" style={{}}>
+                    <div className="  mr-1 flex flex-col " style={{width:'15%'}}>
+                        <div className="flex flex-row mb-1">
+                            <PlayerIcon.Play className="w-10 ml-5 p-1 mt-1 bg-gr4 rounded"  />
+                            <PlayerIcon.Pause className="w-10 ml-1 p-1 mt-1 rounded bg-gr4"/>
+                            <PlayerIcon.Previous className="w-10 ml-1 mt-1 p-1 rounded bg-gr4"/>
+                            <PlayerIcon.Next className="w-10 ml-1 mt-1 p-1 rounded bg-gr4"/>
+                        </div>
+                        <div className="flex flex-row">
+                            
+                            <PlayerIcon.SoundOn className="w-10 ml-16 p-1 rounded bg-gr4"/>
+                            <PlayerIcon.SoundOff className="w-10 ml-1 p-1 rounded bg-gr4"/>
+                            {/* <PlayerIcon.Stop/> */
+                    //         </div>
+                    //         <div>
+                    //             <RecordView/>
+                    //         </div>
+    
+                    //         <div className="p-5" style={{whiteSpace:"break-spaces", wordWrap:'break-word'}}>
+                    //             <Fileupload/>
+                    //         </div>
+                    //     </div>
+                    //     <div className="  mr-1 p-1" style={{width:'65%'}}>
+                    //         <Dynamicdiv />
+                    //     </div>
+                    //     <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
+                    //         <p className="text-2xl rounded p-3 " style={{textAlign:'center'}}>Collaborators</p>
+                    //         {/* <Dynamicdiv/> */}
+                    //     </div>
+                    // </div>
+
+
