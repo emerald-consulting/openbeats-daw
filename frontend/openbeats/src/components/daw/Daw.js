@@ -1,6 +1,6 @@
 import React from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
-import Pianoui from './pianoui/Pianoui'
+import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
 import Fileupload from './Fileupload'
 import Dynamicdiv from '../dynamicdiv/Dynamicdiv'
@@ -88,8 +88,8 @@ const Daw = () => {
                     <div className="  " style={{width:'40%',whiteSpace:"break-spaces"}}>
                         <Drum/>
                     </div>
-                    <div className="" style={{width:'60%'}}>
-                        <Pianoui/>
+                    <div className=" h-100vh" style={{width:'60%'}}>
+                        <Pianoui2/>
                     </div>
 
                 </div>

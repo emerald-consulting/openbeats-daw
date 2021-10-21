@@ -32,9 +32,10 @@ const Dashboard = () => {
     
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
-    axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getImage?email="+state.user.emailId,{headers: {
-      'Accept': 'MediaType.IMAGE_JPEG',
-      'Content-Type': 'application/json',
+    axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getImage?email="+state.user.emailId,{ responseType: 'blob' },{headers: {
+      //'Accept': 'MediaType.IMAGE_JPEG',
+      //'Accept': 'application/json',
+      //'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
@@ -48,7 +49,7 @@ const Dashboard = () => {
       //   setProfilePic(response.data)
       // }
       if(response){
-        setProfilePic(response)
+        setProfilePic(response.data[0])
       }
     });
   }
@@ -90,6 +91,12 @@ const Dashboard = () => {
   }});
   };
 
+  const imgSrc = () =>{
+    return(
+      profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'
+    )
+  }
+
   
               
 
@@ -102,7 +109,7 @@ const Dashboard = () => {
           <div className=" py-20 pl-20 pr-20 rounded-md">
             <div className="flex flex-col">
               <div className="p-2 m-1 bg-gr2 rounded " style={{borderRadius: '50%'}}>
-                <img style={{borderRadius: '50%'}} src="https://cdn-icons-png.flaticon.com/256/149/149071.png"/>
+                <img style={{borderRadius: '50%'}} src={imgSrc()}/>
                 
               </div>
               <div><input className="text-xs " style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
