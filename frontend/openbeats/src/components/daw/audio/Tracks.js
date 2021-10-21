@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 
 import Grid from "@material-ui/core/Grid";
-
-
+import IconButton from "@material-ui/core/IconButton";
+import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
 import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
 import Fileupload from "../Fileupload";
@@ -29,6 +29,14 @@ function Tracks() {
     setFiles([...files, file]);
   };
 
+  const remove = index => {
+    if (index !== -1) {
+      setFiles(files.filter(function(file) { 
+        return file !== files[index]
+      }));
+    }
+  }
+
   return (
     <div style={divStyle}>
       {/* <NavBar /> */}
@@ -45,6 +53,7 @@ function Tracks() {
         {files.map((file, index) => (
           <Grid key={index} item>
             <AudioPlayer file={file} />
+            <IconButton onClick={()=>remove(index)} className="float-right"><CancelIcon /></IconButton>
           </Grid>
         ))}
       </Grid>

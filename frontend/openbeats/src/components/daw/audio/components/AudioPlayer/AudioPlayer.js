@@ -92,7 +92,8 @@ function AudioPlayer({ file }) {
       fillParent: true
     });
 
-    const wav = require("../../static/12346 3203.ogg");
+    // const wav = require("../../static/12346 3203.ogg");
+    const wav = require("../../../../song1.mp3");
 
     // console.log("wav", wav);
     wavesurfer.current.load(wav);
