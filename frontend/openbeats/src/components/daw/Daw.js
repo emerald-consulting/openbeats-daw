@@ -7,6 +7,7 @@ import Dynamicdiv from '../dynamicdiv/Dynamicdiv'
 import { Button, PlayerIcon } from 'react-player-controls'
 import bgimg from '../bg.jpg'
 import { useReactMediaRecorder } from "react-media-recorder";
+import Tracks from './audio/Tracks'
 
 const RecordView = () => {
     const {
@@ -53,13 +54,14 @@ const Daw = () => {
             
             <div className="flex flex-col">
                 <LogNavbar/>
-                <div className="flex flex-row" style={{}}>
+                <div className="flex flex-row " style={{}}>
                     <div className="flex flex-col" style={{width:'80%',height:'100%'}}>
                         <div className="flex flex-row">
                             {/*           empty      buttons upload         */}
                         </div>
                         <div>
-                          <Dynamicdiv/>
+                          {/* <Dynamicdiv/> */}
+                          <Tracks />
                         </div>
                     </div>
                     <div className="  mb-0.5" style={{width:'20%',height:'100%'}}>
