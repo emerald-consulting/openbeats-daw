@@ -1,6 +1,7 @@
 package com.openbeats.openbeatsdaw.config;
 
 import com.openbeats.openbeatsdaw.Service.CustomOAuth2UserService;
+import com.openbeats.openbeatsdaw.Service.FormLoginSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.OAuth2AuthenticationSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,6 +50,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+
+    @Autowired
+    private FormLoginSuccessHandler formLoginSuccessHandler;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -79,7 +86,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/verify").permitAll()
                 .antMatchers("/").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
-                .and().formLogin() // enable form based login
+                .and().formLogin().successHandler(formLoginSuccessHandler) // enable form based login
                 .loginPage("/login")
                 .and().logout()
                 .and().oauth2Login()
@@ -121,11 +128,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         if(client.equals("spotify"))
             return ClientRegistration
                     .withRegistrationId("spotify")
-                    .clientId("dcacba0fd9fe4b10886bff0215a2d94a")
-                    .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
+                    .clientId("d14ff7077fca49aab5c6040e37368518")
+                    .clientSecret("dd77b05c0532424c968a678e7d09f6e4")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
+                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")

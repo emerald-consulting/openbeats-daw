@@ -33,7 +33,7 @@ const Login = () => {
           });
         
 
-      axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
+      axios.get("http://localhost:8655/userlogin?emailId="+email,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -132,7 +132,7 @@ const Login = () => {
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
               <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-blue-400'><a href="http://openbeats-daw.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
+              <div className='p-4 hover:text-blue-400'><a href="http://localhost:8655/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>
