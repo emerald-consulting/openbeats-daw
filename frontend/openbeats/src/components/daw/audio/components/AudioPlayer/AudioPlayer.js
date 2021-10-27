@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { uuid } from "uuidv4";
 
@@ -23,6 +23,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import { UserContext } from "../../../../../model/user-context/UserContext";
 
 const faces = [
   "http://i.pravatar.cc/300?img=1",
@@ -71,8 +72,9 @@ const useStyles = makeStyles(theme => ({
 avatar username ostalo layout sa grid
 
 */
-function AudioPlayer({ file }) {
+function AudioPlayer({ file, playTrack, stopPlaying }) {
   const wavesurfer = useRef(null);
+  const [state, dispatch] = useContext(UserContext);
 
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -124,6 +126,21 @@ function AudioPlayer({ file }) {
     }
   }, [file]);
 
+  useEffect(() => {
+    console.log("playTrack", playTrack);
+    if (playTrack) {
+      wavesurfer.current.play();
+    } else {
+      wavesurfer.current.pause();
+    }
+  }, [playTrack]);
+
+  
+  useEffect(() => {
+    console.log("stopPlaying", stopPlaying);
+    wavesurfer.current.stop();
+  }, [stopPlaying]);
+
   const togglePlayback = () => {
     if (!isPlaying) {
       wavesurfer.current.play();
@@ -163,7 +180,7 @@ function AudioPlayer({ file }) {
                   <Avatar className={classes.avatar}  />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Username"
+                  primary={state.user.firstName}
                   // secondary="@username · 11h ago"
                 />
               </ListItem>
