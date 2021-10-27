@@ -11,8 +11,6 @@ import audioFile_B from './RP4_KICK_1.mp3'
 import audioFile_M from './side_stick_1.mp3'
 import audioFile_comma from './Heater-6.mp3'
 import audioFile_dot from './Give_us_a_light.mp3'
-import audioFile2 from './side_stick_1.mp3'
-import audioFile3 from './song1.mp3'
 const keysPressed=new Array();
 var soundsPLayed=new Array();
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
