@@ -27,6 +27,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setSubject(email)
+                .setIssuer("FormLogin")
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("tokenSecret"))
@@ -41,6 +42,7 @@ public class TokenProvider {
 
         return Jwts.builder()
                 .setSubject(userPrincipal.getEmail())
+                .setIssuer("Oauth")
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("tokenSecret"))
@@ -54,6 +56,15 @@ public class TokenProvider {
                 .getBody();
 
         return claims.getSubject();
+    }
+
+    public String getIssuer(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(env.getProperty("tokenSecret"))
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getIssuer();
     }
 
     public Long getUserIdFromToken(String token) {

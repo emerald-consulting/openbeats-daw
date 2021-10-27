@@ -50,9 +50,9 @@ const Login = () => {
                 // setMessage(response.data.message)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
-                axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
+                axios.get("http://localhost:8655/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic '+ encodedString
+                    'Authorization': 'Bearer '+ response.data.data
             }}).then((response1) => {
                 if(response1.data.status==207){
                     setError(response1.data.message);

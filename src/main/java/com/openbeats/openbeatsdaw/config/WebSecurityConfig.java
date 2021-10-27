@@ -4,6 +4,7 @@ import com.openbeats.openbeatsdaw.Service.CustomOAuth2UserService;
 import com.openbeats.openbeatsdaw.Service.FormLoginSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.OAuth2AuthenticationSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
+import com.openbeats.openbeatsdaw.Utils.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,6 +56,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private FormLoginSuccessHandler formLoginSuccessHandler;
 
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -94,6 +98,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userService(customOAuth2UserService)
                 .and().successHandler(oAuth2AuthenticationSuccessHandler)
                 .and().csrf().disable();
+
+        http.addFilterBefore(
+                jwtTokenFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
 
     }
 
