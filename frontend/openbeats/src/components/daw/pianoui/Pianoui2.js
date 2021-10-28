@@ -2,7 +2,7 @@ import React from 'react';
 import _ from 'lodash';
 import { Piano, KeyboardShortcuts, MidiNumbers } from 'react-piano';
 import 'react-piano/dist/styles.css';
-import Recorder from 'recorder-js';
+// import Recorder from 'recorder-js';
 
 import DimensionsProvider from './DimensionsProvider';
 import SoundfontProvider from './SoundfontProvider';
@@ -11,30 +11,30 @@ import PianoWithRecording from './PianoWithRecording';
 // webkitAudioContext fallback needed to support Safari
 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-const recorder = new Recorder(audioContext);
-let isRecording = false;
-let blob = null;
-navigator.mediaDevices.getUserMedia({audio: true})
-  .then(stream => recorder.init(stream))
-  .catch(err => console.log('Uh oh... unable to get stream...', err));
+// const recorder = new Recorder(audioContext);
+// let isRecording = false;
+// let blob = null;
+// navigator.mediaDevices.getUserMedia({audio: true})
+//   .then(stream => recorder.init(stream))
+//   .catch(err => console.log('Uh oh... unable to get stream...', err));
  
-function startRecording() {
-  recorder.start()
-    .then(() => isRecording = true);
-}
+// function startRecording() {
+//   recorder.start()
+//     .then(() => isRecording = true);
+// }
  
-function stopRecording() {
-  recorder.stop()
-    .then(({blob, buffer}) => {
-      blob = blob;
+// function stopRecording() {
+//   recorder.stop()
+//     .then(({blob, buffer}) => {
+//       blob = blob;
  
-      // buffer is an AudioBuffer
-    });
-}
+//       // buffer is an AudioBuffer
+//     });
+// }
  
-function download() {
-  Recorder.download(blob, 'my-audio-file'); // downloads a .wav file
-}
+// function download() {
+//   Recorder.download(blob, 'my-audio-file'); // downloads a .wav file
+// }
 
 const soundfontHostname = 'https://d1pzp51pvbm36p.cloudfront.net';
 const noteRange = {
@@ -141,10 +141,10 @@ class AppCall extends React.Component {
       <div className="flex flex-col">
       <div className="flex flex-row" style={{height:'100%'}} >
           <div className="mt-5 flex flex-col pr-2">
-            <button className="rounded bg-gr4 p-1 mb-1" onClick={this.onClickPlay}>Play</button>
+            {/* <button className="rounded bg-gr4 p-1 mb-1" onClick={this.onClickPlay}>Play</button>
             <button className="rounded bg-gr4 p-1 mb-1"  onClick={this.onClickStop}>Stop</button>
             <button className="rounded bg-gr4 p-1 mb-1"  onClick={this.onClickClear}>Clear</button>
-            <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button>
+            <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button> */}
           </div>
           <div className="" style={{width:'100%'}}  >
             <SoundfontProvider 
@@ -168,7 +168,7 @@ class AppCall extends React.Component {
  
         
       </div>
-      {this.state.recording.events[0]?this.recordedNotes():""}
+      {/* {this.state.recording.events[0]?this.recordedNotes():""} */}
       {/* <div className="mt-5 text-xs bg-gr4">
           <p>Recorded notes</p>
           <div>{JSON.stringify(this.state.recording.events)}</div>

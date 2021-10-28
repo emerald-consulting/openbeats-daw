@@ -130,6 +130,8 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     if (file) {
       if (file.blobURL){
         wavesurfer.current.load(file.blobURL);
+      }  else if(file.blob){
+        wavesurfer.current.loadBlob(file.blob);
       } else {
         wavesurfer.current.load(file);
       }
