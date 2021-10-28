@@ -9,50 +9,91 @@ import WaveSurfer from 'wavesurfer.js';
 
 import './Waveform.css';
 
-class Waveform extends Component {  
-  state = {
-    playing: false,
-  };
+// import React from "react";
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+// import ReactAudioPlayer from '../src/index.tsx';
 
-  componentDidMount() {
-    const track = document.querySelector('#track');
+// describe('ReactAudioPlayer', function() {
+//   const song = './fixtures/turkish_march.ogg';
+//   test('renders an audio element', function() {
+//     const instance = ReactTestUtils.renderIntoDocument(
+//       // <ReactAudioPlayer />
+//     );
+//     const instanceEl = ReactDOM.findDOMNode(instance);
+//     expect(instanceEl.tagName).toBe('AUDIO');
+//   });
+//   test('sets the loop attribute if provided', function() {
+//     const instance = ReactTestUtils.renderIntoDocument(
+//       // <ReactAudioPlayer  src={song}  loop   />
+//     );
+//     const instanceEl = ReactDOM.findDOMNode(instance);
+//     expect(instanceEl.getAttribute('loop')).not.toBe(null);
+//   })
+//   test('sets title', function() {
+//     const instance = ReactTestUtils.renderIntoDocument(
+//       // <ReactAudioPlayer src={song} title="Turkish march"      />
+//     );
+//     const instanceEl = ReactDOM.findDOMNode(instance);
+//     expect(instanceEl.getAttribute("title")).toBe("Turkish march");
+//   })
+//   test('receives all custom props', function() {
+//     const instance = ReactTestUtils.renderIntoDocument(
+//       // <ReactAudioPlayer src={song} name="custom-name" data-id="custom-data"    controlsList="nodownload" />
+//     );
+//     const props = Object.keys(instance.props);
+//     expect(props).toContain('name');
+//     expect(props).toContain('data-id');
+//     expect(props).toContain('controlsList');
+//   });
+// });
+const Test1 = () => <div></div>
+export default Test1
 
-    this.waveform = WaveSurfer.create({
-      barWidth: 3,
-      cursorWidth: 1,
-      container: '#waveform',
-      backend: 'WebAudio',
-      height: 80,
-      progressColor: '#2D5BFF',
-      responsive: true,
-      waveColor: '#EFEFEF',
-      cursorColor: 'transparent',
-    });
+// class Waveform extends Component {  
+//   state = {
+//     playing: false,
+//   };
 
-    this.waveform.load(track);
-  };
+//   componentDidMount() {
+//     const track = document.querySelector('#track');
+
+//     this.waveform = WaveSurfer.create({
+//       barWidth: 3,
+//       cursorWidth: 1,
+//       container: '#waveform',
+//       backend: 'WebAudio',
+//       height: 80,
+//       progressColor: '#2D5BFF',
+//       responsive: true,
+//       waveColor: '#EFEFEF',
+//       cursorColor: 'transparent',
+//     });
+
+//     this.waveform.load(track);
+//   };
   
-  handlePlay = () => {
-    this.setState({ playing: !this.state.playing });
-    this.waveform.playPause();
-  };
+//   handlePlay = () => {
+//     this.setState({ playing: !this.state.playing });
+//     this.waveform.playPause();
+//   };
   
-  render() {
-    const url = 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3';
+//   render() {
+//     const url = 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3';
 
-    return (
-      <div className="WaveformContianer">
-        <button onClick={this.handlePlay} className="PlayButton">
-          {!this.state.playing ? 'Play' : 'Pause'}
-        </button>
-        <div id="waveform" className="Wave"/>
-        <audio id="track" src={url} />
-      </div>
-    );
-  }
-};
+//     return (
+//       <div className="WaveformContianer">
+//         <button onClick={this.handlePlay} className="PlayButton">
+//           {!this.state.playing ? 'Play' : 'Pause'}
+//         </button>
+//         <div id="waveform" className="Wave"/>
+//         <audio id="track" src={url} />
+//       </div>
+//     );
+//   }
+// };
 
-export default Waveform;
+// export default Waveform;
 
 
 

@@ -16,7 +16,7 @@ class Waveform extends Component {
 
     this.waveform = WaveSurfer.create({
     //   barWidth: 2,
-      cursorWidth: 1,
+      cursorWidth: 3,
       container: '#waveform'+this.props.id,
       backend: 'WebAudio',
       height: 40,

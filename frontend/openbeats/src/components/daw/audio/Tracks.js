@@ -135,31 +135,30 @@ function Tracks() {
     <div style={divStyle}>
       {/* <NavBar /> */}
       <div className="flex flex-row box border">
-        <Microphone style={{}} pushFile={pushFile} />
+        <Microphone style={{}} pushFile={pushFile} spy={true} smooth={true} />
         <div className="p-5 ml-0.5 bg-gr4 hover:bg-gr3">
             <label for={"file-upload"} className=" cursor-pointer">
                 File +</label> 
             <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
         </div>
-        <Fileupload />
-        <Checkbox
-          checked={selected.every(Boolean)}
-          onChange={toggleSelectAll}
-        /> <p className="mt-5">Select All</p>
+        <Fileupload spy={true} smooth={true}/>
+        <Checkbox checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
+        <p className="mt-5">Select All</p>
         {transportPlayButton}
         <IconButton onClick={stopPlayTracks}>
-          <StopIcon />
+          <StopIcon spy={true} smooth={true} capsule='true' />
         </IconButton>
       </div>                 
       <Grid container direction="column" spacing={1}>
         {files.map((file, index) => (
-          <Grid key={index} item>
-            <Checkbox
-              checked={selected[index]}
-              onChange={(e)=>toggleSelectOne(e,index)}
-            /> 
-            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying}/>
-            <IconButton onClick={()=>remove(index) } style={{marginTop: '-60px', position:'relative'}} className="float-right"><CancelIcon /></IconButton>
+          <Grid key={index} item >
+            <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
+            
+            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} />
+            
+            <IconButton onClick={()=>remove(index) } style={{marginTop: '-60px', position:'relative'}} className="float-right">
+              <CancelIcon />
+            </IconButton>
           </Grid>
         ))}
       </Grid>
