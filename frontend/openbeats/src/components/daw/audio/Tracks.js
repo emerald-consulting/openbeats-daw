@@ -10,6 +10,7 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
+import SocketRecord from "../socket/SocketRecord";
 
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'
 
@@ -148,6 +149,7 @@ function Tracks() {
         <IconButton onClick={stopPlayTracks}>
           <StopIcon spy={true} smooth={true} capsule='true' />
         </IconButton>
+        <SocketRecord />
       </div>                 
       <Grid container direction="column" spacing={1}>
         {files.map((file, index) => (
