@@ -72,7 +72,7 @@ const Fileupload = () => {
         <div  className="">
             <div justify="right">
               <input className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-                <button onClick={onFileUpload}  className=" bg-gr4 p-5 ml-0.5 " >
+                <button onClick={onFileUpload}  className=" bg-gr2 p-4 text-xl ml-0.5 rounded-full hover:bg-gr3 " >
                   <p className="text">Upload!</p>
                 </button>
             </div>

@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
     height:'20',
     // minWidth: 240,
     // background:'#68BC76',
-    background: 'red',
+    background: '#444447',
     margin: "auto",
     transition: "0.3s",
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
@@ -186,7 +186,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
   return (
     <>
       <Card className={classes.card }>
-      <input  step='0.01' type="range" color="green" value={volume} 
+      <input className="no-border color-green" step='0.01' type="range" color="green" value={volume} 
         onChange={handleVolumeChange} min='0' max='1'/>
         <Grid container   direction="column" >
           <Grid item>
