@@ -303,7 +303,7 @@ const SocketRecord = () =>{
                     <div className="p-5 ml-0.5 bg-gr2 rounded-full  text-xl hover:bg-gr3">
                         <a id="start" href="#" className="btn btn-success"
                            onClick={()=>start()}><span
-                            className="glyphicon glyphicon-play"></span> Start Recording</a>
+                            className="glyphicon glyphicon-play"></span> Record Session</a>
                     </div>
                     <div className="p-5 ml-0.5 bg-gr2 rounded-full text-xl  hover:bg-gr3">
                         <a

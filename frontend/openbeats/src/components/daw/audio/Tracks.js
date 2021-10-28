@@ -72,12 +72,12 @@ const divStyle = {
 //
 
 function Tracks() {
-  const [files, setFiles] = useState([null]);
+  const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [playTracks, setPlayTracks] = useState([false]);
+  const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [stopPlaying, setStopPlaying] = useState(0);
-  const [selected, setSelected] = useState([false]);
+  const [selected, setSelected] = useState([]);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
     
   const onFileChange = event => {
@@ -332,7 +332,7 @@ if(recording==false){
         </div>
         <div>
           <button onClick={handleRecord} className=" p-4 ml-0.5 pt-5 rounded-full ml-0.5 text-xl bg-gr2 hover:bg-gr3">
-            {!changeRecordLabel ? 'Record' : 'Stop Recording'}
+            {!changeRecordLabel ? 'Record Instrument' : 'Stop Recording'}
           </button>
         </div>
         <SocketRecord />

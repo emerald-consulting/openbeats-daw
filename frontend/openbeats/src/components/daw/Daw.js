@@ -56,7 +56,7 @@ const Daw = () => {
         <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
             
             <div className="flex flex-col">
-                <LogNavbar/>
+                <LogNavbar className="mb-0.5"/>
                 <div className="flex flex-row" style={{}}>
                     <div className="flex flex-col" style={{width:'85%',height:'100%'}}>
                         <div className="flex flex-row">
