@@ -55,7 +55,7 @@ dependencies {
     implementation group: 'com.amazonaws', name: 'aws-java-sdk', version: '1.12.65'
 
     // Kurento media server
-    implementation group: 'org.springframework', name: 'spring-websocket', version: '5.3.11'
+    /*implementation group: 'org.springframework', name: 'spring-websocket', version: '5.3.11'
     implementation group: 'org.webjars', name: 'webjars-locator', version: '0.42'
     implementation group: 'org.webjars.bower', name: 'jquery', version: '3.6.0'
     implementation group: 'org.webjars.bower', name: 'bootstrap', version: '4.6.0'
@@ -63,7 +63,7 @@ dependencies {
     implementation group: 'org.webjars.bower', name: 'ekko-lightbox', version: '5.2.0'
     implementation group: 'org.webjars.bower', name: 'webrtc-adapter', version: '7.4.0'
     implementation group: 'org.kurento', name: 'kurento-client', version: '6.16.1'
-    implementation group: 'org.kurento', name: 'kurento-utils-js', version: '6.15.0'
+    implementation group: 'org.kurento', name: 'kurento-utils-js', version: '6.15.0'*/
 
     implementation 'org.springframework.boot:spring-boot-configuration-processor:2.5.4'
 }
