@@ -66,9 +66,11 @@ const Daw = () => {
                           {/* <Dynamicdiv/> */}
                           <Tracks />
                         </div>
+
                     </div>
-                    <div className="  mb-0.5" style={{width:'15%',height:'100%'}}>
-                        <p className="text-2xl rounded-full p-4 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
+
+                    <div className="  mb-0.5" style={{width:'15%'}}>
+                        <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {<GroupCall emailId={state.user.emailId}/>}
                     </div>

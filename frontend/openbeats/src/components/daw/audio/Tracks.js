@@ -306,39 +306,45 @@ if(recording==false){
     <div style={divStyle}>
       {/* <NavBar /> */}
       <div className="flex flex-row ">
-        <div className=" rounded-full bg-gr2 hover:bg-gr3">
-          <Microphone style={{}}  pushFile={pushFile} spy={true} smooth={true} />
-          </div>
-        <div className="p-2 ml-0.5 text-xl pt-4 rounded-full bg-gr2 hover:bg-gr3">
+        <div className="  bg-gr2 hover:bg-gr3">
+          <Microphone style={{}}  pushFile={pushFile} />
+        </div>
+        <div className="p-2 ml-0.5  pt-4  bg-gr2 hover:bg-gr3">
             <label for={"file-upload"} className=" cursor-pointer">
                 File+</label> 
             <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
         </div>
-        <Fileupload spy={true} smooth={true}/>
-        <div className="text-xl p-2 ml-0.5 flex  flex-row rounded-full bg-gr2 hover:bg-gr3">
+        <Fileupload/>
+        <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
           <Checkbox checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
           <p className="pt-2 pr-1" >Select All</p>
         </div>
-        <div className="rounded-full ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
-        <div className="rounded-full ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+        <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
+        <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
           <IconButton  onClick={stopPlayTracks}>
             <StopIcon  smooth={true}  />
           </IconButton>
         </div>
 
-        <div className="bg-gr2 p-4 ml-0.5 pt-5 rounded-full hover:bg-gr3" style={{width:'20%'}}>
+        {/* <div className="bg-gr2 p-4 ml-0.5 pt-5  hover:bg-gr3" style={{width:'20%'}}>
           <input   step='0.01' type="range" color="green" 
           min='0' max='1'/>
-        </div>
-        <div>
-          <button onClick={handleRecord} className=" p-4 ml-0.5 pt-5 rounded-full ml-0.5 text-xl bg-gr2 hover:bg-gr3">
+        </div> */}
+        <div >
+          <button onClick={handleRecord} 
+            style={{height:'100%'}}
+            className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
             {!changeRecordLabel ? 'Record Instrument' : 'Stop Recording'}
+            
           </button>
         </div>
         <SocketRecord />
         
-      </div>                 
-      <Grid container direction="column" spacing={1}>
+      </div>    
+      <div className=" p-2 ml-0.5 pt-2 " style={{width:'100%'}}>
+        <input   step='0.01' type="range"   min='0' max='1' style={{width:'100%'}}/>
+      </div>             
+      <Grid container direction="column" spacing={1} >
         {files.map((file, index) => (
           <Grid key={index} item >
             <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
