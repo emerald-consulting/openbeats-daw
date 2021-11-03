@@ -1,5 +1,8 @@
 package com.openbeats.openbeatsdaw.config;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.springframework.context.annotation.Bean;
@@ -11,9 +14,14 @@ public class AWSStorageConfig {
 
 
     @Bean
-    @Scope("singleton")
-    public AmazonS3 s3Client(){
-        return AmazonS3ClientBuilder.defaultClient();
-    }
+    public AmazonS3 s3() {
+        AWSCredentials awsCredentials =
+                new BasicAWSCredentials("AKIAXR6ZFUBSQWYWPMYE", "tQtnTWEI9QBRBZZ8Uv1vDCyc96EVkJyPKC9fZIhb");
+        return AmazonS3ClientBuilder
+                .standard()
+                .withRegion("us-east-2")
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
 
+    }
 }

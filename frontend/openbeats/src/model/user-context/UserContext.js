@@ -12,6 +12,7 @@ const initialState = {
     "preferredName":"testName",
     "emailId":"nidic54688@proxiesblog.com",
     "subscriptionType":"free",
+    "drumOutput": null,
     "emailVerified":true,
     "authorities":null,
     "enabled":true,
@@ -49,6 +50,10 @@ const reducer = (state, action) => {
       return {
         selectedFile: action.payload
       };
+      case "STORE_DRUM_AUDIO":
+            return {
+              drumOutput: action.payload
+            };
     case "DEL_CONTACT":
       return {
         contacts: state.contacts.filter(

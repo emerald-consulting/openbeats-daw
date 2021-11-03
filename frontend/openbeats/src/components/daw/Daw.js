@@ -11,6 +11,7 @@ import Tracks from './audio/Tracks'
 import GroupCall from './socket/GroupCall'
 import {UserContext} from "../../model/user-context/UserContext";
 
+
 const RecordView = () => {
     const {
       status,
@@ -49,6 +50,14 @@ const PlayerButton = ({ style, children, ...props }) => (
     </Button>
   )
 
+const handleCallback = (childData) =>{
+    this.setState({msg: childData})
+}
+
+
+
+
+
 const Daw = () => {
     const [state, dispatch] = useContext(UserContext);
     return (
@@ -81,7 +90,6 @@ const Daw = () => {
                     <div className="" style={{width:'70%'}}>
                         <Pianoui2/>
                     </div>
-
                 </div>
             </div>
         </div>

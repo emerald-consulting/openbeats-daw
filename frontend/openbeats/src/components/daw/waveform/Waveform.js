@@ -7,6 +7,7 @@ import './Waveform.css';
 class Waveform extends Component {  
   state = {
     playing: false,
+    recording : false,
     url : 'https://www.mfiles.co.uk/mp3-downloads/gs-cd-track2.mp3'
   };
   
@@ -53,11 +54,29 @@ class Waveform extends Component {
   }
   componentWillUnmount(){
     this.waveform.destroy()
-  } 
+  }
+     KeyboardKey = ({ play, deactivateAudio, sound: { id, key, url, keyCode } }) => {
+      const handleKeydown = (e) => {
+        if(keyCode === e.keyCode) {
+          const audio = document.getElementById(key);
+          console.log("yes");
+          console.log(audio);
+
+        }
+      }
+    }
   
   handlePlay = () => {
     this.setState({ playing: !this.state.playing });
     this.waveform.playPause();
+  };
+
+
+  handleRecord = () => {
+    this.setState({ playing: !this.state.recording });
+    if(this.state.recording==true){
+
+    }
   };
 
   // getSource = () => this.props.source ? this.props.source :this.state.url;
@@ -68,6 +87,9 @@ class Waveform extends Component {
       <div className="WaveformContianer">
         <button onClick={this.handlePlay} className="PlayButton">
           {!this.state.playing ? '▷' : '||'}
+        </button>
+        <button onClick={this.handleRecord} className="Record">
+          {!this.state.recording ? 'Record' : 'Stop Recording'}
         </button>
         <div id={"waveform"+this.props.id} className="Wave"/>
         <audio id={"track"+this.props.id} src={this.state.url} />

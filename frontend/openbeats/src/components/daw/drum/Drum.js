@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom'
-import React from 'react';
+import React,{ useState, useContext } from 'react';
 import './style.css';
 import Crunker from 'crunker'
 import audioFile_N from './Brk_Snr.mp3'
@@ -11,6 +11,9 @@ import audioFile_B from './RP4_KICK_1.mp3'
 import audioFile_M from './side_stick_1.mp3'
 import audioFile_comma from './Heater-6.mp3'
 import audioFile_dot from './Give_us_a_light.mp3'
+import UserContextProvider, { UserContext } from "../../../model/user-context/UserContext";
+import axios from "axios"
+
 const keysPressed=new Array();
 var soundsPLayed=new Array();
 var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -174,6 +177,7 @@ const firstSoundsGroup = [
   );
 
   const App = () => {
+    const [state, dispatch] = useContext(UserContext);
     const [power, setPower] = React.useState(true);
     const [volume, setVolume] = React.useState(1);
     const [soundName, setSoundName] = React.useState("");
@@ -302,8 +306,57 @@ crunker
         let crunker = new Crunker();
         console.log("this is aduio");
           console.log(initBuffer);
-var ds=        crunker.export(initBuffer, "audio/mp3");
-crunker.download(ds.blob);
+var ds= crunker.export(initBuffer, "audio/mp3");
+
+   const formData = new FormData();
+
+    // Update the formData object
+    // formData.append(
+    //   "myFile",
+    //   selectedFile,
+    //   selectedFile.name
+    // );
+      const file = new File([ds.blob], 'audio.mp3');
+
+    formData.append(
+      'file',file
+    );
+
+    formData.append(
+      'bucket','myawsbucket-3'
+    );
+    let bucketname="myawsbucket-1"
+    formData.append(
+      'email',state.user.emailId
+    );
+
+    // Details of the uploaded file
+//    console.log(selectedFile);
+
+    // Request made to the backend api
+    // Send formData object
+    let encodeString = 'c@gmail.com:test';
+    const encodedString = Buffer.from(encodeString).toString('base64');
+
+    axios.post("http://localhost:8655/upload", formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+
+  }});
+//var file = new File(ds.blob, "foo.mp3", {
+//  type: "audio/mp3",
+//});
+//
+//console.log(file);
+//crunker.download(ds.blob);
+//console.log(ds);
+//        dispatch({
+//            type: "STORE_DRUM_AUDIO",
+//            payload: ds
+//          });
 
 
 }
@@ -313,7 +366,7 @@ crunker.download(ds.blob);
     return (
       <div id="drum-machine">
         {setKeyVolume()}
-        <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button>
+
         <div className="wrapper">
           <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} />
           <DumControle

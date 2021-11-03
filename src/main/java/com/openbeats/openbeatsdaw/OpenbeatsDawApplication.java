@@ -1,8 +1,12 @@
 package com.openbeats.openbeatsdaw;
 
+<<<<<<< Updated upstream
 import com.openbeats.openbeatsdaw.KurentoMediaServer.groupcall.CallHandler;
 import com.openbeats.openbeatsdaw.KurentoMediaServer.record.HelloWorldRecHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+=======
+import org.kurento.client.KurentoClient;
+>>>>>>> Stashed changes
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -10,10 +14,10 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 @SpringBootApplication
-@EnableWebSocket
-public class OpenbeatsDawApplication implements WebSocketConfigurer {
+public class OpenbeatsDawApplication  {
 
 
+<<<<<<< Updated upstream
     @Autowired
     CallHandler groupCallHandler;
 
@@ -29,6 +33,10 @@ public class OpenbeatsDawApplication implements WebSocketConfigurer {
         registry.addHandler(groupCallHandler, "/groupcall").setAllowedOrigins("*");
         registry.addHandler(handler, "/recording").setAllowedOrigins("*");
     }
+=======
+
+
+>>>>>>> Stashed changes
 
 
 }

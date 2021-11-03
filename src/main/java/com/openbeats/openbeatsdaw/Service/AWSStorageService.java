@@ -3,14 +3,13 @@ package com.openbeats.openbeatsdaw.Service;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +25,44 @@ public class AWSStorageService {
         String filename = multipartFile.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucket_name,filename,fileObj));
         fileObj.delete();
+        getFile();
         return filename;
+    }
+
+    public void getFile()  {
+        String bucketName="myawsbucket-3";
+        S3Object object = s3Client.getObject(new GetObjectRequest(bucketName, "audio.mp3"));
+        InputStream objectData = object.getObjectContent();
+// Process the objectData stream.
+        byte[] buffer = new byte[1024];
+
+        File targetFile = new File("http://localhost:3000/static/media/audioaws.mp3");
+        OutputStream outStream = null;
+        try {
+            outStream = new FileOutputStream(targetFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        while(true)
+        {
+            try {
+                if (!((objectData.read(buffer)) != -1)) break;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                outStream.write(buffer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            objectData.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public String createBucket(String new_bucket_name){
