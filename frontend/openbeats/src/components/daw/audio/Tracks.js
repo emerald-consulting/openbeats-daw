@@ -1,16 +1,20 @@
 import React, { useState } from "react";
+import axios from "axios"
+import LoadingOverlay from 'react-loading-overlay';
 
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
 import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
-import Fileupload from "../Fileupload";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
+
 import SocketRecord from "../socket/SocketRecord";
+import Fileupload from "../Fileupload";
+
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
 import audioFile_Z from './components/AudioPlayer/Dsc_Oh.mp3'
 import audioFile_X from './components/AudioPlayer/Cev_H2.mp3'
@@ -32,7 +36,6 @@ import audio_Ab from './components/AudioPlayer/Ab.mp3'
 import audio_A from './components/AudioPlayer/A.mp3'
 import audio_Bb from './components/AudioPlayer/Bb.mp3'
 import audio_B from './components/AudioPlayer/B.mp3'
-import axios from "axios"
 
 
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
@@ -73,12 +76,12 @@ const divStyle = {
 
 function Tracks() {
   const [files, setFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [stopPlaying, setStopPlaying] = useState(0);
   const [selected, setSelected] = useState([]);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
     
   const onFileChange = event => {
     //var blobUrl = URL.createObjectURL(event.target.files[0])
@@ -174,11 +177,7 @@ function Tracks() {
         temp.push(!selected[i])
       }
     }
-    // temp[index]=!temp[index]
-    console.log(temp)
     setSelected(temp);
-    // console.log(selected[index])
-    // console.log(index)
   }
 
   // React.useEffect (() => {
@@ -190,18 +189,18 @@ function Tracks() {
 }, [])
 
 function concatAudioBuffer(buffers){
-let crunker = new Crunker();
-return crunker.concatAudio(buffers);
+  let crunker = new Crunker();
+  return crunker.concatAudio(buffers);
 }
 
 async  function getAudioBuffer(file){
-let crunker = new Crunker();
+  let crunker = new Crunker();
 
-let x= await crunker
-.fetchAudio(file)
-.then((buffers)=>{
-      return buffers;
-});
+  let x= await crunker
+  .fetchAudio(file)
+  .then((buffers)=>{
+        return buffers;
+  });
 
   return x;
 
@@ -210,41 +209,35 @@ let x= await crunker
 
 
 async function download() {
-var initBuffer=null;
-var tempBuffer=null;
-//    var x=[audioFile1,audioFile,audioFile2,audioFile3];
-var x=soundsPLayed;
-console.log(x);
-for(var i=0;i<x.length;i++){
-  console.log(i);
-  if(i==0){
-      initBuffer= await getAudioBuffer(x[i]);
-  }else{
-      tempBuffer= await getAudioBuffer(x[i]);
-      console.log(initBuffer)
-      var x1= new Array();
-      if(i==1){
-          x1.push(initBuffer[0]);
-      }else{
-          x1.push(initBuffer);
-      }
-      x1.push(tempBuffer[0]);
-      initBuffer=concatAudioBuffer(x1);
+  var initBuffer=null;
+  var tempBuffer=null;
+  //    var x=[audioFile1,audioFile,audioFile2,audioFile3];
+  var x=soundsPLayed;
+  for(var i=0;i<x.length;i++){
+    if(i==0){
+        initBuffer= await getAudioBuffer(x[i]);
+    }else{
+        tempBuffer= await getAudioBuffer(x[i]);
+        console.log(initBuffer)
+        var x1= new Array();
+        if(i==1){
+            x1.push(initBuffer[0]);
+        }else{
+            x1.push(initBuffer);
+        }
+        x1.push(tempBuffer[0]);
+        initBuffer=concatAudioBuffer(x1);
 
+
+    }
 
   }
 
-}
-
   let crunker = new Crunker();
-  console.log("this is aduio");
-    console.log(initBuffer);
-var ds= crunker.export(initBuffer, "audio/mp3");
-console.log("this is audio buffer.");
-console.log(ds);
-pushFile(ds);
+  var ds= crunker.export(initBuffer, "audio/mp3");
+  pushFile(ds);
 
-const formData = new FormData();
+  const formData = new FormData();
 
       const file = new File([ds.blob], 'audio.mp3');
 
@@ -276,33 +269,46 @@ const formData = new FormData();
 }
 
 const handleKeydown = (e) => {
-if(recording==true){
-console.log(e);
-console.log(map1.get(e.which));
-console.log("nice");
-  if(map1.has(e.which)){
-          soundsPLayed.push((map1.get(e.which)));
+  if(recording==true){
+  console.log(map1.get(e.which));
+    if(map1.has(e.which)){
+            soundsPLayed.push((map1.get(e.which)));
+    }
   }
-}
 }
 
 const handleRecord = () => {
-recording=!recording;
-setChangeRecordLabel(!changeRecordLabel)
+  recording=!recording;
+  setChangeRecordLabel(!changeRecordLabel)
 
-if(recording==true){
-  console.log("Recording");
-}
+  if(recording==true){
+    console.log("Recording");
+  }
 
-if(recording==false){
-  download();
-  soundsPLayed=new Array();
-}
+  if(recording==false){
+    download();
+    soundsPLayed=new Array();
+  }
 
 };
 
+async function exportAsWav() {
+  setIsLoading(true)
+  let crunker = new Crunker();
+  let expBuffer = await crunker.fetchAudio(...files);
+  let mergedBuffer = await crunker.mergeAudio(expBuffer);
+  let exportedAudio = await crunker.export(mergedBuffer,'audio/wav');
+  await crunker.download(exportedAudio.blob, "merged");
+  setIsLoading(false)
+}
+
 
   return (
+    <LoadingOverlay
+    active={isLoading}
+    spinner
+    text='Please wait...'
+    >
     <div style={divStyle}>
       {/* <NavBar /> */}
       <div className="flex flex-row ">
@@ -338,6 +344,9 @@ if(recording==false){
             
           </button>
         </div>
+        <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+          <button onClick={exportAsWav}>Download</button>
+        </div>
         <SocketRecord />
         
       </div>    
@@ -358,6 +367,7 @@ if(recording==false){
         ))}
       </Grid>
     </div>
+    </LoadingOverlay>
   );
 }
 
