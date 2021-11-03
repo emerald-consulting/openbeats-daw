@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import WaveSurfer from "wavesurfer.js";
+import Drawer from "wavesurfer.js/src/drawer.js";
 import { uuid } from "uuidv4";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -23,6 +24,8 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import { UserContext } from "../../../../../model/user-context/UserContext";
+import { Slider } from "@material-ui/core";
 
 const faces = [
   "http://i.pravatar.cc/300?img=1",
@@ -33,10 +36,11 @@ const faces = [
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: '100%',
-    height:'30',
+    maxWidth: '90%',
+    height:'20',
     // minWidth: 240,
-    background:'#68BC76',
+    // background:'#68BC76',
+    background: '#444447',
     margin: "auto",
     transition: "0.3s",
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
@@ -57,7 +61,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1)
   },
   controls: {
-    minWidth: "100px"
+    minWidth: "100%"
   },
   icon: {
     height: 18,
@@ -71,8 +75,15 @@ const useStyles = makeStyles(theme => ({
 avatar username ostalo layout sa grid
 
 */
-function AudioPlayer({ file }) {
+function AudioPlayer({ file, playTrack, stopPlaying }) {
   const wavesurfer = useRef(null);
+  const [state, dispatch] = useContext(UserContext);
+  const [volume, setVolume] = useState(1);
+
+  const handleVolumeChange = e => {
+    setVolume(e.target.value);
+    wavesurfer.current.setVolume (e.target.value);
+  }
 
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -81,15 +92,17 @@ function AudioPlayer({ file }) {
   useEffect(() => {
     wavesurfer.current = WaveSurfer.create({
       container: `#${wavesurferId}`,
-      waveColor: "grey",
+      waveColor: "blue",
       progressColor: "tomato",
-      height: 70,
+      height: 30,
+      width:70,
       cursorWidth: 1,
       cursorColor: "lightgray",
-      barWidth: 2,
+      barWidth: 1,
       normalize: true,
       responsive: true,
-      fillParent: true
+      fillParent: true,
+      
     });
 
     // const wav = require("../../static/12346 3203.ogg");
@@ -97,7 +110,7 @@ function AudioPlayer({ file }) {
 
     // console.log("wav", wav);
     wavesurfer.current.load(wav);
-
+    // wavesurfer.current.setVolume(newVolume)
     wavesurfer.current.on("ready", () => {
       setPlayerReady(true);
     });
@@ -117,12 +130,29 @@ function AudioPlayer({ file }) {
     if (file) {
       if (file.blobURL){
         wavesurfer.current.load(file.blobURL);
+      }  else if(file.blob){
+        wavesurfer.current.loadBlob(file.blob);
       } else {
         wavesurfer.current.load(file);
       }
       
     }
   }, [file]);
+
+  useEffect(() => {
+    console.log("playTrack", playTrack);
+    if (playTrack) {
+      wavesurfer.current.play();
+    } else {
+      wavesurfer.current.pause();
+    }
+  }, [playTrack]);
+
+  
+  useEffect(() => {
+    console.log("stopPlaying", stopPlaying);
+    wavesurfer.current.stop();
+  }, [stopPlaying]);
 
   const togglePlayback = () => {
     if (!isPlaying) {
@@ -152,10 +182,13 @@ function AudioPlayer({ file }) {
     );
   }
 
+
   return (
     <>
-      <Card className={classes.card } >
-        <Grid container direction="column">
+      <Card className={classes.card }>
+      <input className="no-border color-green" step='0.01' type="range" color="green" value={volume} 
+        onChange={handleVolumeChange} min='0' max='1'/>
+        <Grid container   direction="column" >
           <Grid item>
             <List className={classes.list}>
               <ListItem alignItems="flex-start" className={classes.listItem}>
@@ -163,47 +196,22 @@ function AudioPlayer({ file }) {
                   <Avatar className={classes.avatar}  />
                 </ListItemAvatar>
                 <ListItemText
-                  primary="Username"
+                  primary={state.user.firstName}
                   // secondary="@username · 11h ago"
                 />
+                <Grid item container className={classes.buttons}>
+                  <Grid item xs={5}>
+                    {transportPlayButton}
+                    <IconButton onClick={stopPlayback}>
+                      <StopIcon className={classes.icon} />
+                    </IconButton>
+                  </Grid>
+                </Grid>
               </ListItem>
             </List>
           </Grid>
           <Grid item id={wavesurferId} />
-          <Grid item container className={classes.buttons}>
-            <Grid item xs={5}>
-              {transportPlayButton}
-              <IconButton onClick={stopPlayback}>
-                <StopIcon className={classes.icon} />
-              </IconButton>
-            </Grid>
-            {/* <Grid item xs={7} container justify="space-around">
-              <Grid item>
-                <IconButton>
-                  <FavoriteIcon
-                    style={{ color: blue[500] }}
-                    className={classes.icon}
-                  />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton>
-                  <ShareIcon
-                    style={{ color: red[500] }}
-                    className={classes.icon}
-                  />
-                </IconButton>
-              </Grid>
-              <Grid item>
-                <IconButton>
-                  <ChatBubbleIcon
-                    style={{ color: green[500] }}
-                    className={classes.icon}
-                  />
-                </IconButton>
-              </Grid>
-            </Grid> */}
-          </Grid>
+
         </Grid>
       </Card>
     </>

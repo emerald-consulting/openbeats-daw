@@ -1,54 +1,64 @@
 import ReactDOM from 'react-dom'
 import React from 'react';
 import './style.css';
-
+import Crunker from 'crunker'
+import audioFile_N from './Brk_Snr.mp3'
+import audioFile_Z from './Dsc_Oh.mp3'
+import audioFile_X from './Cev_H2.mp3'
+import audioFile_C from './Kick_n_Hat.mp3'
+import audioFile_V from './punchy_kick_1.mp3'
+import audioFile_B from './RP4_KICK_1.mp3'
+import audioFile_M from './side_stick_1.mp3'
+import audioFile_comma from './Heater-6.mp3'
+import audioFile_dot from './Give_us_a_light.mp3'
 const keysPressed=new Array();
-
+var soundsPLayed=new Array();
+var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const firstSoundsGroup = [
     { key: 'Z',
       keyCode: 90,
       id: 'Open-HH',
-       url: 'https://s3.amazonaws.com/freecodecamp/drums/Dsc_Oh.mp3'
+      url: audioFile_Z
     },
     { key: 'X',
       keyCode: 88,
       id: 'Closed-HH',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/Cev_H2.mp3'
+      url: audioFile_X
     },
     { key: 'C',
       keyCode: 67,
       id: 'Kick-and-Hat',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/Kick_n_Hat.mp3'
+      url: audioFile_C
     },
     { key: 'V',
       keyCode: 86,
       id: 'Punchy-Kick',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/punchy_kick_1.mp3'
+      url: audioFile_V
     },
     { key: 'B',
       keyCode: 66,
       id: 'Kick',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/RP4_KICK_1.mp3'
+      url: audioFile_B
     },
     { key: 'N',
       keyCode: 78,
       id: 'Snare',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/Brk_Snr.mp3'
+      url: audioFile_N
     },
     { key: 'M',
       keyCode: 77,
       id: 'Side-Stick',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/side_stick_1.mp3'
+      url: audioFile_M
     },
     { key: ',',
       keyCode: 188,
       id: 'Clap',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/Heater-6.mp3'
+      url: audioFile_comma
     },
     { key: '.',
       keyCode: 190,
       id: 'Shaker',
-      url: 'https://s3.amazonaws.com/freecodecamp/drums/Give_us_a_light.mp3'
+      url: audioFile_dot
     }
   ];
 
@@ -117,6 +127,7 @@ const firstSoundsGroup = [
     const handleKeydown = (e) => {
       if(keyCode === e.keyCode) {
         const audio = document.getElementById(key);
+        console.log(audio);
         play(key, id);
         deactivateAudio(audio)
       }
@@ -191,6 +202,7 @@ const firstSoundsGroup = [
       console.log(keysPressed);
       setSoundName(sound)
       const audio = document.getElementById(key);
+      soundsPLayed.push(audio.src);
       styleActiveKey(audio);
       audio.currentTime = 0;
       audio.play();
@@ -225,9 +237,83 @@ const firstSoundsGroup = [
       })
     }
 
+  async function download1(audioFile) {
+var audioContext = new AudioContext();
+  //var audioSrc = URL.createObjectURL(audioFile)
+let crunker = new Crunker();
+
+crunker
+  .fetchAudio(audioFile)
+  .then((buffers)=>{
+      return buffers;
+  });
+
+
+
+  }
+
+   function concatAudioBuffer(buffers){
+      let crunker = new Crunker();
+      return crunker.concatAudio(buffers);
+    }
+
+ async  function getAudioBuffer(file){
+    let crunker = new Crunker();
+
+    let x= await crunker
+      .fetchAudio(file)
+      .then((buffers)=>{
+            return buffers;
+      });
+
+        return x;
+
+      }
+
+
+
+ async function download() {
+    var initBuffer=null;
+    var tempBuffer=null;
+//    var x=[audioFile1,audioFile,audioFile2,audioFile3];
+    var x=soundsPLayed;
+    console.log(x);
+    for(var i=0;i<x.length;i++){
+        console.log(i);
+        if(i==0){
+            initBuffer= await getAudioBuffer(x[i]);
+        }else{
+            tempBuffer= await getAudioBuffer(x[i]);
+            console.log(initBuffer)
+            var x1= new Array();
+            if(i==1){
+                x1.push(initBuffer[0]);
+            }else{
+                x1.push(initBuffer);
+            }
+            x1.push(tempBuffer[0]);
+            initBuffer=concatAudioBuffer(x1);
+
+
+        }
+
+    }
+
+        let crunker = new Crunker();
+        console.log("this is aduio");
+          console.log(initBuffer);
+var ds=        crunker.export(initBuffer, "audio/mp3");
+crunker.download(ds.blob);
+
+
+}
+
+
+
     return (
       <div id="drum-machine">
         {setKeyVolume()}
+        {/* <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button> */}
         <div className="wrapper">
           <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} />
           <DumControle

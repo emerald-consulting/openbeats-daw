@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
@@ -8,6 +8,8 @@ import { Button, PlayerIcon } from 'react-player-controls'
 import bgimg from '../bg.jpg'
 import { useReactMediaRecorder } from "react-media-recorder";
 import Tracks from './audio/Tracks'
+import GroupCall from './socket/GroupCall'
+import {UserContext} from "../../model/user-context/UserContext";
 
 const RecordView = () => {
     const {
@@ -48,12 +50,13 @@ const PlayerButton = ({ style, children, ...props }) => (
   )
 
 const Daw = () => {
+    const [state, dispatch] = useContext(UserContext);
     return (
       // <div><LogNavbar/>
         <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
             
             <div className="flex flex-col">
-                <LogNavbar/>
+                <LogNavbar className="mb-0.5"/>
                 <div className="flex flex-row" style={{}}>
                     <div className="flex flex-col" style={{width:'85%',height:'100%'}}>
                         <div className="flex flex-row">
@@ -65,8 +68,9 @@ const Daw = () => {
                         </div>
                     </div>
                     <div className="  mb-0.5" style={{width:'15%',height:'100%'}}>
-                        <p className="text-2xl border p-4 " style={{textAlign:'center'}}>Collaborators</p>
+                        <p className="text-2xl rounded-full p-4 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
+                        {<GroupCall emailId={state.user.emailId}/>}
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
