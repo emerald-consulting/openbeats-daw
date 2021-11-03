@@ -366,7 +366,7 @@ var ds= crunker.export(initBuffer, "audio/mp3");
     return (
       <div id="drum-machine">
         {setKeyVolume()}
-
+        {/* <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button> */}
         <div className="wrapper">
           <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} />
           <DumControle

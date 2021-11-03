@@ -299,19 +299,19 @@ const SocketRecord = () =>{
                     <video id="videoInput" autoPlay width="480px" height="360px"
                            poster="img/webrtc.png"></video>
                 </div>
-                <div className="col-md-2 flex flex-row">
-                    <div className="p-5 ml-0.5 bg-gr4 hover:bg-gr3">
+                <div className=" flex flex-row">
+                    <div className="p-5 ml-0.5 bg-gr2 rounded-full  text-xl hover:bg-gr3">
                         <a id="start" href="#" className="btn btn-success"
                            onClick={()=>start()}><span
-                            className="glyphicon glyphicon-play"></span> Start Recording</a>
+                            className="glyphicon glyphicon-play"></span> Record Session</a>
                     </div>
-                    <div className="p-5 ml-0.5 bg-gr4 hover:bg-gr3">
+                    <div className="p-5 ml-0.5 bg-gr2 rounded-full text-xl  hover:bg-gr3">
                         <a
                         id="stop" href="#" className="btn btn-danger"
                         onClick={()=>stop()}><span
                         className="glyphicon glyphicon-stop"></span> Stop Recording</a>
                     </div>
-                    <div className="p-5 ml-0.5 bg-gr4 hover:bg-gr3">
+                    <div className="p-5 ml-0.5 bg-gr2 rounded-full text-xl hover:bg-gr3">
                         <a
                         id="play" href="#" className="btn btn-warning"
                         onClick={()=>play()}><span

@@ -136,7 +136,7 @@ export default function Microphone({ pushFile }) {
 
   return (
     <>
-      <Grid  justify="left" className='bg-gr4 hover:bg-gr3'>
+      <Grid  justify="left" className=''>
         <Grid item>
           <IconButton onClick={handleClickOpen}>
             <MicIcon className={classes.icon} />

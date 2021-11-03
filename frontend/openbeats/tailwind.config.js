@@ -13,7 +13,9 @@ module.exports = {
       "gr3":"#359E50",
       "gr4":"#68BC76",
       "err":"#FF00FF",
-      "wh":"#E0E0E0"
+      "wh":"#E0E0E0",
+      "bk":"#000000",
+      "gy":"#837b7f"
     }
   },
   variants: {
