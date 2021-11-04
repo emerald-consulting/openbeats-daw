@@ -1,4 +1,4 @@
-import React, {useState, useContext } from "react";
+import React, {useState, useContext, useEffect } from "react";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 import UserContextProvider, {UserContext} from "../../model/user-context/UserContext";
@@ -7,16 +7,142 @@ import { useHistory } from "react-router";
 import axios from "axios";
 
 import LogNavbar from "../logNavbar/LogNavbar";
+import { useSelector, useDispatch } from 'react-redux'
+import { setSession, setSessionId, setSessionName } from "../../model/session/Session";
 
 const Dashboard = () => {
 
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
-  let history = useHistory();
-  console.log(state)
+<<<<<<< Updated upstream
+=======
+  const [sessionList, setSessionList] = useState([]);
 
-  const createWorkspace = () => {
-    history.push('/daw')
+  const user = useSelector(_state => _state.user);
+  const session = useSelector(_state => _state.session);
+  const dispatch2 = useDispatch();
+  
+>>>>>>> Stashed changes
+  let history = useHistory();
+  let encodeString = `${user.emailId}:${user.password}`;
+  const encodedString = Buffer.from(encodeString).toString('base64');
+  console.log(state)
+  console.log(sessionList)
+
+  useEffect(() => {
+    getSessions();
+  }, [])
+
+  function getSessions(){
+    console.log('get session')
+    axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/getSessionDetails?emailId="+user.emailId,{headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Headers" : "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          'Authorization': 'Basic '+ encodedString
+      }}).then((response) => {
+          console.log(response.data.data);
+          setSessionList(response.data.data);
+       })
+      .catch((error)=>{
+          console.log(error);
+      });
+  }
+
+  function createWorkspace(e) {
+    e.preventDefault();
+    let room = e.target.elements.sessionid?.value;
+    
+    console.log(room)
+    
+    let formdata = JSON.stringify({
+      roomName:room,
+      email: user.emailId,
+      })
+    console.log(formdata)
+
+    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/start", formdata,{headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            'Authorization': 'Basic '+ encodedString
+        }}).then((response) => {
+            console.log(response.data);
+            dispatch2(setSessionId(response.data.sessionId));
+            dispatch2(setSessionName(response.data.sessionName));
+            // let s = {
+            //   "sessionId": response.data.sessionId,
+            //   "sessionName": response.data.sessionName,
+            //   "participants":[]
+            // }
+            // dispatch2(setSession(s));
+            history.push('/daw');
+         })
+        .catch((error)=>{
+            console.log(error);
+        });
+
+    
+    
+  }
+
+  function joinSession(e){
+    e.preventDefault();
+    let sessionJoin=e.target.elements.sessionJoinId?.value;
+    console.log(sessionJoin);
+    let formdata = JSON.stringify({
+      sessionId:sessionJoin,
+      email: user.emailId,
+      })
+    console.log(formdata)
+
+    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/connect", formdata,{headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            'Authorization': 'Basic '+ encodedString
+        }}).then((response) => {
+            console.log(response.data);
+            dispatch2(setSession(response.data));
+            history.push('/daw');
+         })
+        .catch((error)=>{
+            console.log(error);
+        });
+
+  }
+
+  function joinSessionFromList(e){
+    let sessionJoin=e
+    console.log(sessionJoin);
+    let formdata = JSON.stringify({
+      sessionId:sessionJoin,
+      email: user.emailId,
+      })
+    console.log(formdata)
+
+    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/connect", formdata,{headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            "Access-Control-Allow-Headers" : "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            'Authorization': 'Basic '+ encodedString
+        }}).then((response) => {
+            console.log(response.data);
+            dispatch2(setSession(response.data));
+            history.push('/daw');
+         })
+        .catch((error)=>{
+            console.log(error);
+        });
+
   }
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -159,12 +285,13 @@ const Dashboard = () => {
               
               <div className="bg-gr2 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
                 <h1 className="text-2xl text-wh">Saved sessions</h1>
-                <Link className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}}  to="/about" >
-                  session 1
-                </Link>
-                <Link className="p-2 text-whi  mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}}  to="/about" >
-                  session 2
-                </Link>
+                {
+                  sessionList.map((session)=>(
+                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}}  to="/daw" >
+                      {session.sessionId} : {session.sessionName}
+                    </button>
+                  ))
+                }
 
               </div>
               <div className=" rounded  ">
@@ -190,13 +317,13 @@ const Dashboard = () => {
                 </div>
                 <div className="bg-gr2 w-96 rounded ml-0.5 shadow-default py-10 px-16">
                   <h1 className="text-2xl text-wh">Join a Session</h1>
-                  <form >
+                  <form onSubmit={joinSession}>
                       <div>
                           <input
                               type='session_join'
                               className={`w-full p-2 text-primary  rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                              id='session_url'
-                              placeholder='Enter session url'
+                              id='sessionJoinId'
+                              placeholder='Enter session id'
                           />
                       </div>
 

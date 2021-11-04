@@ -5,7 +5,7 @@ import { useHistory } from "react-router"
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
 import { useSelector, useDispatch } from 'react-redux'
-import { setUserFirstName } from "../../model/user/User";
+import { loadUser, setUserEmail, setUserPassword } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
 const Login = () => {
@@ -26,8 +26,6 @@ const Login = () => {
         e.preventDefault();
         setIsLoaded(true);
         
-        dispatch2(setUserFirstName('Gunda'));
-        
 
         let email = e.target.elements.email?.value;
         let password = e.target.elements.password?.value;
@@ -39,6 +37,8 @@ const Login = () => {
             type: "STORE_PASSCODE",
             payload: password
           });
+        dispatch2(setUserPassword(password));
+        dispatch2(setUserEmail(email));
         
 
       axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
@@ -71,7 +71,7 @@ const Login = () => {
                         type: "LOAD_USER",
                         payload: response1.data.data
                       });
-                    
+                    console.log(response1.data.data)
                     setIsLoaded(false)
                     history.push("/dashboard");
                 }
@@ -86,7 +86,6 @@ const Login = () => {
             setError(error)
             setIsLoaded(false)
         });
-      console.log(email, password);
   };
   return (
     <LoadingOverlay
