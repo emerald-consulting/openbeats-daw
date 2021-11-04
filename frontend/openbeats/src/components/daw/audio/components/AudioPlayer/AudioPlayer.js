@@ -12,6 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
+import FastForwardIcon from "@material-ui/icons/FastForward";
+import FastRewindIcon from "@material-ui/icons/FastRewind";
+import LoopIcon from "@material-ui/icons/Loop";
+
 import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
 import ShareIcon from "@material-ui/icons/Share";
 import FavoriteIcon from "@material-ui/icons/Favorite";
@@ -33,7 +37,7 @@ const faces = [
   "http://i.pravatar.cc/300?img=3",
   "http://i.pravatar.cc/300?img=4"
 ];
-
+var isLoop=false;
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: '100%',
@@ -188,6 +192,43 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     );
   }
 
+  const fastForward = () => {
+        wavesurfer.current.skipForward();
+      }
+   const skipBackward = () => {
+          wavesurfer.current.skipBackward();
+        }
+   const setLoop=() =>{
+        isLoop=!isLoop;
+        console.log(isLoop);
+   }
+
+   if(wavesurfer.current != null){
+    wavesurfer.current.on('finish', function () {
+           if(isLoop){
+            wavesurfer.current.play();
+//            isPlaying=true;
+           }
+       });
+   }
+
+
+  let transportFastForwardButton;
+
+     transportFastForwardButton = (
+          <IconButton onClick={fastForward}>
+            <FastForwardIcon  />
+          </IconButton>
+        );
+
+
+  let transportFastRewindButton;
+
+     transportFastForwardButton = (
+          <IconButton onClick={skipBackward}>
+            <FastRewindIcon  />
+          </IconButton>
+        );
 
   return (
     <>
@@ -214,6 +255,15 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
                     <IconButton onClick={stopPlayback}>
                       <StopIcon className={classes.icon} />
                     </IconButton>
+                    <IconButton onClick={skipBackward}>
+                        <FastRewindIcon  />
+                    </IconButton>
+                    <IconButton onClick={fastForward}>
+                                <FastForwardIcon  />
+                              </IconButton>
+                    <IconButton onClick={setLoop}>
+                                                    <LoopIcon  />
+                                                  </IconButton>
                   </Grid>
                 </Grid>
               </ListItem>
