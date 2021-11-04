@@ -353,16 +353,21 @@ async function exportAsWav() {
       <div className=" p-2 ml-0.5 pt-2 " style={{width:'100%'}}>
         <input   step='0.01' type="range"   min='0' max='1' style={{width:'100%'}}/>
       </div>             
-      <Grid container direction="column" spacing={1} >
+      <Grid container direction="column" >
         {files.map((file, index) => (
-          <Grid key={index} item >
+          <Grid key={index} container >
+            <Grid item md={0.2}>
             <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
-            
+            </Grid>
+            <Grid item md={11}>
             <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} />
-            
-            <IconButton onClick={()=>remove(index) } style={{marginTop: '-60px', position:'relative'}} className="float-right">
+            </Grid>
+            <Grid item md={0.5}>
+            <IconButton onClick={()=>remove(index) }  className="float-right">
+              {/* style={{marginTop: '-60px', position:'relative'}} */}
               <CancelIcon />
             </IconButton>
+            </Grid>
           </Grid>
         ))}
       </Grid>

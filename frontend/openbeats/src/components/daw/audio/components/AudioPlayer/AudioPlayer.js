@@ -36,12 +36,12 @@ const faces = [
 
 const useStyles = makeStyles(theme => ({
   card: {
-    maxWidth: '90%',
+    maxWidth: '100%',
     height:'20',
     // minWidth: 240,
     // background:'#68BC76',
     background: '#444447',
-    margin: "auto",
+    // margin: "auto",
     transition: "0.3s",
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
     "&:hover": {
@@ -103,6 +103,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
       responsive: true,
       fillParent: true,
       
+      // scrollParent:true
     });
 
     // const wav = require("../../static/12346 3203.ogg");
@@ -130,11 +131,15 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     if (file) {
       if (file.blobURL){
         wavesurfer.current.load(file.blobURL);
+        
       }  else if(file.blob){
         wavesurfer.current.loadBlob(file.blob);
+        
       } else {
         wavesurfer.current.load(file);
+        console.log(wavesurfer.current.getCurrentTime());
       }
+      
       
     }
   }, [file]);
@@ -146,6 +151,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     } else {
       wavesurfer.current.pause();
     }
+    
   }, [playTrack]);
 
   
@@ -185,23 +191,26 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
 
   return (
     <>
-      <Card className={classes.card }>
-      <input className="no-border color-green" step='0.01' type="range" color="green" value={volume} 
-        onChange={handleVolumeChange} min='0' max='1'/>
-        <Grid container   direction="column" >
-          <Grid item>
+      <Card className={classes.card } container>
+
+        <Grid container >
+          <input className="no-border color-green" step='0.01' type="range" color="green" value={volume} 
+            onChange={handleVolumeChange} min='0' max='1'/>
+          <Grid item  >
             <List className={classes.list}>
               <ListItem alignItems="flex-start" className={classes.listItem}>
-                <ListItemAvatar>
-                  <Avatar className={classes.avatar}  />
-                </ListItemAvatar>
+                    {/* 
+                      coming from above      
+                    <ListItemAvatar>
+                      <Avatar className={classes.avatar}  />
+                    </ListItemAvatar> */}
                 <ListItemText
                   primary={state.user.firstName}
                   // secondary="@username · 11h ago"
                 />
-                <Grid item container className={classes.buttons}>
-                  <Grid item xs={5}>
-                    {transportPlayButton}
+                <Grid item   className={classes.buttons}>
+                  <Grid container item > 
+                    <div >{transportPlayButton}</div>
                     <IconButton onClick={stopPlayback}>
                       <StopIcon className={classes.icon} />
                     </IconButton>
@@ -210,7 +219,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} />
+          <Grid item id={wavesurferId} style={{width:'50%'}}/>
 
         </Grid>
       </Card>
