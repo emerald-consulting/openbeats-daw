@@ -264,8 +264,8 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
                                 <FastForwardIcon  />
                               </IconButton>
                     <IconButton onClick={setLoop}>
-                                                    <LoopIcon  />
-                                                  </IconButton>
+                      <LoopIcon  />
+                    </IconButton>
                   </Grid>
                 </Grid>
               </ListItem>

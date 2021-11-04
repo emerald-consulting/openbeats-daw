@@ -146,7 +146,7 @@ class AppCall extends React.Component {
             <button className="rounded bg-gr4 p-1 mb-1"  onClick={this.onClickClear}>Clear</button>
             <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button> */}
           </div>
-          <div className="" style={{width:'100%'}}  >
+          <div className="p-4 rounded-lg" style={{width:'95%',boxShadow: '5px 5px 8px 3px'}}  >
             <SoundfontProvider 
               instrumentName="acoustic_grand_piano"
               audioContext={audioContext}

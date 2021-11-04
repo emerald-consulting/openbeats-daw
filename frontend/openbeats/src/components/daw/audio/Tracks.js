@@ -311,7 +311,7 @@ async function exportAsWav() {
     >
     <div style={divStyle}>
       {/* <NavBar /> */}
-      <div className="flex flex-row pl-24">
+      <div className="flex flex-row pl-20">
         <div className="  bg-gr2 hover:bg-gr3">
           <Microphone style={{}}  pushFile={pushFile} />
         </div>
