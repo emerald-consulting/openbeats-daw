@@ -14,15 +14,12 @@ const Dashboard = () => {
 
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
-<<<<<<< Updated upstream
-=======
   const [sessionList, setSessionList] = useState([]);
 
   const user = useSelector(_state => _state.user);
   const session = useSelector(_state => _state.session);
   const dispatch2 = useDispatch();
   
->>>>>>> Stashed changes
   let history = useHistory();
   let encodeString = `${user.emailId}:${user.password}`;
   const encodedString = Buffer.from(encodeString).toString('base64');
@@ -109,7 +106,8 @@ const Dashboard = () => {
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response.data);
-            dispatch2(setSession(response.data));
+            dispatch2(setSessionId(response.data.sessionId));
+            dispatch2(setSessionName(response.data.sessionName));
             history.push('/daw');
          })
         .catch((error)=>{
@@ -136,7 +134,8 @@ const Dashboard = () => {
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response.data);
-            dispatch2(setSession(response.data));
+            dispatch2(setSessionId(response.data.sessionId));
+            dispatch2(setSessionName(response.data.sessionName));
             history.push('/daw');
          })
         .catch((error)=>{

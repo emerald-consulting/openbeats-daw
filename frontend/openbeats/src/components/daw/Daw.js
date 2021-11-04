@@ -11,6 +11,8 @@ import Tracks from './audio/Tracks'
 import GroupCall from './socket/GroupCall'
 import {UserContext} from "../../model/user-context/UserContext";
 
+import { useSelector, useDispatch } from 'react-redux'
+
 const RecordView = () => {
     const {
       status,
@@ -51,6 +53,8 @@ const PlayerButton = ({ style, children, ...props }) => (
 
 const Daw = () => {
     const [state, dispatch] = useContext(UserContext);
+    
+    const session = useSelector(_state => _state.session);
     return (
       // <div><LogNavbar/>
         <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
@@ -70,6 +74,7 @@ const Daw = () => {
                     </div>
 
                     <div className="  mb-0.5" style={{width:'15%'}}>
+                        <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Session ID : {session.sessionId}</p>
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {<GroupCall emailId={state.user.emailId}/>}
