@@ -125,6 +125,17 @@ public class OpenBeatsRestController {
         }
     }
 
+    @PostMapping("/upgradeUser")
+    public ResponseEntity<Object> upgradeUser(@RequestParam(value = "email") String emailId){
+        int isUpgraded=createUser.upgradeSubscriptionType(emailId);
+        log.info(String.valueOf(isUpgraded));
+        if(isUpgraded>0) return ResponseHandler.generateResponse("Success", HttpStatus.OK,isUpgraded);
+        else return ResponseHandler.generateResponse("Failed", HttpStatus.OK,isUpgraded);
+    }
+
+
+
+
     @RequestMapping("/spotifyOauth")
     @ResponseBody
     public Map<String, Object> user(@AuthenticationPrincipal OAuth2User principal) {
@@ -170,7 +181,7 @@ public class OpenBeatsRestController {
         }
         return ResponseHandler.generateResponse("success", HttpStatus.OK,service.createBucket(new_bucket_name));
     }
-
+    
     @PostMapping("/deleteWorkspace")
     public ResponseEntity<Object> deleteBucket(@RequestParam(value = "sessionName")String sessionName,
                                                @RequestParam(value = "email") String email){

@@ -12,7 +12,6 @@ const Dashboard = () => {
 
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
-
   let history = useHistory();
   console.log(state)
 
@@ -53,6 +52,35 @@ const Dashboard = () => {
       }
     });
   }
+
+    const upgradeUser = () => {
+
+      let encodeString = 'c@gmail.com:test';
+      const encodedString = Buffer.from(encodeString).toString('base64');
+        const formData = new FormData();
+           formData.append(
+             'email',state.user.emailId
+           );
+
+    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/upgradeUser",formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+  }}).then((response) => {
+        if(response){
+          console.log(response);
+          state.user.subscriptionType='paid';
+              var x = document.getElementById("upgradeUserDiv");
+
+                x.style.display = "none";
+
+        }
+      });
+    }
+
+
 
   const onFileUpload = () => {
     
@@ -121,6 +149,10 @@ const Dashboard = () => {
               <div className="p-2 m-1 bg-gr2 text-wh rounded ">{state.user.firstName}</div>
               <div className="p-2 m-1 bg-gr2 text-wh  rounded ">{state.user.emailId}</div>
             </div>
+            <div id="upgradeUserDiv">
+            {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded bg-gr4 p-1">Upgrade to Premium</button>}
+            </div>
+
           </div>
           <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
