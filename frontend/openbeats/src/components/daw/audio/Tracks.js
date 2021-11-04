@@ -323,7 +323,7 @@ async function exportAsWav() {
         <div className="  bg-gr2 hover:bg-gr3">
           <Microphone style={{}}  pushFile={pushFile} />
         </div>
-        <div className="p-2 ml-0.5  pt-4  bg-gr2 hover:bg-gr3">
+        <div className="p-2 ml-0.5  pt-5  bg-gr2 hover:bg-gr3">
             <label for={"file-upload"} className=" cursor-pointer">
                 File+</label> 
             <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
@@ -331,7 +331,7 @@ async function exportAsWav() {
         <Fileupload/>
         <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
           <Checkbox checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
-          <p className="pt-2 pr-1" >Select All</p>
+          <p className="pt-3 pr-1" >Select All</p>
         </div>
         <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
         <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">

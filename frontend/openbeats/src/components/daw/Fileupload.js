@@ -69,10 +69,10 @@ const Fileupload = () => {
     }
   };
     return (
-        <div  className="bg-gr2  ml-0.5 ">
-            <div className="hover:bg-gr3">
+        <div  className="bg-gr2 ml-0.5 ">
+            <div className="">
               <input className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-                <button onClick={onFileUpload}  className=" bg-gr2 p-4 hover:bg-gr3 " >
+                <button onClick={onFileUpload}  className=" bg-gr2 p-5 hover:bg-gr3  " >
                   <p className="text">Upload!</p>
                 </button>
             </div>

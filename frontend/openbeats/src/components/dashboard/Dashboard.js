@@ -106,10 +106,10 @@ const Dashboard = () => {
         <LogNavbar/>
         <div className='flex flex-row'>
         
-          <div className=" py-20 pl-20 pr-20 rounded-md">
+          <div className=" py-20 pl-20 pr-20 rounded-md" style={{width:'40%'}}>
             <div className="flex flex-col">
-              <div className="p-2 m-1 bg-gr2 rounded " style={{borderRadius: '50%'}}>
-                <img style={{borderRadius: '50%'}} src={imgSrc()}/>
+              <div className="p-2 m-1 bg-gr2 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
+                <img style={{borderRadius: '40px',margin:'auto'}}  src={imgSrc()}/>
                 
               </div>
               <div><input className="text-xs " style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
@@ -122,7 +122,7 @@ const Dashboard = () => {
               <div className="p-2 m-1 bg-gr2 text-wh  rounded ">{state.user.emailId}</div>
             </div>
           </div>
-          <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end'}}>Sessions</h1>
+          <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
               <div className="bg-gr2 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
