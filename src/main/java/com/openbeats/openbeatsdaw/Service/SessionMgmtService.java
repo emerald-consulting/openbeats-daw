@@ -58,9 +58,13 @@ public class SessionMgmtService {
         return true;
     }
 
-    public List<Session> getAllUserSessions(String emailId){
+    public List<StudioSession> getAllUserSessions(String emailId){
         log.info("getting all sessions");
-        return sessionRepository.findAllByUserEmail(emailId);
+
+        if(SessionStorage.getInstance().getUserSessions().containsKey(emailId)){
+            return SessionStorage.getInstance().getUserSessions().get(emailId);
+        }
+        return new ArrayList<>();
     }
 
     // New logic for handling sessions
