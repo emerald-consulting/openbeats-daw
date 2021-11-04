@@ -62,7 +62,7 @@ const Daw = () => {
                         <div className="flex flex-row">
                             {/*           empty      buttons upload         */}
                         </div>
-                        <div>
+                        <div >
                           {/* <Dynamicdiv/> */}
                           <Tracks />
                         </div>

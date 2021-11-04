@@ -311,7 +311,7 @@ async function exportAsWav() {
     >
     <div style={divStyle}>
       {/* <NavBar /> */}
-      <div className="flex flex-row ">
+      <div className="flex flex-row pl-24">
         <div className="  bg-gr2 hover:bg-gr3">
           <Microphone style={{}}  pushFile={pushFile} />
         </div>
@@ -350,8 +350,8 @@ async function exportAsWav() {
         <SocketRecord />
         
       </div>    
-      <div className=" p-2 ml-0.5 pt-2 " style={{width:'100%'}}>
-        <input   step='0.01' type="range"   min='0' max='1' style={{width:'100%'}}/>
+      <div className=" p-0.5 pt-0.5" style={{width:'100%'}}>
+        <input   step='0.01' type="range"  min='0' max='1' style={{width:'50%',marginLeft:'515px'}}/>
       </div>             
       <Grid container direction="column" >
         {files.map((file, index) => (
