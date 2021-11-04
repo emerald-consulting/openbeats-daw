@@ -99,6 +99,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
       container: `#${wavesurferId}`,
       waveColor: "blue",
       progressColor: "tomato",
+
       height: 30,
       width:70,
       cursorWidth: 1,
@@ -246,13 +247,13 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
                     <ListItemAvatar>
                       <Avatar className={classes.avatar}  />
                     </ListItemAvatar> */}
-                <ListItemText
+                <ListItemText className="pt-4"
                   primary={state.user.firstName}
                   // secondary="@username · 11h ago"
                 />
                 <Grid item   className={classes.buttons}>
                   <Grid container item > 
-                    <div >{transportPlayButton}</div>
+                    <div className="pt-1">{transportPlayButton}</div>
                     <IconButton onClick={stopPlayback}>
                       <StopIcon className={classes.icon} />
                     </IconButton>
@@ -270,7 +271,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} style={{width:'50%'}}/>
+          <Grid item id={wavesurferId} style={{width:'55%'}} className="pt-6"/>
 
         </Grid>
         

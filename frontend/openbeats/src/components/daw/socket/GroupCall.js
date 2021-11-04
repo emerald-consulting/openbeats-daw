@@ -304,9 +304,9 @@ const GroupCall = ({emailId}) =>{
             <h2 id="room-header"></h2>
             <div id="participants"></div>
             <input type="button" id="button-leave" onMouseUp={()=>register()}
-                   value="Register" className="m-4 rounded bg-gr4 hover:bg-gr3" />
+                   value="Register" className="p-5 box mr-1  bg-gr4 hover:bg-gr3" />
             <input type="button" id="button-leave" onMouseUp={()=>leaveRoom()}
-                   value="Leave room" className="m-4 rounded bg-gr4 hover:bg-gr3"/>
+                   value="Leave room" className="p-5 box bg-gr4 hover:bg-gr3"/>
         </div>
     )
 }
