@@ -8,6 +8,7 @@ import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.LoginRequest;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
+import com.openbeats.openbeatsdaw.model.StudioSession;
 import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -196,7 +197,7 @@ public class OpenBeatsRestController {
 
     @GetMapping("/getSessionDetails")
     public ResponseEntity<Object> getSessionList(@RequestParam String emailId){
-        List<Session> sessionList = sessionMgmtService.getAllUserSessions(emailId);
+        List<StudioSession> sessionList = sessionMgmtService.getAllUserSessions(emailId);
         return ResponseHandler.generateResponse("success", HttpStatus.OK,sessionList);
     }
 
