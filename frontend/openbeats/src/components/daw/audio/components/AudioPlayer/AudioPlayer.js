@@ -47,6 +47,7 @@ const useStyles = makeStyles(theme => ({
     background: '#444447',
     // margin: "auto",
     transition: "0.3s",
+    
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
     "&:hover": {
       boxShadow: "0 16px 70px -12.125px rgba(0,0,0,0.3)"
@@ -232,13 +233,13 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
 
   return (
     <>
-      <Card className={classes.card } container>
+      <Card className={classes.card } container >
 
         <Grid container >
-          <input className="no-border color-green" step='0.01' type="range" color="green" value={volume} 
+          <input className="no-border " step='0.01' type="range"  value={volume} 
             onChange={handleVolumeChange} min='0' max='1'/>
           <Grid item  >
-            <List className={classes.list}>
+            <List className={classes.list} >
               <ListItem alignItems="flex-start" className={classes.listItem}>
                     {/* 
                       coming from above      
@@ -272,7 +273,9 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
           <Grid item id={wavesurferId} style={{width:'50%'}}/>
 
         </Grid>
+        
       </Card>
+      <br/>
     </>
   );
 }
