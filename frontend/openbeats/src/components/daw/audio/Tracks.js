@@ -15,6 +15,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import SocketRecord from "../socket/SocketRecord";
 import Fileupload from "../Fileupload";
 
+import { useSelector, useDispatch } from 'react-redux'
+import { setMaxDuration } from "../../../model/audio/Audio";
+
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
 import audioFile_Z from './components/AudioPlayer/Dsc_Oh.mp3'
 import audioFile_X from './components/AudioPlayer/Cev_H2.mp3'
@@ -82,6 +85,11 @@ function Tracks() {
   const [selected, setSelected] = useState([]);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [seekValue, setSeekValue] = useState(0);
+
+  const _audio = useSelector(_state => _state.audio);
+  const maxDuration = _audio?_audio.maxDuration:1;
+  console.log(maxDuration);
     
   const onFileChange = event => {
     //var blobUrl = URL.createObjectURL(event.target.files[0])
@@ -351,7 +359,7 @@ async function exportAsWav() {
         
       </div>    
       <div className=" p-0.5 pt-0.5" style={{width:'100%'}}>
-        <input   step='0.01' type="range"  min='0' max='1' style={{width:'50%',marginLeft:'515px'}}/>
+        <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/>
       </div>             
       <Grid container direction="column" >
         {files.map((file, index) => (
@@ -360,7 +368,7 @@ async function exportAsWav() {
             <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
             </Grid>
             <Grid item md={11}>
-            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} />
+            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} />
             </Grid>
             <Grid item md={0.5}>
             <IconButton onClick={()=>remove(index) }  className="float-right">

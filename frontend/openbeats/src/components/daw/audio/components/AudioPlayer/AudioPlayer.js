@@ -1,14 +1,12 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import WaveSurfer from "wavesurfer.js";
-import Drawer from "wavesurfer.js/src/drawer.js";
 import { uuid } from "uuidv4";
 
+import { useSelector, useDispatch } from 'react-redux'
+import { setMaxDuration } from "../../../../../model/audio/Audio";
+
 import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
 import Card from "@material-ui/core/Card";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
-import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
@@ -16,27 +14,14 @@ import FastForwardIcon from "@material-ui/icons/FastForward";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
 import LoopIcon from "@material-ui/icons/Loop";
 
-import ChatBubbleIcon from "@material-ui/icons/ChatBubble";
-import ShareIcon from "@material-ui/icons/Share";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import { green, red, blue } from "@material-ui/core/colors";
-
 import PauseIcon from "@material-ui/icons/Pause";
 import Grid from "@material-ui/core/Grid";
 
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import { UserContext } from "../../../../../model/user-context/UserContext";
-import { Slider } from "@material-ui/core";
 
-const faces = [
-  "http://i.pravatar.cc/300?img=1",
-  "http://i.pravatar.cc/300?img=2",
-  "http://i.pravatar.cc/300?img=3",
-  "http://i.pravatar.cc/300?img=4"
-];
 var isLoop=false;
 const useStyles = makeStyles(theme => ({
   card: {
@@ -44,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     height:'20',
     // minWidth: 240,
     // background:'#68BC76',
-    background: '#444447',
+    background: '#68BC76',
     // margin: "auto",
     transition: "0.3s",
     
@@ -80,10 +65,14 @@ const useStyles = makeStyles(theme => ({
 avatar username ostalo layout sa grid
 
 */
-function AudioPlayer({ file, playTrack, stopPlaying }) {
+function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
   const [volume, setVolume] = useState(1);
+
+  const _audio = useSelector(_state => _state.audio);
+  const maxDuration = _audio?_audio.maxDuration:-1;
+  const dispatch2 = useDispatch();
 
   const handleVolumeChange = e => {
     setVolume(e.target.value);
@@ -97,8 +86,8 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
   useEffect(() => {
     wavesurfer.current = WaveSurfer.create({
       container: `#${wavesurferId}`,
-      waveColor: "blue",
-      progressColor: "tomato",
+      waveColor: "#FFFFFF",
+      progressColor: "#006622",
 
       height: 30,
       width:70,
@@ -120,6 +109,11 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     // wavesurfer.current.setVolume(newVolume)
     wavesurfer.current.on("ready", () => {
       setPlayerReady(true);
+      let cDur = wavesurfer.current.getDuration();
+      console.log(cDur)
+      if (cDur > maxDuration){
+        dispatch2(setMaxDuration(cDur))
+      }
     });
 
     const handleResize = wavesurfer.current.util.debounce(() => {
@@ -143,7 +137,6 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
         
       } else {
         wavesurfer.current.load(file);
-        console.log(wavesurfer.current.getCurrentTime());
       }
       
       
@@ -160,6 +153,12 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
     
   }, [playTrack]);
 
+  useEffect(() => {
+    console.log("seek", seek);
+    wavesurfer.current.seekAndCenter(parseInt(seek));
+    
+  }, [seek]);
+
   
   useEffect(() => {
     console.log("stopPlaying", stopPlaying);
@@ -169,6 +168,7 @@ function AudioPlayer({ file, playTrack, stopPlaying }) {
   const togglePlayback = () => {
     if (!isPlaying) {
       wavesurfer.current.play();
+      console.log(wavesurfer.current.getDuration());
     } else {
       wavesurfer.current.pause();
     }
