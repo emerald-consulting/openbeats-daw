@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router"
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import { useSelector, useDispatch } from 'react-redux'
+import { setUserFirstName } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
 const Login = () => {
@@ -12,6 +14,10 @@ const Login = () => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [message, setMessage] = useState(null);
 
+    const user = useSelector(_state => _state.user);
+    const dispatch2 = useDispatch();
+    console.log(user);
+
     let history = useHistory();
 
     const handleFormSubmit = (e) => {
@@ -19,6 +25,8 @@ const Login = () => {
         setMessage(null)
         e.preventDefault();
         setIsLoaded(true);
+        
+        dispatch2(setUserFirstName('Gunda'));
         
 
         let email = e.target.elements.email?.value;
@@ -33,7 +41,7 @@ const Login = () => {
           });
         
 
-      axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
+      axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -50,7 +58,7 @@ const Login = () => {
                 // setMessage(response.data.message)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
-                axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
+                axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response1) => {

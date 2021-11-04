@@ -6,6 +6,8 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import WebFont from 'webfontloader';
 import UserContextProvider from "./model/user-context/UserContext";
+import store from './model/store'
+import { Provider } from 'react-redux'
 
 WebFont.load({
    google: {
@@ -15,11 +17,13 @@ WebFont.load({
 
 ReactDOM.render(
   <React.StrictMode>
+    <Provider store={store}>
     <BrowserRouter>
       <UserContextProvider>
         <App />
       </UserContextProvider>
     </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

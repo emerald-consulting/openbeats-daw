@@ -43,7 +43,7 @@ const Signup = () => {
             subscriptionType: subscriptionType,
             emailVerified: emailVerified,
             })
-        axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/createUser", formdata,{headers: {
+        axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/createUser", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }}).then((response) => {
@@ -149,7 +149,7 @@ const Signup = () => {
             <div>or sign-up using</div>
             <div className='flex flex-row'>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-gray-400'><a href="http://openbeats-daw.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
+              <div className='p-4 hover:text-gray-400'><a href="http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>
