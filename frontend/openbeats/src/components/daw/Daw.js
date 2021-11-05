@@ -77,6 +77,7 @@ const Daw = () => {
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Session ID : {session.sessionId}</p>
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
+                        {session.participants.map((p)=>(<p>{p.firstName}</p>))}
                         {<GroupCall emailId={state.user.emailId}/>}
                     </div>
                 </div>

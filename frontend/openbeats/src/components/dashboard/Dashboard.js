@@ -8,7 +8,7 @@ import axios from "axios";
 
 import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
-import { setSession, setSessionId, setSessionName } from "../../model/session/Session";
+import { setSession, setSessionId, setSessionName, setParticipants } from "../../model/session/Session";
 
 const Dashboard = () => {
 
@@ -71,6 +71,7 @@ const Dashboard = () => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
+            dispatch2(setParticipants(response.data.participants));
             // let s = {
             //   "sessionId": response.data.sessionId,
             //   "sessionName": response.data.sessionName,
@@ -108,6 +109,7 @@ const Dashboard = () => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
+            dispatch2(setParticipants(response.data.participants));
             history.push('/daw');
          })
         .catch((error)=>{
@@ -136,6 +138,7 @@ const Dashboard = () => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
+            dispatch2(setParticipants(response.data.participants));
             history.push('/daw');
          })
         .catch((error)=>{
