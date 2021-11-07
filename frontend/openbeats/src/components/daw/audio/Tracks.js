@@ -72,10 +72,10 @@ map1.set(85, audio_Bb);
 map1.set(74, audio_B);
 
 const divStyle = {
-  overflowY: 'scroll', height: '400px', maxWidth: '100%', overflowX: 'hidden'
+  overflowY: 'scroll',height: '60vh', maxWidth: '100%', overflowX: 'hidden'
 };
 
-//
+// height: '100%',
 
 function Tracks() {
   const [files, setFiles] = useState([]);
@@ -330,7 +330,7 @@ async function exportAsWav() {
         </div>
         <Fileupload/>
         <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
-          <Checkbox checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
+          <Checkbox style={{color: "#00e676" }} checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
           <p className="pt-3 pr-1" >Select All</p>
         </div>
         <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
@@ -365,7 +365,7 @@ async function exportAsWav() {
         {files.map((file, index) => (
           <Grid key={index} container >
             <Grid item md={0.2}>
-            <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
+            <Checkbox    style ={{  color: "#00e676" }} checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
             </Grid>
             <Grid item md={11}>
             <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} />

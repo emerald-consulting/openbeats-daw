@@ -69,6 +69,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
   const [volume, setVolume] = useState(1);
+  const [loopStyle, setLoopStyle] = useState(false);
 
   const _audio = useSelector(_state => _state.audio);
   const maxDuration = _audio?_audio.maxDuration:-1;
@@ -203,6 +204,12 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
    const setLoop=() =>{
         isLoop=!isLoop;
         console.log(isLoop);
+        
+        if (isLoop){ setLoopStyle(true)}
+        else{setLoopStyle(false)}
+        
+
+        //style={{color:"red"}}
    }
 
    if(wavesurfer.current != null){
@@ -263,8 +270,8 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
                     <IconButton onClick={fastForward}>
                                 <FastForwardIcon  />
                               </IconButton>
-                    <IconButton onClick={setLoop}>
-                      <LoopIcon  />
+                    <IconButton onClick={setLoop} >
+                       {loopStyle? <LoopIcon style={{color:'blue'}} />: <LoopIcon/> }
                     </IconButton>
                   </Grid>
                 </Grid>
