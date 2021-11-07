@@ -10,6 +10,9 @@ import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants } from "../../model/session/Session";
 
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
+
 const Dashboard = () => {
 
   const [state, dispatch] = useContext(UserContext);
@@ -32,7 +35,7 @@ const Dashboard = () => {
 
   function getSessions(){
     console.log('get session')
-    axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/getSessionDetails?emailId="+user.emailId,{headers: {
+    axios.get(url+"/getSessionDetails?emailId="+user.emailId,{headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           "Access-Control-Allow-Headers" : "Content-Type",
@@ -60,7 +63,7 @@ const Dashboard = () => {
       })
     console.log(formdata)
 
-    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/start", formdata,{headers: {
+      axios.post(url+"/start", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -98,7 +101,7 @@ const Dashboard = () => {
       })
     console.log(formdata)
 
-    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/connect", formdata,{headers: {
+    axios.post(url+"/connect", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -127,7 +130,7 @@ const Dashboard = () => {
       })
     console.log(formdata)
 
-    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/connect", formdata,{headers: {
+    axios.post(url+"/connect", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -159,7 +162,7 @@ const Dashboard = () => {
     
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
-    axios.get("http://openbeats-daw.us-east-2.elasticbeanstalk.com/getImage?email="+state.user.emailId,{ responseType: 'blob' },{headers: {
+    axios.get(url+"/getImage?email="+state.user.emailId,{ responseType: 'blob' },{headers: {
       //'Accept': 'MediaType.IMAGE_JPEG',
       //'Accept': 'application/json',
       //'Content-Type': 'application/json',
@@ -190,7 +193,7 @@ const Dashboard = () => {
              'email',state.user.emailId
            );
 
-    axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/upgradeUser",formData,{headers: {
+    axios.post(url+"/upgradeUser",formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
@@ -237,7 +240,7 @@ const Dashboard = () => {
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
     
-    axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/uploadProfilePic", formData,{headers: {
+    axios.post(url+"/uploadProfilePic", formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
@@ -289,7 +292,7 @@ const Dashboard = () => {
                 <h1 className="text-2xl text-wh">Saved sessions</h1>
                 {
                   sessionList.map((session)=>(
-                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}}  to="/daw" >
+                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}} >
                       {session.sessionId} : {session.sessionName}
                     </button>
                   ))

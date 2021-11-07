@@ -1,4 +1,4 @@
-import React, {useContext} from 'react'
+import React, {useContext, useRef} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
@@ -10,8 +10,13 @@ import { useReactMediaRecorder } from "react-media-recorder";
 import Tracks from './audio/Tracks'
 import GroupCall from './socket/GroupCall'
 import {UserContext} from "../../model/user-context/UserContext";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 import { useSelector, useDispatch } from 'react-redux'
+
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 const RecordView = () => {
     const {
@@ -53,8 +58,29 @@ const PlayerButton = ({ style, children, ...props }) => (
 
 const Daw = () => {
     const [state, dispatch] = useContext(UserContext);
+    let clientRef = useRef(null);
     
     const session = useSelector(_state => _state.session);
+
+    const sendMessage = (msg) => {
+      console.log("sending...")
+      clientRef.sendMessage('/topics/all', msg);
+    }
+
+    const connect = () => {
+      console.log("connecting to the game");
+      let socket = new SockJS(url+"/studioSession");
+      let stompClient = Stomp.over(socket);
+      stompClient.connect({}, function (frame) {
+        console.log("connected to the frame: " + frame);
+        stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+            let data = JSON.parse(response.body);
+            console.log(data);
+            // displayResponse(data);
+        })
+      })
+    }
+
     return (
       // <div><LogNavbar/>
         <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
@@ -78,7 +104,7 @@ const Daw = () => {
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {session.participants.map((p)=>(<p>{p.firstName}</p>))}
-                        {<GroupCall emailId={state.user.emailId}/>}
+                        <button onClick={connect}>Connect</button>
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>

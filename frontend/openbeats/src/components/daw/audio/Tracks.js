@@ -46,6 +46,9 @@ import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
 
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
+
 var soundsPLayed=new Array();
 
 map1.set(90, audioFile_Z);
@@ -264,7 +267,7 @@ async function download() {
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
 
-    axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/upload", formData,{headers: {
+    axios.post(url+"/upload", formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
@@ -283,6 +286,18 @@ const handleKeydown = (e) => {
             soundsPLayed.push((map1.get(e.which)));
     }
   }
+
+  let encodeString = 'test@test.com:test1234';
+  const encodedString = Buffer.from(encodeString).toString('base64');
+  axios.post(url+"/studioSession?file=hello&sessionId=839477",{headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    "Access-Control-Allow-Headers" : "Content-Type",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    'Authorization': 'Basic '+ encodedString
+
+  }});
 }
 
 const handleRecord = () => {

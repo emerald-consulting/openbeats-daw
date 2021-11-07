@@ -8,6 +8,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { loadUser, setUserEmail, setUserPassword } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
+
 const Login = () => {
     const [state, dispatch] = useContext(UserContext);
     const [error, setError] = useState(null);
@@ -41,7 +44,7 @@ const Login = () => {
         dispatch2(setUserEmail(email));
         
 
-      axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/userlogin",{headers: {
+      axios.get(url+"/userlogin",{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -58,7 +61,7 @@ const Login = () => {
                 // setMessage(response.data.message)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
-                axios.get("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/getUserDetails?emailId="+email,{headers: {
+                axios.get(url+"/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Basic '+ encodedString
             }}).then((response1) => {

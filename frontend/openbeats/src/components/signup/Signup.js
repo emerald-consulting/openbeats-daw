@@ -4,6 +4,9 @@ import { Link } from "react-router-dom";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
 
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
+
 const Signup = () => {
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(false);
@@ -43,7 +46,7 @@ const Signup = () => {
             subscriptionType: subscriptionType,
             emailVerified: emailVerified,
             })
-        axios.post("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/createUser", formdata,{headers: {
+        axios.post(url+"/createUser", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }}).then((response) => {
