@@ -104,14 +104,42 @@ function Tracks() {
     setFiles([...files, file]);
     setPlayTracks([...playTracks, false])
     setSelected([...selected, false])
-    let num=15
+    // console.log(file.blob)
+    // let fileurl=""
+    // if (file.blobURL){
+    //   fileurl=file.blobURL
+    // } else {
+    //   fileurl=URL.createObjectURL(file.blob)
+    // }
+    // console.log(fileurl)
     let encodeString = 'test@test.com:test1234';
+    const formData = new FormData();
+
+    formData.append(
+      'fileName','hello'
+    );
+
+      const _file = new File([file.blob], 'audio.mp3');
+
+    formData.append(
+      'file','file'
+    );
+
+    formData.append(
+      'sessionId',session.sessionId
+    );
+
+    formData.append(
+      'bucketName',session.bucketName
+    );
+    let requestsParams = "fileName=hello&file=file&sessionid="+session.sessionId+"&bucketName="+session.bucketName;
     const encodedString = Buffer.from(encodeString).toString('base64');
-    axios.post(url+"/studioSession?fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName,{headers: {
+    axios.post(url+"/studioSession?"+requestsParams,{headers: {
+    // axios.post(url+"/studioSession",formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
-      // "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
       'Authorization': 'Basic '+ encodedString
 
