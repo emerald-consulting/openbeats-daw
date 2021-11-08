@@ -70,6 +70,7 @@ const Daw = () => {
     const connect = () => {
       console.log("connecting to the game");
       let socket = new SockJS(url+"/studioSession");
+      //{headers : {"Access-Control-Allow-Origin": "*" }}
       let stompClient = Stomp.over(socket);
       stompClient.connect({}, function (frame) {
         console.log("connected to the frame: " + frame);

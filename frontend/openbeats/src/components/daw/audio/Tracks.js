@@ -46,8 +46,8 @@ import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -89,7 +89,7 @@ function Tracks() {
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [seekValue, setSeekValue] = useState(0);
-
+  const session = useSelector(_state => _state.session);
   const _audio = useSelector(_state => _state.audio);
   const maxDuration = _audio?_audio.maxDuration:1;
   console.log(maxDuration);
@@ -104,6 +104,18 @@ function Tracks() {
     setFiles([...files, file]);
     setPlayTracks([...playTracks, false])
     setSelected([...selected, false])
+    let num=15
+    let encodeString = 'test@test.com:test1234';
+    const encodedString = Buffer.from(encodeString).toString('base64');
+    axios.post(url+"/studioSession?fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      // "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Basic '+ encodedString
+
+    }});
   };
 
   const remove = index => {
@@ -287,17 +299,6 @@ const handleKeydown = (e) => {
     }
   }
 
-  let encodeString = 'test@test.com:test1234';
-  const encodedString = Buffer.from(encodeString).toString('base64');
-  axios.post(url+"/studioSession?file=hello&sessionId=839477",{headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-    "Access-Control-Allow-Headers" : "Content-Type",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    'Authorization': 'Basic '+ encodedString
-
-  }});
 }
 
 const handleRecord = () => {

@@ -5,13 +5,15 @@ export const sessionSlice = createSlice({
   initialState: {
     "sessionId": "NA",
     "sessionName": "NA",
-    "participants":[]
+    "participants":[],
+    "bucketName":"NA",
   },
   reducers: {
     setSession: (state, action) => {
         state.sessionId = action.payload.sessionId;
         state.sessionName = action.payload.sessionName;
         state.participants = action.payload.participants;
+        state.bucketName = action.payload.bucketName;
     },
     setSessionId: (state, action) => {
         state.sessionId = action.payload
@@ -21,10 +23,13 @@ export const sessionSlice = createSlice({
     },
     setParticipants: (state, action) => {
         state.participants = action.payload
+    },
+    setBucketName: (state, action) => {
+      state.bucketName = action.payload
     }
   }
 })
 
-export const { setSession, setSessionId, setSessionName, setParticipants } = sessionSlice.actions
+export const { setSession, setSessionId, setSessionName, setParticipants, setBucketName } = sessionSlice.actions
 
 export default sessionSlice.reducer
