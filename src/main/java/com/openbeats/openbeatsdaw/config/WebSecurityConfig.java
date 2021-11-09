@@ -1,16 +1,21 @@
 package com.openbeats.openbeatsdaw.config;
 
+import com.google.common.collect.ImmutableList;
 import com.openbeats.openbeatsdaw.Service.CustomOAuth2UserService;
 import com.openbeats.openbeatsdaw.Service.OAuth2AuthenticationSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,8 +30,10 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,24 +57,38 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authProviderDB());
     }
 
-
-    @Bean
+    /*@Bean
     protected CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
-    }
-    /*@Bean
+    }*/
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(ImmutableList.of("*"));
-        //config.setAllowCredentials(true);
-        config.setAllowedMethods(ImmutableList.of("HEAD",
-                "GET", "POST", "PUT", "DELETE", "PATCH"));
-        config.setAllowedHeaders(ImmutableList.of("Authorization", "Cache-Control", "Content-Type"));
+        config.setAllowedOrigins(ImmutableList.of("http://localhost:3000"));
+        config.setAllowCredentials(true);
+        //config.setAllowedMethods(ImmutableList.of("HEAD","GET", "POST", "PUT", "DELETE", "PATCH"));
+        config.setAllowedMethods(ImmutableList.of("*"));
+        //config.setAllowedHeaders(ImmutableList.of("Access-Control-Allow-Methods","Authorization", "Cache-Control", "Content-Type","Accept","Access-Control-Allow-Headers","Access-Control-Allow-Origin"));
+        config.setAllowedHeaders(ImmutableList.of("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
+    }
+
+    /*@Bean
+    public FilterRegistrationBean<CorsFilter> simpleCorsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        //config.setAllowCredentials(true);
+        //config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        source.registerCorsConfiguration("/**", config);
+        FilterRegistrationBean<CorsFilter> bean = new FilterRegistrationBean<>(new CorsFilter(source));
+        bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return bean;
     }*/
 
     @Bean
@@ -79,10 +100,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
 
-        http.cors()
-                .and().authorizeRequests()
+        //http.cors().and().authorizeRequests().antMatchers("/**").permitAll();
+        http.cors().and().authorizeRequests()
                 .antMatchers("/createUser").permitAll()
                 .antMatchers("/verify").permitAll()
                 .antMatchers("/upgradeUser").permitAll()
@@ -99,6 +120,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();
 
     }
+
+    /*@Override
+    public void configure(WebSecurity web){
+        web.ignoring().antMatchers(HttpMethod.OPTIONS, "/**");
+
+    }*/
 
 
     @Bean
