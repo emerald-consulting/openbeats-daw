@@ -12,4 +12,5 @@ public class StudioSession implements Serializable {
     private String sessionName;
     private List<User> participants;
     private List<AudioTrack> audioTracks;
+    private String bucketName;
 }
