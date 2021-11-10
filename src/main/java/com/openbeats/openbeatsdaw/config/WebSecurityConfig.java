@@ -2,7 +2,6 @@ package com.openbeats.openbeatsdaw.config;
 
 import com.google.common.collect.ImmutableList;
 import com.openbeats.openbeatsdaw.Service.CustomOAuth2UserService;
-import com.openbeats.openbeatsdaw.Service.FormLoginSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.OAuth2AuthenticationSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.JwtTokenFilter;
@@ -54,10 +53,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
-
-    @Autowired
-    private FormLoginSuccessHandler formLoginSuccessHandler;
 
     @Autowired
     private JwtTokenFilter jwtTokenFilter;
@@ -121,7 +116,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/**").permitAll()
                 .anyRequest().authenticated().and().httpBasic()
-                .and().formLogin().successHandler(formLoginSuccessHandler) // enable form based login
+                .and().formLogin() // enable form based login
                 .loginPage("/login")
                 .and().logout()
                 .and().oauth2Login()
@@ -178,7 +173,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clientSecret("dd77b05c0532424c968a678e7d09f6e4")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
+                    .redirectUri("http://openbeats--daw.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")

@@ -11,8 +11,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-const url = "http://192.168.1.166:5000"
-
+//const url = "http://192.168.1.166:5000"
+const url="http://localhost:8080"
 const Dashboard = () => {
 
   const [state, dispatch] = useContext(UserContext);
@@ -25,6 +25,8 @@ const Dashboard = () => {
   
   let history = useHistory();
   let encodeString = `${user.emailId}:${user.password}`;
+  let jwtToken = `${user.jwtToken}`;
+  //console.log("this is the jwt token"+jwtToken);
   const encodedString = Buffer.from(encodeString).toString('base64');
   console.log(state)
   console.log(sessionList)
@@ -41,7 +43,7 @@ const Dashboard = () => {
           "Access-Control-Allow-Headers" : "Content-Type",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-          'Authorization': 'Basic '+ encodedString
+          'Authorization': 'Bearer '+ jwtToken
       }}).then((response) => {
           console.log(response.data.data);
           setSessionList(response.data.data);
@@ -69,7 +71,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+            'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -108,7 +110,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+            'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -138,7 +140,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -172,7 +174,7 @@ const Dashboard = () => {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
     }}).then((response) => {
       // if(response.data){
       //   // dispatch({
@@ -201,7 +203,8 @@ const Dashboard = () => {
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Bearer '+ jwtToken
   }}).then((response) => {
         if(response){
           console.log(response);
@@ -249,7 +252,7 @@ const Dashboard = () => {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
   }});
   };
 
