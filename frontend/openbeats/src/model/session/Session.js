@@ -7,6 +7,7 @@ export const sessionSlice = createSlice({
     "sessionName": "NA",
     "participants":[],
     "bucketName":"NA",
+    "audioTracks":[],
   },
   reducers: {
     setSession: (state, action) => {
@@ -26,10 +27,13 @@ export const sessionSlice = createSlice({
     },
     setBucketName: (state, action) => {
       state.bucketName = action.payload
+    },
+    setAudioTracks: (state, action) => {
+      state.audioTracks = action.payload
     }
   }
 })
 
-export const { setSession, setSessionId, setSessionName, setParticipants, setBucketName } = sessionSlice.actions
+export const { setSession, setSessionId, setSessionName, setParticipants, setBucketName, setAudioTracks } = sessionSlice.actions
 
 export default sessionSlice.reducer
