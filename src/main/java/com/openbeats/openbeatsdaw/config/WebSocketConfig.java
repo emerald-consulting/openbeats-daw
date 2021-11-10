@@ -23,11 +23,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/studioSession").withSockJS();
+        registry.addEndpoint("/studioSession").setAllowedOrigins("http://localhost:3000").withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.setApplicationDestinationPrefixes("/app").enableSimpleBroker("/topic");
+        registry.enableSimpleBroker("/topic/session-progress");
     }
 }

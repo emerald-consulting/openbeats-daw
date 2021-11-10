@@ -1,5 +1,8 @@
 package com.openbeats.openbeatsdaw.Service;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
@@ -13,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +32,13 @@ public class SessionMgmtService {
 
     @Autowired
     private UserManagementService userManagementService;
+
+    @Autowired
+    private AWSStorageService awsStorageService;
+
+    @Autowired
+    private AmazonS3 amazonS3Client;
+
 
     public boolean saveSession(String email, String sessionName,String userSessionName) {
         List<Session> existingSessions = sessionRepository.findByUserEmail(email);
@@ -111,7 +123,7 @@ public class SessionMgmtService {
         return studioSession;
     }
 
-    public StudioSession studioSession(String file, String sessionId) throws Exception {
+    public StudioSession studioSession(String fileName, String sessionId,String bucketName) throws Exception {
 
         if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
             throw new Exception("Session not found");
@@ -121,10 +133,12 @@ public class SessionMgmtService {
         log.info("Getting studio session");
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
 
+        //String newFileName = awsStorageService.uploadFile(file,bucketName);
+
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);
-        audioTrack.setFile(file);
+        audioTrack.setFile(fileName);
         audioTracks.add(audioTrack);
         log.info("Storing audio tracks in session");
         SessionStorage.getInstance().setStudioSession(studioSession);
@@ -133,6 +147,34 @@ public class SessionMgmtService {
 
 
     }
+
+    public StudioSession getStudioSession(String sessionId) throws Exception {
+        if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
+            throw new Exception("Session not found");
+        }
+        return SessionStorage.getInstance().getStudioSession().get(sessionId);
+    }
+
+    /*public ByteArrayOutputStream downloadFile(String keyName) {
+        try {
+            S3Object s3object = awsStorageService.getObject(new GetObjectRequest(bucketName, keyName));
+
+            InputStream is = s3object.getObjectContent();
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            int len;
+            byte[] buffer = new byte[4096];
+            while ((len = is.read(buffer, 0, buffer.length)) != -1) {
+                outputStream.write(buffer, 0, len);
+            }
+
+            return outputStream;
+        } catch (Exception e) {
+
+        }
+
+        return null;
+    }*/
+
 
     /*public StudioSession addTrackToSession(String sessionId) throws Exception {
         if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
