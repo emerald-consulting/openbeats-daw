@@ -1,11 +1,11 @@
 import React, {useState, useContext, useEffect } from "react";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link } from "react-router-dom";
+import { Link , useLocation} from "react-router-dom";
 import UserContextProvider, {UserContext} from "../../model/user-context/UserContext";
 import bgimg2 from '../bg2.jpg'
 import { useHistory } from "react-router";
 import axios from "axios";
-
+import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
@@ -15,6 +15,7 @@ import { setSession, setSessionId, setSessionName, setParticipants, setBucketNam
 const url="http://localhost:8080"
 const Dashboard = () => {
 
+  const search = useLocation().search;
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
   const [sessionList, setSessionList] = useState([]);
@@ -32,8 +33,41 @@ const Dashboard = () => {
   console.log(sessionList)
 
   useEffect(() => {
+      if(search){
+      getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
+      }
+
+   });
+
+
+  useEffect(() => {
     getSessions();
   }, [])
+
+
+   function getSpotifyUserDetails(token,email){
+      console.log('get getSpotifyUserDetails');
+       dispatch2(setUserToken(token));
+        dispatch2(setUserEmail(email));
+      axios.get(url+"/getUserDetails?emailId="+email,{headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': 'Bearer '+ token
+                 }}).then((response1) => {
+                     if(response1.data.status==207){
+
+
+                     }
+                     else if(response1.data){
+                          dispatch({
+                                                 type: "LOAD_USER",
+                                                 payload: response1.data.data
+                                               });
+                         console.log(response1.data.data)
+
+
+                     }
+                 });
+    }
 
   function getSessions(){
     console.log('get session')
