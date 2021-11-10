@@ -260,12 +260,12 @@ const Dashboard = () => {
               
 
     return (
-      <div className='h-screen' style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}>
-        
+      <div className='h-screen'>
+         {/* style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}         */}
         <LogNavbar/>
         <div className='flex flex-row'>
         
-          <div className=" py-20 pl-20 pr-20 rounded-md" style={{width:'40%'}}>
+          <div className=" py-20 pl-20 pr-20 rounded-md" style={{width:'40%', height:'90vh'}}>
             <div className="flex flex-col">
               <div className="p-2 m-1 bg-gr2 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
                 <img style={{borderRadius: '40px',margin:'auto'}}  src={imgSrc()}/>
@@ -277,19 +277,19 @@ const Dashboard = () => {
                 </button>
             </div>
             <div><button onClick={getImage} className="rounded bg-gr4 p-1">Get Image</button></div>
-              <div className="p-2 m-1 bg-gr2 text-wh rounded ">{state.user.firstName}</div>
-              <div className="p-2 m-1 bg-gr2 text-wh  rounded ">{state.user.emailId}</div>
+              <div className="p-2 m-1 bg-gr2  rounded ">{state.user.firstName}</div>
+              <div className="p-2 m-1 bg-gr2   rounded ">{state.user.emailId}</div>
             </div>
             <div id="upgradeUserDiv">
             {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded bg-gr4 p-1">Upgrade to Premium</button>}
             </div>
 
           </div>
-          <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
+          <div className="p-10 pr-20" style={{width:'60%', height:'90vh'}}><h1 class="text-4xl pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
               <div className="bg-gr2 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
-                <h1 className="text-2xl text-wh">Saved sessions</h1>
+                <h1 className="text-2xl ">Saved sessions</h1>
                 {
                   sessionList.map((session)=>(
                     <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}} >
@@ -301,7 +301,7 @@ const Dashboard = () => {
               </div>
               <div className=" rounded  ">
                 <div className="bg-gr2 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
-                  <h1 className="text-2xl text-wh">Create a Session</h1>
+                  <h1 className="text-2xl ">Create a Session</h1>
                   <form onSubmit={createWorkspace}>
                       <div>
                           <input
@@ -321,7 +321,7 @@ const Dashboard = () => {
                   </form>
                 </div>
                 <div className="bg-gr2 w-96 rounded ml-0.5 shadow-default py-10 px-16">
-                  <h1 className="text-2xl text-wh">Join a Session</h1>
+                  <h1 className="text-2xl ">Join a Session</h1>
                   <form onSubmit={joinSession}>
                       <div>
                           <input
