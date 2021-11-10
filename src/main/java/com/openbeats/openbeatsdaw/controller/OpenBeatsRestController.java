@@ -8,6 +8,7 @@ import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.LoginRequest;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
+import com.openbeats.openbeatsdaw.model.StudioSession;
 import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
@@ -112,17 +113,28 @@ public class OpenBeatsRestController {
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com/confirmation");
+            redirectView.setUrl("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/confirmation");
             return redirectView;
 
         } else {
             log.info("User verified Unsuccessfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://openbeats-frontend.s3-website.us-east-2.amazonaws.com");
+            redirectView.setUrl("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com");
             return redirectView;
 
         }
     }
+
+    @PostMapping("/upgradeUser")
+    public ResponseEntity<Object> upgradeUser(@RequestParam(value = "email") String emailId){
+        int isUpgraded=createUser.upgradeSubscriptionType(emailId);
+        log.info(String.valueOf(isUpgraded));
+        if(isUpgraded>0) return ResponseHandler.generateResponse("Success", HttpStatus.OK,isUpgraded);
+        else return ResponseHandler.generateResponse("Failed", HttpStatus.OK,isUpgraded);
+    }
+
+
+
 
     @RequestMapping("/spotifyOauth")
     @ResponseBody
@@ -169,7 +181,7 @@ public class OpenBeatsRestController {
         }
         return ResponseHandler.generateResponse("success", HttpStatus.OK,service.createBucket(new_bucket_name));
     }
-
+    
     @PostMapping("/deleteWorkspace")
     public ResponseEntity<Object> deleteBucket(@RequestParam(value = "sessionName")String sessionName,
                                                @RequestParam(value = "email") String email){
@@ -196,7 +208,7 @@ public class OpenBeatsRestController {
 
     @GetMapping("/getSessionDetails")
     public ResponseEntity<Object> getSessionList(@RequestParam String emailId){
-        List<Session> sessionList = sessionMgmtService.getAllUserSessions(emailId);
+        List<StudioSession> sessionList = sessionMgmtService.getAllUserSessions(emailId);
         return ResponseHandler.generateResponse("success", HttpStatus.OK,sessionList);
     }
 

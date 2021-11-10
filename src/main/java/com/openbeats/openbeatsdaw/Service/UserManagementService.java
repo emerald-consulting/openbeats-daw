@@ -104,6 +104,10 @@ public class UserManagementService implements UserDetailsService {
 
     }
 
+    public int upgradeSubscriptionType(String email){
+        log.info(email);
+        return userRepository.upgradeUserSubscription(email);
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

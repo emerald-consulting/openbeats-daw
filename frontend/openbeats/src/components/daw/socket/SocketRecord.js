@@ -285,7 +285,8 @@ $(document).delegate('*[data-toggle="lightbox"]', 'click', function(event) {
 
 const SocketRecord = () =>{
     return(
-        <div className="container">
+        // className="container"
+        <div  style={{height:'100%'}}>
             <div className="row" style={{display: 'none'}}>
                 <div className="col-md-12" >
                     <input type="radio" name="mode" value="video-and-audio"/> Video and audio
@@ -293,25 +294,26 @@ const SocketRecord = () =>{
                     <input type="radio" name="mode" value="audio-only" checked="checked" /> Audio only
                 </div>
             </div>
-            <div className="row">
+            <div className="row" >
                 <div className="col-md-5" style={{display: 'none'}}>
                     <h3>Local stream</h3>
                     <video id="videoInput" autoPlay width="480px" height="360px"
                            poster="img/webrtc.png"></video>
                 </div>
                 <div className=" flex flex-row">
-                    <div className="p-5 ml-0.5 bg-gr2 rounded-full  text-xl hover:bg-gr3">
-                        <a id="start" href="#" className="btn btn-success"
-                           onClick={()=>start()}><span
-                            className="glyphicon glyphicon-play"></span> Record Session</a>
+                    <div className="p-5 ml-0.5 bg-gr2  hover:bg-gr3"  >
+                        <a id="start" href="#" className="btn btn-success" 
+                           onClick={()=>start()}><span style={{height:'100%'}}
+                            className="glyphicon glyphicon-play"></span> Record Session
+                        </a>
                     </div>
-                    <div className="p-5 ml-0.5 bg-gr2 rounded-full text-xl  hover:bg-gr3">
+                    <div className="p-5 ml-0.5 bg-gr2  hover:bg-gr3">
                         <a
                         id="stop" href="#" className="btn btn-danger"
                         onClick={()=>stop()}><span
                         className="glyphicon glyphicon-stop"></span> Stop Recording</a>
                     </div>
-                    <div className="p-5 ml-0.5 bg-gr2 rounded-full text-xl hover:bg-gr3">
+                    <div className="p-5 ml-0.5 bg-gr2 hover:bg-gr3">
                         <a
                         id="play" href="#" className="btn btn-warning"
                         onClick={()=>play()}><span

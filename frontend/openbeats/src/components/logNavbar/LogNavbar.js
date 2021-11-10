@@ -4,9 +4,12 @@ import logo from '../openbeats_notype-45.png';
 // import About from "../about/About";
 import { useHistory } from "react-router"
 import { UserContext } from "../../model/user-context/UserContext";
+import { useSelector, useDispatch } from 'react-redux'
 
 const LogNavbar = () => {
   const [state, dispatch] = useContext(UserContext);
+  const user = useSelector(_state => _state.user);
+  console.log(user);
   
   return (
     <div>  

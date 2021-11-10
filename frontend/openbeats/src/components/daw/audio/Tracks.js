@@ -1,16 +1,23 @@
 import React, { useState } from "react";
+import axios from "axios"
+import LoadingOverlay from 'react-loading-overlay';
 
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
 import AudioPlayer from "./components/AudioPlayer/AudioPlayer";
-import Fileupload from "../Fileupload";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
+
 import SocketRecord from "../socket/SocketRecord";
+import Fileupload from "../Fileupload";
+
+import { useSelector, useDispatch } from 'react-redux'
+import { setMaxDuration } from "../../../model/audio/Audio";
+
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
 import audioFile_Z from './components/AudioPlayer/Dsc_Oh.mp3'
 import audioFile_X from './components/AudioPlayer/Cev_H2.mp3'
@@ -32,13 +39,15 @@ import audio_Ab from './components/AudioPlayer/Ab.mp3'
 import audio_A from './components/AudioPlayer/A.mp3'
 import audio_Bb from './components/AudioPlayer/Bb.mp3'
 import audio_B from './components/AudioPlayer/B.mp3'
-import axios from "axios"
 
 
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
 import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
+
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -66,19 +75,24 @@ map1.set(85, audio_Bb);
 map1.set(74, audio_B);
 
 const divStyle = {
-  overflowY: 'scroll', height: '400px', maxWidth: '100%', overflowX: 'hidden'
+  overflowY: 'scroll',height: '60vh', maxWidth: '100%', overflowX: 'hidden'
 };
 
-//
+// height: '100%',
 
 function Tracks() {
   const [files, setFiles] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
   const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [stopPlaying, setStopPlaying] = useState(0);
   const [selected, setSelected] = useState([]);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [seekValue, setSeekValue] = useState(0);
+  const session = useSelector(_state => _state.session);
+  const _audio = useSelector(_state => _state.audio);
+  const maxDuration = _audio?_audio.maxDuration:1;
+  console.log(maxDuration);
     
   const onFileChange = event => {
     //var blobUrl = URL.createObjectURL(event.target.files[0])
@@ -90,6 +104,51 @@ function Tracks() {
     setFiles([...files, file]);
     setPlayTracks([...playTracks, false])
     setSelected([...selected, false])
+    // console.log(file.blob)
+    // let fileurl=""
+    // if (file.blobURL){
+    //   fileurl=file.blobURL
+    // } else {
+    //   fileurl=URL.createObjectURL(file.blob)
+    // }
+    // console.log(fileurl)
+    let encodeString = 'test@test.com:test1234';
+    const formData = new FormData();
+
+    formData.append(
+      'fileName','hello'
+    );
+    let _file = null;
+    console.log(file.blob)
+    if (file.blob){
+      _file = new File([file.blob], 'audio.mp3');
+    } else {
+      console.log(file.substring(5))
+      _file = new File([new Blob(file.substring(5))], 'audio.mp3')
+    }
+    formData.append(
+      'file',_file
+    );
+
+    formData.append(
+      'sessionId',session.sessionId
+    );
+
+    formData.append(
+      'bucketName',session.bucketName
+    );
+    let requestsParams = "fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName;
+    const encodedString = Buffer.from(encodeString).toString('base64');
+    axios.post(url+"/studioSession",formData,{headers: {
+    // axios.post(url+"/studioSession",formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Basic '+ encodedString
+
+    }});
   };
 
   const remove = index => {
@@ -174,11 +233,7 @@ function Tracks() {
         temp.push(!selected[i])
       }
     }
-    // temp[index]=!temp[index]
-    console.log(temp)
     setSelected(temp);
-    // console.log(selected[index])
-    // console.log(index)
   }
 
   // React.useEffect (() => {
@@ -190,18 +245,18 @@ function Tracks() {
 }, [])
 
 function concatAudioBuffer(buffers){
-let crunker = new Crunker();
-return crunker.concatAudio(buffers);
+  let crunker = new Crunker();
+  return crunker.concatAudio(buffers);
 }
 
 async  function getAudioBuffer(file){
-let crunker = new Crunker();
+  let crunker = new Crunker();
 
-let x= await crunker
-.fetchAudio(file)
-.then((buffers)=>{
-      return buffers;
-});
+  let x= await crunker
+  .fetchAudio(file)
+  .then((buffers)=>{
+        return buffers;
+  });
 
   return x;
 
@@ -210,41 +265,35 @@ let x= await crunker
 
 
 async function download() {
-var initBuffer=null;
-var tempBuffer=null;
-//    var x=[audioFile1,audioFile,audioFile2,audioFile3];
-var x=soundsPLayed;
-console.log(x);
-for(var i=0;i<x.length;i++){
-  console.log(i);
-  if(i==0){
-      initBuffer= await getAudioBuffer(x[i]);
-  }else{
-      tempBuffer= await getAudioBuffer(x[i]);
-      console.log(initBuffer)
-      var x1= new Array();
-      if(i==1){
-          x1.push(initBuffer[0]);
-      }else{
-          x1.push(initBuffer);
-      }
-      x1.push(tempBuffer[0]);
-      initBuffer=concatAudioBuffer(x1);
+  var initBuffer=null;
+  var tempBuffer=null;
+  //    var x=[audioFile1,audioFile,audioFile2,audioFile3];
+  var x=soundsPLayed;
+  for(var i=0;i<x.length;i++){
+    if(i==0){
+        initBuffer= await getAudioBuffer(x[i]);
+    }else{
+        tempBuffer= await getAudioBuffer(x[i]);
+        console.log(initBuffer)
+        var x1= new Array();
+        if(i==1){
+            x1.push(initBuffer[0]);
+        }else{
+            x1.push(initBuffer);
+        }
+        x1.push(tempBuffer[0]);
+        initBuffer=concatAudioBuffer(x1);
 
+
+    }
 
   }
 
-}
-
   let crunker = new Crunker();
-  console.log("this is aduio");
-    console.log(initBuffer);
-var ds= crunker.export(initBuffer, "audio/mp3");
-console.log("this is audio buffer.");
-console.log(ds);
-pushFile(ds);
+  var ds= crunker.export(initBuffer, "audio/mp3");
+  pushFile(ds);
 
-const formData = new FormData();
+  const formData = new FormData();
 
       const file = new File([ds.blob], 'audio.mp3');
 
@@ -263,95 +312,160 @@ const formData = new FormData();
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
 
-    axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/upload", formData,{headers: {
+  //   axios.post(url+"/upload", formData,{headers: {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json',
+  //     "Access-Control-Allow-Headers" : "Content-Type",
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+  //     'Authorization': 'Basic '+ encodedString
+
+  // }});
+
+}
+
+const handleKeydown = (e) => {
+  if(recording==true){
+  console.log(map1.get(e.which));
+    if(map1.has(e.which)){
+            soundsPLayed.push((map1.get(e.which)));
+    }
+  }
+
+}
+
+const handleRecord = () => {
+  recording=!recording;
+  setChangeRecordLabel(!changeRecordLabel)
+
+  if(recording==true){
+    console.log("Recording");
+  }
+
+  if(recording==false){
+    download();
+    soundsPLayed=new Array();
+  }
+
+};
+
+async function exportAsWav() {
+  setIsLoading(true)
+  let crunker = new Crunker();
+  let expBuffer = await crunker.fetchAudio(...files);
+  let mergedBuffer = await crunker.mergeAudio(expBuffer);
+  let exportedAudio = await crunker.export(mergedBuffer,'audio/wav');
+  await crunker.download(exportedAudio.blob, "merged");
+  setIsLoading(false)
+}
+
+function getAllFiles() {
+  setIsLoading(true)
+  session.audioTracks.forEach((s) => {
+    const formData = new FormData();
+    formData.append(
+      'fileName',s.file
+    );
+    formData.append(
+      'bucketName',session.bucketName
+    );
+    let encodeString = 'test@test.com:test1234';
+    const encodedString = Buffer.from(encodeString).toString('base64');
+    axios.post(url+"/getFile", formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
       'Authorization': 'Basic '+ encodedString
-
-  }});
-
+  
+  }}).then( res =>{
+    if (res.data){
+      //const _file = new File([res.data], 'audio.mp3');
+      console.log(res.data)
+      const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mp3' });
+      pushFile(_file);
+    }
+  }).catch( error => {console.log(error)});
+  })
+  setIsLoading(false)
+  
 }
-
-const handleKeydown = (e) => {
-if(recording==true){
-console.log(e);
-console.log(map1.get(e.which));
-console.log("nice");
-  if(map1.has(e.which)){
-          soundsPLayed.push((map1.get(e.which)));
-  }
-}
-}
-
-const handleRecord = () => {
-recording=!recording;
-setChangeRecordLabel(!changeRecordLabel)
-
-if(recording==true){
-  console.log("Recording");
-}
-
-if(recording==false){
-  download();
-  soundsPLayed=new Array();
-}
-
-};
 
 
   return (
+    <LoadingOverlay
+    active={isLoading}
+    spinner
+    text='Please wait...'
+    >
     <div style={divStyle}>
       {/* <NavBar /> */}
-      <div className="flex flex-row ">
-        <div className=" rounded-full bg-gr2 hover:bg-gr3">
-          <Microphone style={{}}  pushFile={pushFile} spy={true} smooth={true} />
-          </div>
-        <div className="p-2 ml-0.5 text-xl pt-4 rounded-full bg-gr2 hover:bg-gr3">
+      <div className="flex flex-row pl-20">
+        <div className="  bg-gr2 hover:bg-gr3">
+          <Microphone style={{}}  pushFile={pushFile} />
+        </div>
+        <div className="p-2 ml-0.5  pt-5  bg-gr2 hover:bg-gr3">
             <label for={"file-upload"} className=" cursor-pointer">
                 File+</label> 
             <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
         </div>
-        <Fileupload spy={true} smooth={true}/>
-        <div className="text-xl p-2 ml-0.5 flex  flex-row rounded-full bg-gr2 hover:bg-gr3">
-          <Checkbox checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
-          <p className="pt-2 pr-1" >Select All</p>
+        <Fileupload/>
+        <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
+          <Checkbox style={{color: "#00e676" }} checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
+          <p className="pt-3 pr-1" >Select All</p>
         </div>
-        <div className="rounded-full ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
-        <div className="rounded-full ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+        <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
+        <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
           <IconButton  onClick={stopPlayTracks}>
             <StopIcon  smooth={true}  />
           </IconButton>
         </div>
 
-        <div className="bg-gr2 p-4 ml-0.5 pt-5 rounded-full hover:bg-gr3" style={{width:'20%'}}>
+        {/* <div className="bg-gr2 p-4 ml-0.5 pt-5  hover:bg-gr3" style={{width:'20%'}}>
           <input   step='0.01' type="range" color="green" 
           min='0' max='1'/>
-        </div>
-        <div>
-          <button onClick={handleRecord} className=" p-4 ml-0.5 pt-5 rounded-full ml-0.5 text-xl bg-gr2 hover:bg-gr3">
+        </div> */}
+        <div >
+          <button onClick={handleRecord} 
+            style={{height:'100%'}}
+            className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
             {!changeRecordLabel ? 'Record Instrument' : 'Stop Recording'}
+            
           </button>
         </div>
-        <SocketRecord />
+        <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+          <button onClick={exportAsWav}>Download</button>
+        </div>
+        <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+          <button onClick={getAllFiles}>Reload</button>
+        </div>
         
-      </div>                 
-      <Grid container direction="column" spacing={1}>
+        
+      </div>    
+      <div className=" p-0.5 pt-0.5" style={{width:'100%'}}>
+        <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/>
+      </div>             
+      <Grid container direction="column" >
         {files.map((file, index) => (
-          <Grid key={index} item >
-            <Checkbox checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
-            
-            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} />
-            
-            <IconButton onClick={()=>remove(index) } style={{marginTop: '-60px', position:'relative'}} className="float-right">
+          <Grid key={index} container >
+            <Grid item md={0.2}>
+            <Checkbox    style ={{  color: "#00e676" }} checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
+            </Grid>
+            <Grid item md={11}>
+            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} />
+            </Grid>
+            <Grid item md={0.5}>
+            <IconButton onClick={()=>remove(index) }  className="float-right">
+              {/* style={{marginTop: '-60px', position:'relative'}} */}
               <CancelIcon />
             </IconButton>
+            </Grid>
           </Grid>
         ))}
       </Grid>
     </div>
+    </LoadingOverlay>
   );
 }
 
