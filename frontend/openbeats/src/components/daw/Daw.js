@@ -12,8 +12,10 @@ import GroupCall from './socket/GroupCall'
 import {UserContext} from "../../model/user-context/UserContext";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import axios from "axios"
 
 import { useSelector, useDispatch } from 'react-redux'
+import { setAudioTracks } from "../../model/session/Session";
 
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 const url = "http://192.168.1.166:5000"
@@ -61,6 +63,7 @@ const Daw = () => {
     let clientRef = useRef(null);
     
     const session = useSelector(_state => _state.session);
+    const dispatch2 = useDispatch();
 
     const sendMessage = (msg) => {
       console.log("sending...")
@@ -70,6 +73,7 @@ const Daw = () => {
     const connect = () => {
       console.log("connecting to the game");
       let socket = new SockJS(url+"/studioSession");
+      //{headers : {"Access-Control-Allow-Origin": "*" }}
       let stompClient = Stomp.over(socket);
       stompClient.connect({}, function (frame) {
         console.log("connected to the frame: " + frame);
@@ -79,6 +83,26 @@ const Daw = () => {
             // displayResponse(data);
         })
       })
+      const formData = new FormData();
+      formData.append(
+        'sessionId',session.sessionId
+      );
+      let encodeString = 'test@test.com:test1234';
+      const encodedString = Buffer.from(encodeString).toString('base64');
+      axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        'Authorization': 'Basic '+ encodedString
+
+      }}).then((res)=>{
+        console.log(res)
+        if(res.data){
+          dispatch2(setAudioTracks(res.data.audioTracks))
+        }
+      }).catch(error => {console.log(error)});
     }
 
     return (

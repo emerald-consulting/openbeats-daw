@@ -46,8 +46,8 @@ import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -89,7 +89,7 @@ function Tracks() {
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [seekValue, setSeekValue] = useState(0);
-
+  const session = useSelector(_state => _state.session);
   const _audio = useSelector(_state => _state.audio);
   const maxDuration = _audio?_audio.maxDuration:1;
   console.log(maxDuration);
@@ -104,6 +104,51 @@ function Tracks() {
     setFiles([...files, file]);
     setPlayTracks([...playTracks, false])
     setSelected([...selected, false])
+    // console.log(file.blob)
+    // let fileurl=""
+    // if (file.blobURL){
+    //   fileurl=file.blobURL
+    // } else {
+    //   fileurl=URL.createObjectURL(file.blob)
+    // }
+    // console.log(fileurl)
+    let encodeString = 'test@test.com:test1234';
+    const formData = new FormData();
+
+    formData.append(
+      'fileName','hello'
+    );
+    let _file = null;
+    console.log(file.blob)
+    if (file.blob){
+      _file = new File([file.blob], 'audio.mp3');
+    } else {
+      console.log(file.substring(5))
+      _file = new File([new Blob(file.substring(5))], 'audio.mp3')
+    }
+    formData.append(
+      'file',_file
+    );
+
+    formData.append(
+      'sessionId',session.sessionId
+    );
+
+    formData.append(
+      'bucketName',session.bucketName
+    );
+    let requestsParams = "fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName;
+    const encodedString = Buffer.from(encodeString).toString('base64');
+    axios.post(url+"/studioSession",formData,{headers: {
+    // axios.post(url+"/studioSession",formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Basic '+ encodedString
+
+    }});
   };
 
   const remove = index => {
@@ -267,15 +312,15 @@ async function download() {
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
 
-    axios.post(url+"/upload", formData,{headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Access-Control-Allow-Headers" : "Content-Type",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+  //   axios.post(url+"/upload", formData,{headers: {
+  //     'Accept': 'application/json',
+  //     'Content-Type': 'application/json',
+  //     "Access-Control-Allow-Headers" : "Content-Type",
+  //     "Access-Control-Allow-Origin": "*",
+  //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+  //     'Authorization': 'Basic '+ encodedString
 
-  }});
+  // }});
 
 }
 
@@ -287,17 +332,6 @@ const handleKeydown = (e) => {
     }
   }
 
-  let encodeString = 'test@test.com:test1234';
-  const encodedString = Buffer.from(encodeString).toString('base64');
-  axios.post(url+"/studioSession?file=hello&sessionId=839477",{headers: {
-    'Accept': 'application/json',
-    'Content-Type': 'application/json',
-    "Access-Control-Allow-Headers" : "Content-Type",
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    'Authorization': 'Basic '+ encodedString
-
-  }});
 }
 
 const handleRecord = () => {
@@ -323,6 +357,39 @@ async function exportAsWav() {
   let exportedAudio = await crunker.export(mergedBuffer,'audio/wav');
   await crunker.download(exportedAudio.blob, "merged");
   setIsLoading(false)
+}
+
+function getAllFiles() {
+  setIsLoading(true)
+  session.audioTracks.forEach((s) => {
+    const formData = new FormData();
+    formData.append(
+      'fileName',s.file
+    );
+    formData.append(
+      'bucketName',session.bucketName
+    );
+    let encodeString = 'test@test.com:test1234';
+    const encodedString = Buffer.from(encodeString).toString('base64');
+    axios.post(url+"/getFile", formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Basic '+ encodedString
+  
+  }}).then( res =>{
+    if (res.data){
+      //const _file = new File([res.data], 'audio.mp3');
+      console.log(res.data)
+      const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mp3' });
+      pushFile(_file);
+    }
+  }).catch( error => {console.log(error)});
+  })
+  setIsLoading(false)
+  
 }
 
 
@@ -370,7 +437,10 @@ async function exportAsWav() {
         <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
           <button onClick={exportAsWav}>Download</button>
         </div>
-        <SocketRecord />
+        <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+          <button onClick={getAllFiles}>Reload</button>
+        </div>
+        
         
       </div>    
       <div className=" p-0.5 pt-0.5" style={{width:'100%'}}>

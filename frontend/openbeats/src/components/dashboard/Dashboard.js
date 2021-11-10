@@ -8,7 +8,7 @@ import axios from "axios";
 
 import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
-import { setSession, setSessionId, setSessionName, setParticipants } from "../../model/session/Session";
+import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 const url = "http://192.168.1.166:5000"
@@ -67,7 +67,7 @@ const Dashboard = () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
@@ -75,6 +75,7 @@ const Dashboard = () => {
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
+            dispatch2(setBucketName(response.data.bucketName));
             // let s = {
             //   "sessionId": response.data.sessionId,
             //   "sessionName": response.data.sessionName,
@@ -105,7 +106,7 @@ const Dashboard = () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
-            "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
             'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
@@ -113,6 +114,7 @@ const Dashboard = () => {
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
+            dispatch2(setBucketName(response.data.bucketName));
             history.push('/daw');
          })
         .catch((error)=>{
@@ -142,6 +144,7 @@ const Dashboard = () => {
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
+            dispatch2(setBucketName(response.data.bucketName));
             history.push('/daw');
          })
         .catch((error)=>{

@@ -23,7 +23,7 @@ public class AWSStorageService {
 
     public String uploadFile(MultipartFile multipartFile,String bucket_name){
         File fileObj = convertMultipartFileToFile(multipartFile);
-        String filename = multipartFile.getOriginalFilename();
+        String filename = System.currentTimeMillis()+multipartFile.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucket_name,filename,fileObj));
         fileObj.delete();
         return filename;
