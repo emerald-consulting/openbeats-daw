@@ -60,13 +60,13 @@ public class StudioSessionController {
     //@CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/studioSession")
     public ResponseEntity<StudioSessionResponse> studioSession(@RequestParam(value = "fileName") String fileName,
-                                                               //@RequestParam(value = "file") MultipartFile file,
+                                                               @RequestParam(value = "file") MultipartFile file,
                                                                @RequestParam(value = "bucketName") String bucketName,
                                                                @RequestParam(value = "sessionId") String sessionId) throws Exception {
         log.info("session info received: {}", sessionId);
         HttpHeaders responseHeaders = new HttpHeaders();
         //responseHeaders.set("Access-Control-Allow-Origin", "*");
-        StudioSession studioSession = sessionMgmtService.studioSession(fileName,sessionId,bucketName);
+        StudioSession studioSession = sessionMgmtService.studioSession(fileName,file,sessionId,bucketName);
         log.info("Studio session {}",studioSession);
         simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
 

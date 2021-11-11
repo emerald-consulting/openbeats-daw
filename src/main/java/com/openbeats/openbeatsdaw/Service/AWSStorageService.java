@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 import java.util.Objects;
 
@@ -107,4 +105,19 @@ public class AWSStorageService {
 
         return "Bucket Deleted:"+bucket_name;
     }
+
+    public ByteArrayOutputStream downloadFile(String filename,String bucketName) throws IOException {
+
+        S3Object s3Object = s3Client.getObject(new GetObjectRequest(bucketName,filename));
+        InputStream is = s3Object.getObjectContent();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        int len;
+        byte[] buffer = new byte[4096];
+        while ((len = is.read(buffer, 0, buffer.length)) != -1) {
+            outputStream.write(buffer, 0, len);
+        }
+
+        return outputStream;
+    }
+
 }

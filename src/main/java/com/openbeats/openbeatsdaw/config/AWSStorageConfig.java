@@ -13,9 +13,15 @@ import org.springframework.context.annotation.Scope;
 public class AWSStorageConfig {
 
     @Bean
-    @Scope("singleton")
-    public AmazonS3 s3Client(){
-        return AmazonS3ClientBuilder.defaultClient();
+    public AmazonS3 s3() {
+        AWSCredentials awsCredentials =
+                new BasicAWSCredentials("AKIA3IOIOP7MDBCCI47R", "WpD3JopUsAze0jgqJLVb1Hrm67vdCD+H478u9Uio");
+        return AmazonS3ClientBuilder
+                .standard()
+                .withRegion("us-east-2")
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
+
     }
 
 }
