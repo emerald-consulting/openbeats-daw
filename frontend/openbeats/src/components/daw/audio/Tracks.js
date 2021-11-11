@@ -11,8 +11,8 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
-import createBuffer from "audio-buffer-from"
-import AWS from 'aws-sdk';
+// import createBuffer from "audio-buffer-from"
+// import AWS from 'aws-sdk';
 
 import SocketRecord from "../socket/SocketRecord";
 import Fileupload from "../Fileupload";
@@ -360,11 +360,6 @@ async function exportAsWav() {
   await crunker.download(exportedAudio.blob, "merged");
   setIsLoading(false)
 }
-
-AWS.config.update({
-  accessKeyId: "AKIA3IOIOP7MDBCCI47R",
-  secretAccessKey: "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",
-});
 
 function getAllFiles() {
   setIsLoading(true)
