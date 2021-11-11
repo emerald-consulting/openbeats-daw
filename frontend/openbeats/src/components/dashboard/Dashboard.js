@@ -286,7 +286,7 @@ const Dashboard = () => {
                 {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
               </div>
             </div>
-
+ 
 
           </div>
           <div className="p-10 pr-20" style={{width:'50%', height:'80vh'}}><h1 class="text-4xl pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
