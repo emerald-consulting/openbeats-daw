@@ -392,12 +392,13 @@ function getAllFiles() {
     );
     let encodeString = 'test@test.com:test1234';
     const encodedString = Buffer.from(encodeString).toString('base64');
-    axios.post(url+"/getFile", formData,{headers: {
+    axios.post(url+"/getFile", formData,{ responseType: 'arraybuffer',headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
+
       'Authorization': 'Basic '+ encodedString
   
   }}).then( res =>{
@@ -407,12 +408,15 @@ function getAllFiles() {
       // let arr = Array.from(res.data);
       // const _file = new Blob([arr], { type: 'audio/mp3' });
       // const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mpeg' });
-      let bytes = new Uint8Array(res.data.length);
-
-      for (let i = 0; i < bytes.length; i++) {
-          bytes[i] = res.data.charCodeAt(i);
-      }
-      let _file = new Blob([bytes],{type: 'audio/mp3'});
+//      let bytes = new Uint8Array(res.data.length);
+//
+//      for (let i = 0; i < bytes.length; i++) {
+//          bytes[i] = res.data.charCodeAt(i);
+//      }
+//      let _file = new Blob([bytes],{type: 'audio/mp3'});
+ const _file = new Blob([res.data], {
+        type: 'audio/mp3'
+    })
       // var buffer = res.data;
       // var uint8Array = new Uint8Array(buffer.length);
       // for(var i = 0; i < uint8Array.length; i++) {
