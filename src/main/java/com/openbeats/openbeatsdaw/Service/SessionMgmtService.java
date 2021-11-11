@@ -123,7 +123,7 @@ public class SessionMgmtService {
         return studioSession;
     }
 
-    public StudioSession studioSession(String fileName, String sessionId,String bucketName) throws Exception {
+    public StudioSession studioSession(String fileName,MultipartFile file, String sessionId,String bucketName) throws Exception {
 
         if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
             throw new Exception("Session not found");
@@ -133,12 +133,12 @@ public class SessionMgmtService {
         log.info("Getting studio session");
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
 
-        //String newFileName = awsStorageService.uploadFile(file,bucketName);
+        String newFileName = awsStorageService.uploadFile(file,bucketName);
 
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);
-        audioTrack.setFile(fileName);
+        audioTrack.setFile(newFileName);
         audioTracks.add(audioTrack);
         log.info("Storing audio tracks in session");
         SessionStorage.getInstance().setStudioSession(studioSession);
