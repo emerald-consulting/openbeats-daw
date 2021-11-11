@@ -11,6 +11,8 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
+import createBuffer from "audio-buffer-from"
+import AWS from 'aws-sdk';
 
 import SocketRecord from "../socket/SocketRecord";
 import Fileupload from "../Fileupload";
@@ -359,9 +361,33 @@ async function exportAsWav() {
   setIsLoading(false)
 }
 
+AWS.config.update({
+  accessKeyId: "AKIA3IOIOP7MDBCCI47R",
+  secretAccessKey: "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",
+});
+
 function getAllFiles() {
   setIsLoading(true)
   session.audioTracks.forEach((s) => {
+    
+    // const s3 = new AWS.S3();
+    // const params = {
+    //   Bucket: session.bucketName,
+    //   Key: s.file,
+    // };
+
+    // s3.getObject(params, (err, data) => {
+    //   if (err) {
+    //     console.log(err, err.stack);
+    //   } else {
+    //     console.log(data)
+    //     let blob = new Blob([data.Body.toString()], {
+    //       type: 'audio/mp3',
+    //     });
+    //     pushFile(blob)
+    //   }
+    // });
+    
     const formData = new FormData();
     formData.append(
       'fileName',s.file
@@ -383,7 +409,28 @@ function getAllFiles() {
     if (res.data){
       //const _file = new File([res.data], 'audio.mp3');
       console.log(res.data)
-      const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mp3' });
+      // let arr = Array.from(res.data);
+      // const _file = new Blob([arr], { type: 'audio/mp3' });
+      // const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mpeg' });
+      let bytes = new Uint8Array(res.data.length);
+
+      for (let i = 0; i < bytes.length; i++) {
+          bytes[i] = res.data.charCodeAt(i);
+      }
+      let _file = new Blob([bytes],{type: 'audio/mp3'});
+      // var buffer = res.data;
+      // var uint8Array = new Uint8Array(buffer.length);
+      // for(var i = 0; i < uint8Array.length; i++) {
+      //     uint8Array[i] = buffer[i];
+      // }
+      // var dataview = new DataView(uint8Array);
+      // var mFloatArray = new Float32Array(uint8Array.byteLength / 4);
+
+      // for (let i = 0; i < mFloatArray.length; i++) {
+      //     mFloatArray[i] = dataview.getFloat32(i*4);
+      // }
+
+      // let audioBuffer = createBuffer(mFloatArray, { sampleRate: 16000 });
       pushFile(_file);
     }
   }).catch( error => {console.log(error)});
