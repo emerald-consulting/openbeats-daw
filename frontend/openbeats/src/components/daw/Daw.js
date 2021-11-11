@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useRef, useEffect} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
@@ -17,8 +17,8 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 const RecordView = () => {
     const {
@@ -65,45 +65,54 @@ const Daw = () => {
     const session = useSelector(_state => _state.session);
     const dispatch2 = useDispatch();
 
-    const sendMessage = (msg) => {
-      console.log("sending...")
-      clientRef.sendMessage('/topics/all', msg);
-    }
+    // const sendMessage = (msg) => {
+    //   console.log("sending...")
+    //   clientRef.sendMessage('/topics/all', msg);
+    // }
 
-    const connect = () => {
-      console.log("connecting to the game");
-      let socket = new SockJS(url+"/studioSession");
-      //{headers : {"Access-Control-Allow-Origin": "*" }}
-      let stompClient = Stomp.over(socket);
-      stompClient.connect({}, function (frame) {
-        console.log("connected to the frame: " + frame);
-        stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
-            let data = JSON.parse(response.body);
-            console.log(data);
-            // displayResponse(data);
-        })
-      })
-      const formData = new FormData();
-      formData.append(
-        'sessionId',session.sessionId
-      );
-      let encodeString = 'test@test.com:test1234';
-      const encodedString = Buffer.from(encodeString).toString('base64');
-      axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        'Authorization': 'Basic '+ encodedString
+    // useEffect(() => {
+    //   connect();
+    //   getFileNames();
+    // }, [])
 
-      }}).then((res)=>{
-        console.log(res)
-        if(res.data){
-          dispatch2(setAudioTracks(res.data.audioTracks))
-        }
-      }).catch(error => {console.log(error)});
-    }
+    // const getFileNames = () => {
+    //   const formData = new FormData();
+    //   formData.append(
+    //     'sessionId',session.sessionId
+    //   );
+    //   let encodeString = 'test@test.com:test1234';
+    //   const encodedString = Buffer.from(encodeString).toString('base64');
+    //   axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     "Access-Control-Allow-Headers" : "Content-Type",
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    //     'Authorization': 'Basic '+ encodedString
+    
+    //   }}).then((res)=>{
+    //     console.log(res)
+    //     if(res.data){
+    //       dispatch2(setAudioTracks(res.data.audioTracks))
+    //     }
+    //   }).catch(error => {console.log(error)});
+    // }    
+
+    // const connect = () => {
+    //   console.log("connecting to the session");
+    //   let socket = new SockJS(url+"/studioSession");
+    //   //{headers : {"Access-Control-Allow-Origin": "*" }}
+    //   let stompClient = Stomp.over(socket);
+    //   stompClient.connect({}, function (frame) {
+    //     console.log("connected to the frame: " + frame);
+    //     stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+    //         let data = JSON.parse(response.body);
+    //         console.log(data);
+    //         getFileNames();
+    //         // displayResponse(data);
+    //     })
+    //   })
+    // }
 
     return (
       // <div><LogNavbar/>
@@ -128,7 +137,7 @@ const Daw = () => {
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {session.participants.map((p)=>(<p>{p.firstName}</p>))}
-                        <button onClick={connect}>Connect</button>
+                        {/* <button onClick={connect}>Connect</button> */}
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>

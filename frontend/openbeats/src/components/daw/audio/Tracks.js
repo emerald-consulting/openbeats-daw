@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
@@ -18,6 +21,7 @@ import SocketRecord from "../socket/SocketRecord";
 import Fileupload from "../Fileupload";
 
 import { useSelector, useDispatch } from 'react-redux'
+import { setAudioTracks } from "../../../model/session/Session";
 import { setMaxDuration } from "../../../model/audio/Audio";
 
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
@@ -48,8 +52,8 @@ import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -92,28 +96,12 @@ function Tracks() {
   const [isLoading, setIsLoading] = useState(false);
   const [seekValue, setSeekValue] = useState(0);
   const session = useSelector(_state => _state.session);
+  const dispatch2 = useDispatch();
   const _audio = useSelector(_state => _state.audio);
   const maxDuration = _audio?_audio.maxDuration:1;
   console.log(maxDuration);
-    
-  const onFileChange = event => {
-    //var blobUrl = URL.createObjectURL(event.target.files[0])
-    // setSelectedFile(event.target.files[0]);
-    pushFile(URL.createObjectURL(event.target.files[0]))
-  };
 
-  const pushFile = file => {
-    setFiles([...files, file]);
-    setPlayTracks([...playTracks, false])
-    setSelected([...selected, false])
-    // console.log(file.blob)
-    // let fileurl=""
-    // if (file.blobURL){
-    //   fileurl=file.blobURL
-    // } else {
-    //   fileurl=URL.createObjectURL(file.blob)
-    // }
-    // console.log(fileurl)
+  const uploadFIle = file => {
     let encodeString = 'test@test.com:test1234';
     const formData = new FormData();
 
@@ -151,6 +139,28 @@ function Tracks() {
       'Authorization': 'Basic '+ encodedString
 
     }});
+  }
+    
+  const onFileChange = event => {
+    //var blobUrl = URL.createObjectURL(event.target.files[0])
+    // setSelectedFile(event.target.files[0]);
+    pushFile(URL.createObjectURL(event.target.files[0]));
+    uploadFIle(event.target.files[0]);
+  };
+
+  const pushFile = file => {
+    setFiles([...files, file]);
+    setPlayTracks([...playTracks, false])
+    setSelected([...selected, false])
+    // console.log(file.blob)
+    // let fileurl=""
+    // if (file.blobURL){
+    //   fileurl=file.blobURL
+    // } else {
+    //   fileurl=URL.createObjectURL(file.blob)
+    // }
+    // console.log(fileurl)
+    
   };
 
   const remove = index => {
@@ -295,6 +305,8 @@ async function download() {
   var ds= crunker.export(initBuffer, "audio/mp3");
   pushFile(ds);
 
+  uploadFIle(ds);
+
   const formData = new FormData();
 
       const file = new File([ds.blob], 'audio.mp3');
@@ -364,25 +376,6 @@ async function exportAsWav() {
 function getAllFiles() {
   setIsLoading(true)
   session.audioTracks.forEach((s) => {
-    
-    // const s3 = new AWS.S3();
-    // const params = {
-    //   Bucket: session.bucketName,
-    //   Key: s.file,
-    // };
-
-    // s3.getObject(params, (err, data) => {
-    //   if (err) {
-    //     console.log(err, err.stack);
-    //   } else {
-    //     console.log(data)
-    //     let blob = new Blob([data.Body.toString()], {
-    //       type: 'audio/mp3',
-    //     });
-    //     pushFile(blob)
-    //   }
-    // });
-    
     const formData = new FormData();
     formData.append(
       'fileName',s.file
@@ -403,39 +396,65 @@ function getAllFiles() {
   
   }}).then( res =>{
     if (res.data){
-      //const _file = new File([res.data], 'audio.mp3');
       console.log(res.data)
-      // let arr = Array.from(res.data);
-      // const _file = new Blob([arr], { type: 'audio/mp3' });
-      // const _file = new Blob([new Uint8Array(res.data)], { type: 'audio/mpeg' });
-//      let bytes = new Uint8Array(res.data.length);
-//
-//      for (let i = 0; i < bytes.length; i++) {
-//          bytes[i] = res.data.charCodeAt(i);
-//      }
-//      let _file = new Blob([bytes],{type: 'audio/mp3'});
- const _file = new Blob([res.data], {
+      const _file = new Blob([res.data], {
         type: 'audio/mp3'
-    })
-      // var buffer = res.data;
-      // var uint8Array = new Uint8Array(buffer.length);
-      // for(var i = 0; i < uint8Array.length; i++) {
-      //     uint8Array[i] = buffer[i];
-      // }
-      // var dataview = new DataView(uint8Array);
-      // var mFloatArray = new Float32Array(uint8Array.byteLength / 4);
-
-      // for (let i = 0; i < mFloatArray.length; i++) {
-      //     mFloatArray[i] = dataview.getFloat32(i*4);
-      // }
-
-      // let audioBuffer = createBuffer(mFloatArray, { sampleRate: 16000 });
+      })
       pushFile(_file);
     }
   }).catch( error => {console.log(error)});
   })
   setIsLoading(false)
   
+}
+
+useEffect(() => {
+  connect();
+  getFileNames();
+}, [])
+
+useEffect(() => {
+  getAllFiles();
+}, [session.audioTracks])
+
+function getFileNames() {
+  const formData = new FormData();
+  formData.append(
+    'sessionId',session.sessionId
+  );
+  let encodeString = 'test@test.com:test1234';
+  const encodedString = Buffer.from(encodeString).toString('base64');
+  axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+    'Accept': 'application/json',
+    'Content-Type': 'application/json',
+    "Access-Control-Allow-Headers" : "Content-Type",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    'Authorization': 'Basic '+ encodedString
+
+  }}).then((res)=>{
+    console.log(res)
+    if(res.data){
+      dispatch2(setAudioTracks(res.data.audioTracks));
+    }
+  }).catch(error => {console.log(error)});
+  
+}    
+
+const connect = () => {
+  console.log("connecting to the session");
+  let socket = new SockJS(url+"/studioSession");
+  //{headers : {"Access-Control-Allow-Origin": "*" }}
+  let stompClient = Stomp.over(socket);
+  stompClient.connect({}, function (frame) {
+    console.log("connected to the frame: " + frame);
+    stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+        let data = JSON.parse(response.body);
+        console.log(data);
+        getFileNames();
+        // displayResponse(data);
+    })
+  })
 }
 
 
