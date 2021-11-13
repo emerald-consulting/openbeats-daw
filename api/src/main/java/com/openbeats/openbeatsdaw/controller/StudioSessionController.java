@@ -1,6 +1,5 @@
 package com.openbeats.openbeatsdaw.controller;
 
-import com.amazonaws.services.cloudfront.model.FieldLevelEncryption;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.model.ConnectRequest;
@@ -15,9 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 
 @RestController
 @RequestMapping("/")

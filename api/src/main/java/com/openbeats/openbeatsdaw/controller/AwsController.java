@@ -1,7 +1,6 @@
 package com.openbeats.openbeatsdaw.controller;
 
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
-import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;

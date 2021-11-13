@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  openbeats_611_api:
+    container_name: openbeats_611_api
+    build:
+      dockerfile: Dockerfile
+      context: ./api
+    depends_on:
+      - openbeats_611_mysql
+    environment:
+      DATABASE_URL: postgres://user:password@postgres:5432/db
+      NODE_ENV: development
+    ports:
+      - '8080:8080'
+
+  openbeats_611_web:
+    container_name: openbeats_611_web
+    stdin_open: true
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      dockerfile: Dockerfile
+      context: ./web
+    volumes:
+      - ./web:/app # live updates
+
+  openbeats_611_mysql:
+    container_name: openbeats_611_mysql
+    platform: linux/x86_64
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'openbeats'
+      MYSQL_ROOT_PASSWORD: 'admin'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
