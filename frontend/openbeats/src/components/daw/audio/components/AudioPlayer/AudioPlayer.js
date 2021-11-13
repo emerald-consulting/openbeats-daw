@@ -130,6 +130,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
   useEffect(() => {
     console.log("file", file);
     if (file) {
+
       if (file.blobURL){
         wavesurfer.current.load(file.blobURL);
         
@@ -137,7 +138,11 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
         wavesurfer.current.loadBlob(file.blob);
         
       } else {
-        wavesurfer.current.load(file);
+        // let audio = new Audio();
+        // audio.src = URL.createObjectURL(file)
+        // wavesurfer.current.load(audio);
+        // wavesurfer.current.loadDecodedBuffer(file)
+        wavesurfer.current.loadBlob(file);
       }
       
       
@@ -260,7 +265,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
                 />
                 <Grid item   className={classes.buttons}>
                   <Grid container item > 
-                    <div className="pt-1">{transportPlayButton}</div>
+                    <div>{transportPlayButton}</div>
                     <IconButton onClick={stopPlayback}>
                       <StopIcon className={classes.icon} />
                     </IconButton>

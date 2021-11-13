@@ -10,9 +10,9 @@ import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 
-// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-//const url = "http://192.168.1.166:5000"
-const url="http://localhost:8080"
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
+
 const Dashboard = () => {
 
   const search = useLocation().search;
@@ -300,14 +300,14 @@ const Dashboard = () => {
               
 
     return (
-      <div className='h-screen' style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}>
-        
+      <div className='h-screen'>
+         {/* style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}         */}
         <LogNavbar/>
-        <div className='flex flex-row'>
+        <div className='flex flex-row pt-10'>
         
-          <div className=" py-20 pl-20 pr-20 rounded-md" style={{width:'40%'}}>
-            <div className="flex flex-col">
-              <div className="p-2 m-1 bg-gr2 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
+          <div className=" py-20 pl-20 pr-20 pl-40 rounded-md" style={{width:'40%', height:'80vh'}}>
+            <div className="flex flex-col  p-2">
+              <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
                 <img style={{borderRadius: '40px',margin:'auto'}}  src={imgSrc()}/>
                 
               </div>
@@ -315,24 +315,25 @@ const Dashboard = () => {
                 <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
                   <p className="text-xs">Upload!</p>
                 </button>
+              </div>
+              <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div>
+              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user.firstName}</div>
+              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user.emailId}</div>
+              <div id="upgradeUserDiv">
+                {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
+              </div>
             </div>
-            <div><button onClick={getImage} className="rounded bg-gr4 p-1">Get Image</button></div>
-              <div className="p-2 m-1 bg-gr2 text-wh rounded ">{state.user.firstName}</div>
-              <div className="p-2 m-1 bg-gr2 text-wh  rounded ">{state.user.emailId}</div>
-            </div>
-            <div id="upgradeUserDiv">
-            {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded bg-gr4 p-1">Upgrade to Premium</button>}
-            </div>
+ 
 
           </div>
-          <div className="p-10"><h1 class="text-4xl text-wh pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
+          <div className="p-10 pr-20" style={{width:'50%', height:'80vh'}}><h1 class="text-4xl pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
-              <div className="bg-gr2 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
-                <h1 className="text-2xl text-wh">Saved sessions</h1>
+              <div className="border border-gr4 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
+                <h1 className="text-2xl ">Saved sessions</h1>
                 {
                   sessionList.map((session)=>(
-                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1  rounded" style={{fontSize:15}} >
+                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1 font-bold rounded" style={{fontSize:15}} >
                       {session.sessionId} : {session.sessionName}
                     </button>
                   ))
@@ -340,40 +341,40 @@ const Dashboard = () => {
 
               </div>
               <div className=" rounded  ">
-                <div className="bg-gr2 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
-                  <h1 className="text-2xl text-wh">Create a Session</h1>
+                <div className="border-gr4 border w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
+                  <h1 className="text-2xl ">Create a Session</h1>
                   <form onSubmit={createWorkspace}>
                       <div>
                           <input
                               type='session'
-                              className={`w-full p-2 text-primary  rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                              className={`w-full p-2 text-primary border-gr4 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                               id='sessionid'
                               placeholder='Enter session name'
                           />
                       </div>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`text-white bg-gr4  hover:bg-gr3 py-2 px-4 rounded`}>
+                          <button className={`text-white border-gr4 border bg-gr4 font-bold hover:bg-gr3 py-2 px-4 rounded`}>
                               Create new Session
                           </button>
                           
                       </div>
                   </form>
                 </div>
-                <div className="bg-gr2 w-96 rounded ml-0.5 shadow-default py-10 px-16">
-                  <h1 className="text-2xl text-wh">Join a Session</h1>
+                <div className="border-gr4 border w-96 rounded ml-0.5 shadow-default py-10 px-16">
+                  <h1 className="text-2xl ">Join a Session</h1>
                   <form onSubmit={joinSession}>
                       <div>
                           <input
                               type='session_join'
-                              className={`w-full p-2 text-primary  rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                              className={`w-full p-2 border-gr4 border text-primary  rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                               id='sessionJoinId'
                               placeholder='Enter session id'
                           />
                       </div>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`bg-gr4 text-white hover:bg-gr3 py-2 px-4 rounded`}>
+                          <button className={`bg-gr4 text-white font-bold hover:bg-gr3 py-2 px-4 rounded`}>
                               Join Session
                           </button>
                           
