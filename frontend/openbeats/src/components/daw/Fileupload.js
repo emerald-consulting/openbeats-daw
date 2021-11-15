@@ -2,8 +2,8 @@ import React,{useState, useContext} from 'react'
 import axios from "axios"
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 import { useSelector, useDispatch } from 'react-redux'
-//const url="http://openbeats-daw.us-east-2.elasticbeanstalk.com"
-const url="http://localhost:8080"
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+//const url="http://localhost:8080"
 
 const Fileupload = () => {
 
