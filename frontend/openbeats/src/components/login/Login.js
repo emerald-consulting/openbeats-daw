@@ -8,8 +8,8 @@ import { useSelector, useDispatch } from 'react-redux'
 import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
-//const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
- const url = "http://localhost:8080"
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+ //const url = "http://localhost:8080"
 
 const Login = () => {
     const [state, dispatch] = useContext(UserContext);
@@ -144,7 +144,7 @@ const Login = () => {
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
               <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
-              <div className='p-4 hover:text-blue-400'><a href="http://openbeats-daw.us--east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
+              <div className='p-4 hover:text-blue-400'><a href="http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
             </div>
           </div>

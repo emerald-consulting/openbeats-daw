@@ -165,7 +165,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ClientRegistration getRegistration(String client) {
 
         // @formatter:off
-
         if(client.equals("spotify"))
             return ClientRegistration
                     .withRegistrationId("spotify")
@@ -173,7 +172,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clientSecret("dd77b05c0532424c968a678e7d09f6e4")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://openbeats--daw.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
+                    .redirectUri("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")

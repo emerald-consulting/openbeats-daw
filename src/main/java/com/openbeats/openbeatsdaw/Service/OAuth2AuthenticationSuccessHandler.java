@@ -48,7 +48,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        String  targetUrl="http://localhost:3000/dashboard";
+        String  targetUrl="http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/dashboard";
 
 
         String token = tokenProvider.createToken(authentication);
