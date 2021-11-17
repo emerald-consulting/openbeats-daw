@@ -3,6 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import Snackbar from '@material-ui/core/Snackbar';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+
 
 const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
@@ -13,7 +18,12 @@ const Signup = () => {
     const [message, setMessage] = useState(null);
     const [user, setUser] = useState({});
     
-    
+    const handleOnclose = () =>{
+        setError(null)
+        setMessage(null)
+
+    }
+
     const handleFormSubmit = (e) => {
         
         
@@ -142,18 +152,42 @@ const Signup = () => {
                       <div className='p-4'>Already a member? Login <Link to='/signin' className='underline hover:text-gray-400'>here</Link></div>
                   </div>
               </form>
-              <div className="flex justify-center items-center m-2">
-                <div className="px-4 text-blue-700">{message?"Success! Email verification link sent":""}</div>
-                <div className="px-4 text-color-err">{error?"Error! "+error:""}</div>
-              </div>
-              
+              {/* <div className="flex justify-center items-center m-2">
+                <div className="px-4 text-blue-700"> {message?<Snackbar message="Success! Email verification link sent" open />:<Snackbar message=""/>}</div>
+                <div className="px-4 text-color-err">{error?<Snackbar message={"Error! "+error} />:<Snackbar message=""/>}</div>
+                
+              </div> */}
+              <Snackbar TransitionComponent="Fade" autoHideDuration={6000} 
+                  action={ 
+                    <IconButton 
+                        aria-label="close"
+                        color="inherit"
+                        sx={{ p: 0.5 }}
+                        onClick={handleOnclose}
+                        >
+                        <CloseIcon />
+                    </IconButton>
+                    }
+                    onClose={handleOnclose} message="Success! Email verification link sent!! Open email to verify" open={message}/>
+                <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={handleOnclose} 
+                    action={ 
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            sx={{ p: 0.5 }}
+                            onClick={handleOnclose}
+                            >
+                            <CloseIcon />
+                        </IconButton>
+                        }
+                    message={"ERROR :"+error} open={error}/>
           </div>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-3 px-5 flex justify-center items-center mt-6 flex-col'>
             <div>or sign-up using</div>
             <div className='flex flex-row'>
-              <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div>
+              {/* <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'apple']} /></div> */}
               <div className='p-4 hover:text-gray-400'><a href="http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
-              <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'google']} /></div>
+              {/* <div className='p-4 hover:text-gray-400'><FontAwesomeIcon icon={['fab', 'google']} /></div> */}
             </div>
           </div>
       </div>
