@@ -56,6 +56,7 @@ const Signup = () => {
             subscriptionType: subscriptionType,
             emailVerified: emailVerified,
             })
+
         axios.post(url+"/createUser", formdata,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

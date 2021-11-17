@@ -81,10 +81,10 @@ public class OpenBeatsRestController {
     }
 
     @GetMapping("/userlogin")
-    public ResponseEntity<Object> login(){
+    public ResponseEntity<Object> login(@RequestParam String emailId){
         log.info("Received login request");
-
-        return ResponseHandler.generateResponse("Login success", HttpStatus.OK,true);
+        String token=tokenProvider.createToken(emailId);
+        return ResponseHandler.generateResponse("Login success", HttpStatus.OK,token);
 
     }
 

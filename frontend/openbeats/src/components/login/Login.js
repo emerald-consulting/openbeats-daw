@@ -5,15 +5,15 @@ import { useHistory } from "react-router"
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
 import { useSelector, useDispatch } from 'react-redux'
-import { loadUser, setUserEmail, setUserPassword } from "../../model/user/User";
+import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Snackbar from '@material-ui/core/Snackbar';
 
-// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-const url = "http://192.168.1.166:5000"
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+ //const url = "http://localhost:8080"
 
 const Login = () => {
     const [state, dispatch] = useContext(UserContext);
@@ -53,7 +53,8 @@ const Login = () => {
         dispatch2(setUserEmail(email));
         
 
-      axios.get(url+"/userlogin",{headers: {
+
+      axios.get(url+"/userlogin?emailId="+email,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -70,9 +71,10 @@ const Login = () => {
                 // setMessage(response.data.message)
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
+                dispatch2(setUserToken(response.data.data));
                 axios.get(url+"/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic '+ encodedString
+                    'Authorization': 'Bearer '+ response.data.data
             }}).then((response1) => {
                 if(response1.data.status==207){
                     setError(response1.data.message);
@@ -177,7 +179,7 @@ const Login = () => {
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
               {/* <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div> */}
-              <div className='p-4 hover:text-blue-400'><a href="http://openbeats-daw.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
+              <div className='p-4 hover:text-blue-400'><a href="http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
               {/* <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div> */}
             </div>
           </div>

@@ -27,10 +27,13 @@ export const userSlice = createSlice({
     },
     setUserPassword: (state, action) => {
       state.password = action.payload
+    },
+    setUserToken: (state, action) => {
+          state.jwtToken = action.payload
     }
   }
 })
 
-export const { loadUser, setUserEmail, setUserPassword } = userSlice.actions
+export const { loadUser, setUserEmail, setUserPassword,setUserToken } = userSlice.actions
 
 export default userSlice.reducer

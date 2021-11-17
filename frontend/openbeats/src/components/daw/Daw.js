@@ -17,9 +17,9 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
 
+
 const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
-
 const RecordView = () => {
     const {
       status,
@@ -63,8 +63,10 @@ const Daw = () => {
     let clientRef = useRef(null);
     
     const session = useSelector(_state => _state.session);
+    const user = useSelector(_state => _state.user);
     const dispatch2 = useDispatch();
-
+    let jwtToken = `${user.jwtToken}`;
+    console.log("this is the jwt token"+jwtToken);
     const sendMessage = (msg) => {
       console.log("sending...")
       clientRef.sendMessage('/topics/all', msg);
@@ -95,7 +97,7 @@ const Daw = () => {
         "Access-Control-Allow-Headers" : "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        'Authorization': 'Basic '+ encodedString
+        'Authorization': 'Bearer '+ jwtToken
 
       }}).then((res)=>{
         console.log(res)

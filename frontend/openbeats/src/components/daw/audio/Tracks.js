@@ -49,7 +49,6 @@ var recording=false;
 const map1 = new Map();
 
 const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -93,8 +92,12 @@ function Tracks() {
   const [seekValue, setSeekValue] = useState(0);
   const session = useSelector(_state => _state.session);
   const _audio = useSelector(_state => _state.audio);
+  const user = useSelector(_state => _state.user);
   const maxDuration = _audio?_audio.maxDuration:1;
   console.log(maxDuration);
+
+   let jwtToken = `${user.jwtToken}`;
+    console.log("from Track js this is the jwt token"+jwtToken);
     
   const onFileChange = event => {
     //var blobUrl = URL.createObjectURL(event.target.files[0])
@@ -148,7 +151,7 @@ function Tracks() {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
 
     }});
   };
@@ -397,10 +400,8 @@ function getAllFiles() {
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
-
-      'Authorization': 'Basic '+ encodedString
-  
+       "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
+      'Authorization': 'Bearer '+ jwtToken
   }}).then( res =>{
     if (res.data){
       //const _file = new File([res.data], 'audio.mp3');

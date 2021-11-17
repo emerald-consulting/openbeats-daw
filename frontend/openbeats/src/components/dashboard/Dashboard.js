@@ -1,11 +1,11 @@
 import React, {useState, useContext, useEffect } from "react";
 // import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Link } from "react-router-dom";
+import { Link , useLocation} from "react-router-dom";
 import UserContextProvider, {UserContext} from "../../model/user-context/UserContext";
 import bgimg2 from '../bg2.jpg'
 import { useHistory } from "react-router";
 import axios from "axios";
-
+import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
@@ -15,6 +15,7 @@ const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com
 
 const Dashboard = () => {
 
+  const search = useLocation().search;
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
   const [sessionList, setSessionList] = useState([]);
@@ -25,13 +26,48 @@ const Dashboard = () => {
   
   let history = useHistory();
   let encodeString = `${user.emailId}:${user.password}`;
+  let jwtToken = `${user.jwtToken}`;
+  //console.log("this is the jwt token"+jwtToken);
   const encodedString = Buffer.from(encodeString).toString('base64');
   console.log(state)
   console.log(sessionList)
 
   useEffect(() => {
+      if(search){
+      getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
+      }
+
+   });
+
+
+  useEffect(() => {
     getSessions();
   }, [])
+
+
+   function getSpotifyUserDetails(token,email){
+      console.log('get getSpotifyUserDetails');
+       dispatch2(setUserToken(token));
+        dispatch2(setUserEmail(email));
+      axios.get(url+"/getUserDetails?emailId="+email,{headers: {
+                         'Content-Type': 'application/json',
+                         'Authorization': 'Bearer '+ token
+                 }}).then((response1) => {
+                     if(response1.data.status==207){
+
+
+                     }
+                     else if(response1.data){
+                          dispatch({
+                                                 type: "LOAD_USER",
+                                                 payload: response1.data.data
+                                               });
+                         console.log(response1.data.data)
+
+
+                     }
+                 });
+    }
 
   function getSessions(){
     console.log('get session')
@@ -41,7 +77,7 @@ const Dashboard = () => {
           "Access-Control-Allow-Headers" : "Content-Type",
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-          'Authorization': 'Basic '+ encodedString
+          'Authorization': 'Bearer '+ jwtToken
       }}).then((response) => {
           console.log(response.data.data);
           setSessionList(response.data.data);
@@ -69,7 +105,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+            'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -108,7 +144,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+            'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -138,7 +174,7 @@ const Dashboard = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
+             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
             dispatch2(setSessionId(response.data.sessionId));
@@ -172,7 +208,7 @@ const Dashboard = () => {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
     }}).then((response) => {
       // if(response.data){
       //   // dispatch({
@@ -201,7 +237,8 @@ const Dashboard = () => {
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Bearer '+ jwtToken
   }}).then((response) => {
         if(response){
           console.log(response);
@@ -249,7 +286,7 @@ const Dashboard = () => {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
   }});
   };
 

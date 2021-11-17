@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.openbeats.openbeatsdaw.Service.CustomOAuth2UserService;
 import com.openbeats.openbeatsdaw.Service.OAuth2AuthenticationSuccessHandler;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
+import com.openbeats.openbeatsdaw.Utils.JwtTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -51,6 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    @Autowired
+    private JwtTokenFilter jwtTokenFilter;
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -119,6 +125,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().successHandler(oAuth2AuthenticationSuccessHandler)
                 .and().csrf().disable();
 
+        http.addFilterBefore(
+                jwtTokenFilter,
+                UsernamePasswordAuthenticationFilter.class
+        );
+
     }
 
     /*@Override
@@ -154,7 +165,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private ClientRegistration getRegistration(String client) {
 
         // @formatter:off
-
         if(client.equals("spotify"))
             return ClientRegistration
                     .withRegistrationId("spotify")
@@ -162,7 +172,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://openbeats-daw.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
+                    .redirectUri("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")
@@ -177,7 +187,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .clientSecret("463cdcd58a3641a798a20c3e6da8036a")
                     .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                     .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                    .redirectUri("http://localhost:8655/login/oauth2/code/spotify")
+                    .redirectUri("http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/login/oauth2/code/spotify")
                     .scope("user-read-private", "user-read-email")
                     .authorizationUri("https://accounts.spotify.com/authorize")
                     .tokenUri("https://accounts.spotify.com/api/token")
