@@ -2,17 +2,17 @@ import React, {useContext, useRef, useEffect} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
-import Fileupload from './Fileupload'
-import Dynamicdiv from '../dynamicdiv/Dynamicdiv'
-import { Button, PlayerIcon } from 'react-player-controls'
+// import Fileupload from './Fileupload'
+// import Dynamicdiv from '../dynamicdiv/Dynamicdiv'
+// import { Button, PlayerIcon } from 'react-player-controls'
 import bgimg from '../bg.jpg'
-import { useReactMediaRecorder } from "react-media-recorder";
+// import { useReactMediaRecorder } from "react-media-recorder";
 import Tracks from './audio/Tracks'
-import GroupCall from './socket/GroupCall'
+// import GroupCall from './socket/GroupCall'
 import {UserContext} from "../../model/user-context/UserContext";
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
-import axios from "axios"
+// import SockJS from 'sockjs-client';
+// import Stomp from 'stompjs';
+// import axios from "axios"
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
@@ -20,43 +20,43 @@ import { setAudioTracks } from "../../model/session/Session";
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 const url = "http://192.168.1.166:5000"
 
-const RecordView = () => {
-    const {
-      status,
-      startRecording,
-      stopRecording,
-      mediaBlobUrl,
-    } = useReactMediaRecorder({ video: true });
+// const RecordView = () => {
+//     const {
+//       status,
+//       startRecording,
+//       stopRecording,
+//       mediaBlobUrl,
+//     } = useReactMediaRecorder({ video: true });
   
-    return (
-      <div className="text-sm text-red pt-10 pb-5" style={{textAlign:'center'}}>
-        <p  className="rounded bg-gr4 mb-0.5">{status}</p>
-        <button className="rounded mb-0.5 bg-gr4 p-0.5" onClick={startRecording}>Start Recording</button><br/>
-        <button className="rounded bg-gr4 p-0.5" onClick={stopRecording}>Stop Recording</button>
-        {/* <video src={mediaBlobUrl} controls autoPlay loop /> */}
-      </div>
-    );
-  };
+//     return (
+//       <div className="text-sm text-red pt-10 pb-5" style={{textAlign:'center'}}>
+//         <p  className="rounded bg-gr4 mb-0.5">{status}</p>
+//         <button className="rounded mb-0.5 bg-gr4 p-0.5" onClick={startRecording}>Start Recording</button><br/>
+//         <button className="rounded bg-gr4 p-0.5" onClick={stopRecording}>Stop Recording</button>
+//         {/* <video src={mediaBlobUrl} controls autoPlay loop /> */}
+//       </div>
+//     );
+//   };
 
-const PlayerButton = ({ style, children, ...props }) => (
-    <Button
-      style={{
-        appearance: 'none',
-        outline: 'none',
-        border: 'none',
-        borderRadius: 3,
-        background: 'white',
-        color: 'blue',
-        '&:hover': {
-          'color': 'lightblue',
-        },
-        ...style,
-      }}
-      {...props}
-    >
-      {children}
-    </Button>
-  )
+// const PlayerButton = ({ style, children, ...props }) => (
+//     <Button
+//       style={{
+//         appearance: 'none',
+//         outline: 'none',
+//         border: 'none',
+//         borderRadius: 3,
+//         background: 'white',
+//         color: 'blue',
+//         '&:hover': {
+//           'color': 'lightblue',
+//         },
+//         ...style,
+//       }}
+//       {...props}
+//     >
+//       {children}
+//     </Button>
+//   )
 
 const Daw = () => {
     const [state, dispatch] = useContext(UserContext);
@@ -67,45 +67,45 @@ const Daw = () => {
     const dispatch2 = useDispatch();
     let jwtToken = `${user.jwtToken}`;
     console.log("this is the jwt token"+jwtToken);
-    const sendMessage = (msg) => {
-      console.log("sending...")
-      clientRef.sendMessage('/topics/all', msg);
-    }
+    // const sendMessage = (msg) => {
+    //   console.log("sending...")
+    //   clientRef.sendMessage('/topics/all', msg);
+    // }
 
-    const connect = () => {
-      console.log("connecting to the game");
-      let socket = new SockJS(url+"/studioSession");
-      //{headers : {"Access-Control-Allow-Origin": "*" }}
-      let stompClient = Stomp.over(socket);
-      stompClient.connect({}, function (frame) {
-        console.log("connected to the frame: " + frame);
-        stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
-            let data = JSON.parse(response.body);
-            console.log(data);
-            // displayResponse(data);
-        })
-      })
-      const formData = new FormData();
-      formData.append(
-        'sessionId',session.sessionId
-      );
-      let encodeString = 'test@test.com:test1234';
-      const encodedString = Buffer.from(encodeString).toString('base64');
-      axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        "Access-Control-Allow-Headers" : "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        'Authorization': 'Bearer '+ jwtToken
+    // const connect = () => {
+    //   console.log("connecting to the game");
+    //   let socket = new SockJS(url+"/studioSession");
+    //   //{headers : {"Access-Control-Allow-Origin": "*" }}
+    //   let stompClient = Stomp.over(socket);
+    //   stompClient.connect({}, function (frame) {
+    //     console.log("connected to the frame: " + frame);
+    //     stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+    //         let data = JSON.parse(response.body);
+    //         console.log(data);
+    //         // displayResponse(data);
+    //     })
+    //   })
+    //   const formData = new FormData();
+    //   formData.append(
+    //     'sessionId',session.sessionId
+    //   );
+    //   let encodeString = 'test@test.com:test1234';
+    //   const encodedString = Buffer.from(encodeString).toString('base64');
+    //   axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+    //     'Accept': 'application/json',
+    //     'Content-Type': 'application/json',
+    //     "Access-Control-Allow-Headers" : "Content-Type",
+    //     "Access-Control-Allow-Origin": "*",
+    //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+    //     'Authorization': 'Bearer '+ jwtToken
 
-      }}).then((res)=>{
-        console.log(res)
-        if(res.data){
-          dispatch2(setAudioTracks(res.data.audioTracks))
-        }
-      }).catch(error => {console.log(error)});
-    }
+    //   }}).then((res)=>{
+    //     console.log(res)
+    //     if(res.data){
+    //       dispatch2(setAudioTracks(res.data.audioTracks))
+    //     }
+    //   }).catch(error => {console.log(error)});
+    // }
 
     return (
       // <div><LogNavbar/>

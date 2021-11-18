@@ -36,19 +36,33 @@ const Dashboard = () => {
       if(search){
       getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
       }
+      else if ( jwtToken && jwtToken != "undefined"){
+        getSessions();
+      }
+      else{
+        let token = localStorage.getItem("auth-token");
+        if(token){
+          // dispatch2(setUserToken(token));
+          let email = localStorage.getItem("emailId");
+          // dispatch2(setUserEmail(email));
+          getSpotifyUserDetails(token,email);
+        } else {
+          window.location.href = '/signin';
+        }
+      }
 
-   });
+   }, []);
 
 
-  useEffect(() => {
-    getSessions();
-  }, [])
+  // useEffect(() => {
+  //   getSessions();
+  // }, [])
 
 
-   function getSpotifyUserDetails(token,email){
+   async function getSpotifyUserDetails(token,email){
       console.log('get getSpotifyUserDetails');
-       dispatch2(setUserToken(token));
-        dispatch2(setUserEmail(email));
+      await dispatch2(setUserToken(token));
+      await dispatch2(setUserEmail(email));
       axios.get(url+"/getUserDetails?emailId="+email,{headers: {
                          'Content-Type': 'application/json',
                          'Authorization': 'Bearer '+ token
@@ -67,11 +81,13 @@ const Dashboard = () => {
 
                      }
                  });
+        
+      getSessions(email);
     }
 
-  function getSessions(){
+  function getSessions( email = user.emailId){
     console.log('get session')
-    axios.get(url+"/getSessionDetails?emailId="+user.emailId,{headers: {
+    axios.get(url+"/getSessionDetails?emailId="+email,{headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           "Access-Control-Allow-Headers" : "Content-Type",
@@ -118,7 +134,7 @@ const Dashboard = () => {
             //   "participants":[]
             // }
             // dispatch2(setSession(s));
-            history.push('/daw');
+            history.push('/daw?sessionId='+response.data.sessionId);
          })
         .catch((error)=>{
             console.log(error);
@@ -151,7 +167,7 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
-            history.push('/daw');
+            history.push('/daw?sessionId='+response.data.sessionId);
          })
         .catch((error)=>{
             console.log(error);
@@ -181,7 +197,7 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
-            history.push('/daw');
+            history.push('/daw?sessionId='+response.data.sessionId);
          })
         .catch((error)=>{
             console.log(error);
@@ -317,10 +333,10 @@ const Dashboard = () => {
                 </button>
               </div>
               <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div>
-              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user.firstName}</div>
-              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user.emailId}</div>
+              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}</div>
+              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
               <div id="upgradeUserDiv">
-                {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
+                {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
               </div>
             </div>
  

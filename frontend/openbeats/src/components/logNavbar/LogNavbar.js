@@ -22,7 +22,7 @@ const LogNavbar = () => {
 
       <div className="flex flex-row py-3" style={{flexDirection: 'row', marginLeft: 'auto'}} >
         <Link className=" mr-7 text-gr4" style={{fontSize:14}}  to="/dashboard">
-          {state.user.firstName}
+          {state.user?.firstName}
         </Link>
         <Link className=" mr-7 text-gr4" style={{fontSize:14}}  to="/signin">
           Logout

@@ -72,6 +72,8 @@ const Login = () => {
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
                 dispatch2(setUserToken(response.data.data));
+                localStorage.setItem("auth-token",response.data.data);
+                localStorage.setItem("emailId",email);
                 axios.get(url+"/getUserDetails?emailId="+email,{headers: {
                     'Content-Type': 'application/json',
                     'Authorization': 'Bearer '+ response.data.data
@@ -148,18 +150,6 @@ const Login = () => {
                     <div className="px-4 text-blue-700">{message?"Success! Logged In":""}</div>
                     <div className="px-4 text-color-err">{error?"Login failed! Please check username or password":""}</div>
                 </div> */}
-                <Snackbar TransitionComponent="Fade" autoHideDuration={6000} 
-                  action={ 
-                    <IconButton 
-                        aria-label="close"
-                        color="inherit"
-                        sx={{ p: 0.5 }}
-                        onClick={handleOnclose}
-                        >
-                        <CloseIcon />
-                    </IconButton>
-                    }
-                    onClose={handleOnclose} message="Success! Email verification link sent!! Open email to verify" open={message}/>
                 <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={handleOnclose} 
                         action={ 
                             <IconButton
@@ -171,7 +161,7 @@ const Login = () => {
                                 <CloseIcon />
                             </IconButton>
                             }
-                        message={"ERROR :"+error} open={error}/>
+                        message={"Login Failed! Please check username or password"} open={error}/>
 
               </form>
           </div>
