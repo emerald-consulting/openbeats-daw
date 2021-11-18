@@ -52,8 +52,8 @@ import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
 var soundsPLayed=new Array();
 
@@ -107,11 +107,11 @@ function Tracks() {
    let jwtToken = `${user.jwtToken}`;
     console.log("from Track js this is the jwt token"+jwtToken);
     
-  const onFileChange = event => {
-    //var blobUrl = URL.createObjectURL(event.target.files[0])
-    // setSelectedFile(event.target.files[0]);
-    pushFile(URL.createObjectURL(event.target.files[0]))
-  };
+  // const onFileChange = event => {
+  //   var blobUrl = URL.createObjectURL(event.target.files[0])
+  //   setSelectedFile(event.target.files[0]);
+  //   pushFile(URL.createObjectURL(event.target.files[0]))
+  // };
 
   const uploadFIle = file => {
     let encodeString = 'test@test.com:test1234';
@@ -436,7 +436,7 @@ async function getFileByNum(i){
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
 
-      'Authorization': 'Basic '+ encodedString
+      'Authorization': 'Bearer '+ jwtToken
   
       }});
     const _file = new Blob([res.data], {
@@ -489,7 +489,7 @@ async function getAllFiles() {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
 
-      'Authorization': 'Basic '+ jwtToken
+      'Authorization': 'Bearer '+ jwtToken
   
       }});
     const _file = new Blob([res.data], {
@@ -559,7 +559,7 @@ function getFileNames() {
     "Access-Control-Allow-Headers" : "Content-Type",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    'Authorization': 'Basic '+ encodedString
+    'Authorization': 'Bearer '+ jwtToken
 
   }}).then((res)=>{
     console.log(res)
