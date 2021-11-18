@@ -15,7 +15,16 @@ public interface SessionRepository extends JpaRepository<Session,Long> {
     @Query("SELECT s FROM Session s WHERE s.userEmail = ?1 and s.bucketName = ?2")
     Session findByUserEmailAndBucketName(String email, String bucketName);
 
+
+    @Query("SELECT s FROM Session s WHERE s.joiningCode = ?1")
+    Session findBySessionJoinCode(String sessionJoinCode);
+
+
     List<Session> findAllByUserEmail(String email);
+
+    List<Session> findBysessionIdIn(List<Long> sessionIdList);
+
+    Session findByJoiningCode(String joiningCode);
 
     @Override
     void delete(Session entity);

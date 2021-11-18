@@ -34,7 +34,10 @@ public class SessionStorage {
     }
 
     public void setStudioSession(StudioSession studioSession) {
-        studioSessions.put(studioSession.getSessionId(), studioSession);
+        if(!studioSessions.containsKey(studioSession.getSessionId())){
+            studioSessions.put(studioSession.getSessionId(), studioSession);
+
+        }
 
         // user session mapping
         List<User> users = studioSession.getParticipants();

@@ -1,8 +1,12 @@
 package com.openbeats.openbeatsdaw.controller;
 
 import com.amazonaws.services.cloudfront.model.FieldLevelEncryption;
+import com.openbeats.openbeatsdaw.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
+import com.openbeats.openbeatsdaw.Service.CollaboratorMgmtService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
+import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.model.ConnectRequest;
 import com.openbeats.openbeatsdaw.model.CreateStudioRequest;
 import com.openbeats.openbeatsdaw.model.StudioSession;
@@ -18,6 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
@@ -33,27 +39,81 @@ public class StudioSessionController {
     @Autowired
     AWSStorageService awsStorageService;
 
+    @Autowired
+    CollaboratorMgmtService collaboratorMgmtService;
+
+    @Autowired
+    UserManagementService userManagementService;
+
+
+    public boolean checkIfUserIsEligibleToCreateSession(String email){
+        Optional<User> userOptional = userManagementService.findUser(email);
+        User user;
+        if (userOptional.isPresent()) {
+            user=userOptional.get();
+            if("free".equalsIgnoreCase(user.getSubscriptionType())){
+                List<Long> sessionIds=collaboratorMgmtService.findAllSessionsFromEmailAndRole(email,"OWNER");
+                if(sessionIds.size()>=3){
+                    return false;
+                }
+            }
+
+        }
+
+
+
+        return true;
+    }
+
+
+    public boolean checkIfUserIsEligibleToJoinSession(String email){
+        Optional<User> userOptional = userManagementService.findUser(email);
+        User user;
+        if (userOptional.isPresent()) {
+            user=userOptional.get();
+            if("free".equalsIgnoreCase(user.getSubscriptionType())){
+                List<Long> sessionIds=collaboratorMgmtService.findAllSessionsFromEmailAndRole(email,"USER");
+                if(sessionIds.size()>=3){
+                    return false;
+                }
+            }
+
+        }
+
+
+
+        return true;
+    }
+
     //@CrossOrigin(origins = "localhost:3000")
     @PostMapping("/start")
     public ResponseEntity<StudioSession> start(@RequestBody CreateStudioRequest creator) {
         HttpHeaders responseHeaders = new HttpHeaders();
         //responseHeaders.set("Access-Control-Allow-Origin", "*");
         log.info("create session request: {}", creator);
+        if(!checkIfUserIsEligibleToCreateSession(creator.getEmail())){
+            return ResponseEntity.accepted().headers(responseHeaders).body(new StudioSession());
+        }
         StudioSession studioSession = sessionMgmtService.createStudioSession(creator);
         String new_bucket_name = System.currentTimeMillis() + studioSession.getSessionId();
         String bucketName = awsStorageService.createBucket(new_bucket_name);
         studioSession.setBucketName(bucketName);
-
+        sessionMgmtService.saveSession2(creator.getEmail(),bucketName,creator.getRoomName(),studioSession.getSessionId());
+        collaboratorMgmtService.joinSession(creator.getEmail(),studioSession.getSessionId(),"OWNER");
         return ResponseEntity.ok().headers(responseHeaders).body(studioSession);
     }
-
+    //accepted ==202
     @PostMapping("/connect")
     public ResponseEntity<StudioSession> connect(@RequestBody ConnectRequest request) throws Exception {
         log.info("connect request: {}", request);
         HttpHeaders responseHeaders = new HttpHeaders();
+        if(!checkIfUserIsEligibleToJoinSession(request.getEmail())){
+            return ResponseEntity.accepted().headers(responseHeaders).body(new StudioSession());
+        }
         /*responseHeaders.set("Access-Control-Allow-Origin", "*");
         responseHeaders.set("Access-Control-Allow-Headers","Content-Type,Authorization");
         responseHeaders.set("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,OPTIONS");*/
+        collaboratorMgmtService.joinSession(request.getEmail(), request.getSessionId(),"USER");
         return ResponseEntity.ok().headers(responseHeaders).body(sessionMgmtService.connectToStudioSession(request.getEmail(), request.getSessionId()));
     }
 
