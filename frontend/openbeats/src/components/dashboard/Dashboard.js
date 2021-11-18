@@ -289,8 +289,11 @@ const Dashboard = () => {
           state.user.subscriptionType='paid';
               var x = document.getElementById("upgradeUserDiv");
 
-                x.innerHTML= '<h1 className="bg-gr4 p-2 mt-1 rounded">*now Logged-in as Premium user*</h1>';
+                //x.innerHTML= '<h1 className="bg-gr4 p-2 mt-1 rounded">*now Logged-in as Premium user*</h1>';
                 // x.innerHTML= 'now Logged-in as Premium user';
+                x.style.display= 'none';
+                setError("*now Logged-in as Premium user* !!");
+
         }
       });
     }
