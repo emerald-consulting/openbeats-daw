@@ -39,19 +39,33 @@ const Dashboard = () => {
       if(search){
       getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
       }
+      else if ( jwtToken && jwtToken != "undefined"){
+        getSessions();
+      }
+      else{
+        let token = localStorage.getItem("auth-token");
+        if(token){
+          // dispatch2(setUserToken(token));
+          let email = localStorage.getItem("emailId");
+          // dispatch2(setUserEmail(email));
+          getSpotifyUserDetails(token,email);
+        } else {
+          window.location.href = '/signin';
+        }
+      }
 
-   });
+   }, []);
 
 
-  useEffect(() => {
-    getSessions();
-  }, [])
+  // useEffect(() => {
+  //   getSessions();
+  // }, [])
 
 
-   function getSpotifyUserDetails(token,email){
+   async function getSpotifyUserDetails(token,email){
       console.log('get getSpotifyUserDetails');
-       dispatch2(setUserToken(token));
-        dispatch2(setUserEmail(email));
+      await dispatch2(setUserToken(token));
+      await dispatch2(setUserEmail(email));
       axios.get(url+"/getUserDetails?emailId="+email,{headers: {
                          'Content-Type': 'application/json',
                          'Authorization': 'Bearer '+ token
@@ -70,11 +84,13 @@ const Dashboard = () => {
 
                      }
                  });
+        
+      getSessions(email);
     }
 
-  function getSessions(){
+  function getSessions( email = user.emailId){
     console.log('get session')
-    axios.get(url+"/getSessionDetails?emailId="+user.emailId,{headers: {
+    axios.get(url+"/getSessionDetails?emailId="+email,{headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
           "Access-Control-Allow-Headers" : "Content-Type",
@@ -112,8 +128,8 @@ const Dashboard = () => {
         }}).then((response) => {
             console.log(response.data);
             if(response.status==202){
-                                           setError("You have exceeded the number of Free Sessions!!");
-                        }else{
+               setError("You have exceeded the number of Free Sessions!!");
+            }else{
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
@@ -124,8 +140,9 @@ const Dashboard = () => {
             //   "participants":[]
             // }
             // dispatch2(setSession(s));
-            history.push('/daw');
+           history.push('/daw?sessionId='+response.data.sessionId);
             }
+
          })
         .catch((error)=>{
             console.log(error);
@@ -154,16 +171,16 @@ const Dashboard = () => {
             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
+
             if(response.status==202){
-                               setError("You have exceeded the number of Free Sessions!!");
+               setError("You have exceeded the number of Free Sessions!!");
             }else{
                 dispatch2(setSessionId(response.data.sessionId));
-                            dispatch2(setSessionName(response.data.sessionName));
-                            dispatch2(setParticipants(response.data.participants));
-                            dispatch2(setBucketName(response.data.bucketName));
-                            history.push('/daw');
+                dispatch2(setSessionName(response.data.sessionName));
+                dispatch2(setParticipants(response.data.participants));
+                dispatch2(setBucketName(response.data.bucketName));
+                history.push('/daw?sessionId='+response.data.sessionId);
             }
-
          })
         .catch((error)=>{
             console.log(error);
@@ -197,8 +214,10 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
-            history.push('/daw');
+
+             history.push('/daw?sessionId='+response.data.sessionId);
             }
+
          })
         .catch((error)=>{
             console.log(error);
@@ -339,10 +358,10 @@ const Dashboard = () => {
                 </button>
               </div>
               <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div>
-              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user.firstName}</div>
-              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user.emailId}</div>
+              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}</div>
+              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
               <div id="upgradeUserDiv">
-                {state.user.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
+                {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
               </div>
             </div>
  
@@ -351,16 +370,17 @@ const Dashboard = () => {
           <div className="p-10 " style={{width:'60%', height:'80vh'}}><h1 class="text-4xl text-gr4 pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
-              <div className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
-                <h1 className="text-2xl ">Saved sessions</h1>
-                {
-                  sessionList.map((session)=>(
-                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1 font-bold rounded" style={{fontSize:15}} >
-                      {session.sessionId} : {session.sessionName}
-                    </button>
-                  ))
-                }
-
+              <div className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
+                <h1 className="text-2xl " >Saved sessions</h1>
+                <div className="overflow-y-auto overflow-x-hidden " >
+                  {
+                    sessionList.map((session)=>(
+                      <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 hover:bg-gr2 m-1 font-bold rounded" style={{fontSize:15}} >
+                        {session.sessionId} : {session.sessionName}
+                      </button>
+                    ))
+                  }
+                </div>
               </div>
               <div className=" rounded  ">
                 <div className="rounded-lg bg-gr4 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
