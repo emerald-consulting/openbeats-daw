@@ -10,9 +10,9 @@ import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+//const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
-
+const url = "http://localhost:8080";
 const Dashboard = () => {
 
   const search = useLocation().search;
@@ -147,11 +147,16 @@ const Dashboard = () => {
             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
-            dispatch2(setSessionId(response.data.sessionId));
-            dispatch2(setSessionName(response.data.sessionName));
-            dispatch2(setParticipants(response.data.participants));
-            dispatch2(setBucketName(response.data.bucketName));
-            history.push('/daw');
+            if(response.status==202){
+                               setError(response.data.message)
+            }else{
+                dispatch2(setSessionId(response.data.sessionId));
+                            dispatch2(setSessionName(response.data.sessionName));
+                            dispatch2(setParticipants(response.data.participants));
+                            dispatch2(setBucketName(response.data.bucketName));
+                            history.push('/daw');
+            }
+
          })
         .catch((error)=>{
             console.log(error);
@@ -177,11 +182,16 @@ const Dashboard = () => {
              'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
+            if(response.status==202){
+                                           setError(response.data.message)
+                        }else{
+
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
             history.push('/daw');
+            }
          })
         .catch((error)=>{
             console.log(error);

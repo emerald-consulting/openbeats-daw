@@ -3,6 +3,8 @@ package com.openbeats.openbeatsdaw.Service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
+import com.openbeats.openbeatsdaw.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.Entity.File;
 import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
@@ -39,15 +41,39 @@ public class SessionMgmtService {
     @Autowired
     private AmazonS3 amazonS3Client;
 
+    @Autowired
+    AudioFileService audioFileService;
 
-    public boolean saveSession(String email, String sessionName,String userSessionName) {
+    @Autowired
+    CollaboratorMgmtService collaboratorMgmtService;
+
+    public boolean saveSession(String email, String bucketName,String userSessionName) {
         List<Session> existingSessions = sessionRepository.findByUserEmail(email);
 
         if(existingSessions.size() < 3){
             Session sessiontoAdd = new Session();
             sessiontoAdd.setSessionName(userSessionName);
-            sessiontoAdd.setBucketName(sessionName);
+            sessiontoAdd.setBucketName(bucketName);
             sessiontoAdd.setUserEmail(email);
+//            sessiontoAdd.setJoiningCode(joiningCode);
+
+            sessionRepository.save(sessiontoAdd);
+        }else {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean saveSession2(String email, String bucketName,String userSessionName,String joiningCode) {
+        List<Session> existingSessions = sessionRepository.findByUserEmail(email);
+
+        if(existingSessions.size() < 1000){
+            Session sessiontoAdd = new Session();
+            sessiontoAdd.setSessionName(userSessionName);
+            sessiontoAdd.setBucketName(bucketName);
+            sessiontoAdd.setUserEmail(email);
+            sessiontoAdd.setJoiningCode(joiningCode);
 
             sessionRepository.save(sessiontoAdd);
         }else {
@@ -70,13 +96,51 @@ public class SessionMgmtService {
         return true;
     }
 
+
+
     public List<StudioSession> getAllUserSessions(String emailId){
         log.info("getting all sessions");
 
-        if(SessionStorage.getInstance().getUserSessions().containsKey(emailId)){
-            return SessionStorage.getInstance().getUserSessions().get(emailId);
+        //make changes here
+
+        List<Long> sessionsIds=collaboratorMgmtService.getAllSessionIdsByEmail(emailId);
+        List<Session> sessionList=sessionRepository.findBysessionIdIn(sessionsIds);
+        List<StudioSession> studioSessions=new ArrayList<>();
+        for(Session s : sessionList){
+            StudioSession studioSession=new StudioSession();
+            studioSession.setSessionId(s.getJoiningCode());
+            studioSession.setSessionName(s.getSessionName());
+            studioSession.setBucketName(s.getBucketName());
+            List<File> files= audioFileService.findAllFilesInSession(s.getSessionId());
+            List<AudioTrack> audioTracks=new ArrayList<>();
+            for(File file : files){
+                audioTracks.add(audioFileService.convertFileToAudioTrack(file,s.getJoiningCode()));
+
+            }
+
+            studioSession.setAudioTracks(audioTracks);
+
+            List<Collaborators> collaborators=collaboratorMgmtService.findAllCollaborators(s.getSessionId());
+            List<User> users=new ArrayList<>();
+            for(Collaborators c : collaborators) {
+                Optional<User> userOptional = userManagementService.findUser(c.getUserEmail());
+                if (userOptional.isPresent()) {
+                    users.add(userOptional.get());
+                }
+            }
+           studioSession.setParticipants(users);
+
+                studioSessions.add(studioSession);
+            SessionStorage.getInstance().setStudioSession(studioSession);
         }
-        return new ArrayList<>();
+
+        return studioSessions;
+
+
+//        if(SessionStorage.getInstance().getUserSessions().containsKey(emailId)){
+//            return SessionStorage.getInstance().getUserSessions().get(emailId);
+//        }
+//        return new ArrayList<>();
     }
 
     // New logic for handling sessions
@@ -130,11 +194,14 @@ public class SessionMgmtService {
         }
 
 
+
+
+
         log.info("Getting studio session");
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
 
         String newFileName = awsStorageService.uploadFile(file,bucketName);
-
+        audioFileService.saveAudioFileDetails(newFileName,"","mp3",sessionId);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);
@@ -148,10 +215,18 @@ public class SessionMgmtService {
 
     }
 
+
+    public Session findSessionByjoinCode(String sessionJoinCode){
+        log.info("finding session");
+
+        return sessionRepository.findBySessionJoinCode(sessionJoinCode);
+    }
+
     public StudioSession getStudioSession(String sessionId) throws Exception {
         if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
             throw new Exception("Session not found");
         }
+//        StudioSession studioSession=new StudioSession();
         return SessionStorage.getInstance().getStudioSession().get(sessionId);
     }
 
