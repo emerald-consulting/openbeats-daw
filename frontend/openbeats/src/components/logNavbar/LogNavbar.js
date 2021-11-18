@@ -10,6 +10,12 @@ const LogNavbar = () => {
   const [state, dispatch] = useContext(UserContext);
   const user = useSelector(_state => _state.user);
   console.log(user);
+
+  const logout = () => {
+    localStorage.setItem('auth-token','');
+    localStorage.setItem('emailId','');
+    window.location.href = '/signin';
+  }
   
   return (
     <div>  
@@ -24,9 +30,9 @@ const LogNavbar = () => {
         <Link className=" mr-7 text-gr4" style={{fontSize:14}}  to="/dashboard">
           {state.user?.firstName}
         </Link>
-        <Link className=" mr-7 text-gr4" style={{fontSize:14}}  to="/signin">
+        <button onClick={logout} className=" mr-7 text-gr4" style={{fontSize:14}} >
           Logout
-        </Link>
+        </button>
 
       </div>
       

@@ -35,7 +35,8 @@ const Dashboard = () => {
   console.log(state)
   console.log(sessionList)
 
-  useEffect(() => {
+  useEffect(() => { 
+      document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
       if(search){
       getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
       }
@@ -184,6 +185,7 @@ const Dashboard = () => {
             }
          })
         .catch((error)=>{
+            setError("Invalid session ID");
             console.log(error);
         });
 
@@ -345,6 +347,7 @@ const Dashboard = () => {
 
 
     }
+    
   
               
 
