@@ -9,6 +9,9 @@ import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../mo
 import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 //const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
@@ -19,7 +22,7 @@ const Dashboard = () => {
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(null);
   const [sessionList, setSessionList] = useState([]);
-
+  const [error, setError] = useState(null);
   const user = useSelector(_state => _state.user);
   const session = useSelector(_state => _state.session);
   const dispatch2 = useDispatch();
@@ -108,6 +111,9 @@ const Dashboard = () => {
             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
             console.log(response.data);
+            if(response.status==202){
+                                           setError("You have exceeded the number of Free Sessions!!");
+                        }else{
             dispatch2(setSessionId(response.data.sessionId));
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
@@ -119,6 +125,7 @@ const Dashboard = () => {
             // }
             // dispatch2(setSession(s));
             history.push('/daw');
+            }
          })
         .catch((error)=>{
             console.log(error);
@@ -148,7 +155,7 @@ const Dashboard = () => {
         }}).then((response) => {
             console.log(response.data);
             if(response.status==202){
-                               setError(response.data.message)
+                               setError("You have exceeded the number of Free Sessions!!");
             }else{
                 dispatch2(setSessionId(response.data.sessionId));
                             dispatch2(setSessionName(response.data.sessionName));
@@ -306,6 +313,11 @@ const Dashboard = () => {
     )
   }
 
+ const handleOnclose = () =>{
+        setError(null);
+
+
+    }
   
               
 
@@ -382,6 +394,18 @@ const Dashboard = () => {
                               placeholder='Enter session id'
                           />
                       </div>
+                      <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={handleOnclose}
+                                              action={
+                                                  <IconButton
+                                                      aria-label="close"
+                                                      color="inherit"
+                                                      sx={{ p: 0.5 }}
+                                                      onClick={handleOnclose}
+                                                      >
+                                                      <CloseIcon />
+                                                  </IconButton>
+                                                  }
+                                              message={"ERROR :"+error} open={error}/>
 
                       <div className='flex justify-center items-center '>
                           <button className={`bg-gr3 font-bold hover:bg-gr2 py-2 px-4 rounded`}>

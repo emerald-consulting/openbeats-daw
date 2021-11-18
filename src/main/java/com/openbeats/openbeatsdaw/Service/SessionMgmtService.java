@@ -96,7 +96,31 @@ public class SessionMgmtService {
         return true;
     }
 
+    public StudioSession createStudioSessionFromSession(Session s){
+        StudioSession studioSession=new StudioSession();
+        studioSession.setSessionId(s.getJoiningCode());
+        studioSession.setSessionName(s.getSessionName());
+        studioSession.setBucketName(s.getBucketName());
+        List<File> files= audioFileService.findAllFilesInSession(s.getSessionId());
+        List<AudioTrack> audioTracks=new ArrayList<>();
+        for(File file : files){
+            audioTracks.add(audioFileService.convertFileToAudioTrack(file,s.getJoiningCode()));
 
+        }
+
+        studioSession.setAudioTracks(audioTracks);
+
+        List<Collaborators> collaborators=collaboratorMgmtService.findAllCollaborators(s.getSessionId());
+        List<User> users=new ArrayList<>();
+        for(Collaborators c : collaborators) {
+            Optional<User> userOptional = userManagementService.findUser(c.getUserEmail());
+            if (userOptional.isPresent()) {
+                users.add(userOptional.get());
+            }
+        }
+        studioSession.setParticipants(users);
+        return studioSession;
+    }
 
     public List<StudioSession> getAllUserSessions(String emailId){
         log.info("getting all sessions");
@@ -107,29 +131,7 @@ public class SessionMgmtService {
         List<Session> sessionList=sessionRepository.findBysessionIdIn(sessionsIds);
         List<StudioSession> studioSessions=new ArrayList<>();
         for(Session s : sessionList){
-            StudioSession studioSession=new StudioSession();
-            studioSession.setSessionId(s.getJoiningCode());
-            studioSession.setSessionName(s.getSessionName());
-            studioSession.setBucketName(s.getBucketName());
-            List<File> files= audioFileService.findAllFilesInSession(s.getSessionId());
-            List<AudioTrack> audioTracks=new ArrayList<>();
-            for(File file : files){
-                audioTracks.add(audioFileService.convertFileToAudioTrack(file,s.getJoiningCode()));
-
-            }
-
-            studioSession.setAudioTracks(audioTracks);
-
-            List<Collaborators> collaborators=collaboratorMgmtService.findAllCollaborators(s.getSessionId());
-            List<User> users=new ArrayList<>();
-            for(Collaborators c : collaborators) {
-                Optional<User> userOptional = userManagementService.findUser(c.getUserEmail());
-                if (userOptional.isPresent()) {
-                    users.add(userOptional.get());
-                }
-            }
-           studioSession.setParticipants(users);
-
+            StudioSession studioSession=createStudioSessionFromSession(s);
                 studioSessions.add(studioSession);
             SessionStorage.getInstance().setStudioSession(studioSession);
         }
@@ -170,13 +172,24 @@ public class SessionMgmtService {
 
     public StudioSession connectToStudioSession(String email, String sessionId) throws Exception {
         if (!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)) {
-            throw new Exception("Session with provided id doesn't exist");
+
+            Session session=sessionRepository.findBySessionJoinCode(sessionId);
+            if(session==null){
+                throw new Exception("Session with provided id doesn't exist");
+            }
+            StudioSession studioSession=createStudioSessionFromSession(session);
+            SessionStorage.getInstance().setStudioSession(studioSession);
         }
 
         Optional<User> user = userManagementService.findUser(email);
         user.orElseThrow(()-> new UsernameNotFoundException("User does not exist"));
 
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+//        if(studioSession==null){
+//            //get session from db
+//
+//        }
+
         if (studioSession.getParticipants().size() == 0){
             throw new Exception("Session is not valid");
         }

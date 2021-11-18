@@ -24,6 +24,8 @@ public interface SessionRepository extends JpaRepository<Session,Long> {
 
     List<Session> findBysessionIdIn(List<Long> sessionIdList);
 
+    Session findByJoiningCode(String joiningCode);
+
     @Override
     void delete(Session entity);
 }

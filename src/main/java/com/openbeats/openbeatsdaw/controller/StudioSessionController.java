@@ -100,14 +100,14 @@ public class StudioSessionController {
         studioSession.setBucketName(bucketName);
         sessionMgmtService.saveSession2(creator.getEmail(),bucketName,creator.getRoomName(),studioSession.getSessionId());
         collaboratorMgmtService.joinSession(creator.getEmail(),studioSession.getSessionId(),"OWNER");
-        return ResponseEntity.accepted().headers(responseHeaders).body(studioSession);
+        return ResponseEntity.ok().headers(responseHeaders).body(studioSession);
     }
     //accepted ==202
     @PostMapping("/connect")
     public ResponseEntity<StudioSession> connect(@RequestBody ConnectRequest request) throws Exception {
         log.info("connect request: {}", request);
         HttpHeaders responseHeaders = new HttpHeaders();
-        if(!checkIfUserIsEligibleToCreateSession(request.getEmail())){
+        if(!checkIfUserIsEligibleToJoinSession(request.getEmail())){
             return ResponseEntity.accepted().headers(responseHeaders).body(new StudioSession());
         }
         /*responseHeaders.set("Access-Control-Allow-Origin", "*");
