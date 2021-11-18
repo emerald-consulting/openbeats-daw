@@ -329,16 +329,17 @@ const Dashboard = () => {
           <div className="p-10 " style={{width:'60%', height:'80vh'}}><h1 class="text-4xl text-gr4 pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
             <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
               
-              <div className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" style={{width:'70%'}}>
-                <h1 className="text-2xl ">Saved sessions</h1>
-                {
-                  sessionList.map((session)=>(
-                    <button onClick={()=>joinSessionFromList(session.sessionId)} className="p-2 text-whi mr-7 bg-gr4 m-1 font-bold rounded" style={{fontSize:15}} >
-                      {session.sessionId} : {session.sessionName}
-                    </button>
-                  ))
-                }
-
+              <div className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
+                <h1 className="text-2xl " >Saved sessions</h1>
+                <div className="overflow-y-auto overflow-x-hidden " >
+                  {
+                    sessionList.map((session)=>(
+                      <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 hover:bg-gr2 m-1 font-bold rounded" style={{fontSize:15}} >
+                        {session.sessionId} : {session.sessionName}
+                      </button>
+                    ))
+                  }
+                </div>
               </div>
               <div className=" rounded  ">
                 <div className="rounded-lg bg-gr4 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
