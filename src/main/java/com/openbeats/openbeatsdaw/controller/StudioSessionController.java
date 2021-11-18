@@ -2,7 +2,9 @@ package com.openbeats.openbeatsdaw.controller;
 
 import com.amazonaws.services.cloudfront.model.FieldLevelEncryption;
 import com.openbeats.openbeatsdaw.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.CollaboratorMgmtService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
@@ -45,6 +47,9 @@ public class StudioSessionController {
     @Autowired
     UserManagementService userManagementService;
 
+    @Autowired
+    SessionRepository sessionRepository;
+
 
     public boolean checkIfUserIsEligibleToCreateSession(String email){
         Optional<User> userOptional = userManagementService.findUser(email);
@@ -66,14 +71,24 @@ public class StudioSessionController {
     }
 
 
-    public boolean checkIfUserIsEligibleToJoinSession(String email){
+    public boolean checkIfUserIsEligibleToJoinSession(String email,String joinCode){
         Optional<User> userOptional = userManagementService.findUser(email);
         User user;
         if (userOptional.isPresent()) {
             user=userOptional.get();
+
+
             if("free".equalsIgnoreCase(user.getSubscriptionType())){
                 List<Long> sessionIds=collaboratorMgmtService.findAllSessionsFromEmailAndRole(email,"USER");
+                List<Session> sessionList=sessionRepository.findBysessionIdIn(sessionIds);
+                for(Session session: sessionList){
+                    if(joinCode.equalsIgnoreCase(session.getJoiningCode())){
+                        return true;
+                    }
+                }
+
                 if(sessionIds.size()>=3){
+
                     return false;
                 }
             }
@@ -107,7 +122,7 @@ public class StudioSessionController {
     public ResponseEntity<StudioSession> connect(@RequestBody ConnectRequest request) throws Exception {
         log.info("connect request: {}", request);
         HttpHeaders responseHeaders = new HttpHeaders();
-        if(!checkIfUserIsEligibleToJoinSession(request.getEmail())){
+        if(!checkIfUserIsEligibleToJoinSession(request.getEmail(),request.getSessionId())){
             return ResponseEntity.accepted().headers(responseHeaders).body(new StudioSession());
         }
         /*responseHeaders.set("Access-Control-Allow-Origin", "*");
