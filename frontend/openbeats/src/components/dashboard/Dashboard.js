@@ -14,13 +14,13 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
 //const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
-const url = "http://localhost:8080";
+const url = "http://192.168.1.166:5000"
+// const url = "http://localhost:8080";
 const Dashboard = () => {
 
   const search = useLocation().search;
   const [state, dispatch] = useContext(UserContext);
-  const [profilePic, setProfilePic] = useState(null);
+  // const [profilePic, setProfilePic] = useState(null);
   const [sessionList, setSessionList] = useState([]);
   const [error, setError] = useState(null);
   const user = useSelector(_state => _state.user);
@@ -41,6 +41,7 @@ const Dashboard = () => {
       }
       else if ( jwtToken && jwtToken != "undefined"){
         getSessions();
+        getImage();
       }
       else{
         let token = localStorage.getItem("auth-token");
@@ -84,7 +85,7 @@ const Dashboard = () => {
 
                      }
                  });
-        
+      getImage(email);
       getSessions(email);
     }
 
@@ -225,19 +226,21 @@ const Dashboard = () => {
 
   }
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  // const [selectedFile, setSelectedFile] = useState(null);
   const onFileChange = event => {
     
     // Update the state
-    setSelectedFile(event.target.files[0]);
+    //setSelectedFile(event.target.files[0]);
+    onFileUpload(event.target.files[0]);
   
   };
 
-  const getImage = () => {
-    
-    let encodeString = 'c@gmail.com:test';
-    const encodedString = Buffer.from(encodeString).toString('base64');
-    axios.get(url+"/getImage?email="+state.user.emailId,{ responseType: 'blob' },{headers: {
+  const getImage = (email = state.user.emailId) => {
+    // console.log(profilePic);
+    // let encodeString = 'c@gmail.com:test';
+    // const encodedString = Buffer.from(encodeString).toString('base64');
+    document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
+    axios.get(url+"/getImage?email="+email,{ responseType: 'blob' },{headers: {
       //'Accept': 'MediaType.IMAGE_JPEG',
       //'Accept': 'application/json',
       //'Content-Type': 'application/json',
@@ -254,7 +257,10 @@ const Dashboard = () => {
       //   setProfilePic(response.data)
       // }
       if(response){
-        setProfilePic(response.data[0])
+        // console.log(response.data)
+        // setProfilePic(response.data)
+        const picSrc = URL.createObjectURL(response.data);
+        document.getElementById('profilePic').src=picSrc;
       }
     });
   }
@@ -289,7 +295,7 @@ const Dashboard = () => {
 
 
 
-  const onFileUpload = () => {
+  const onFileUpload = file => {
     
     // Create an object of formData
     const formData = new FormData();
@@ -301,7 +307,7 @@ const Dashboard = () => {
     //   selectedFile.name
     // );
     formData.append(
-      'image',selectedFile
+      'image',file
     );
     let bucketname="myawsbucket-3"
     formData.append(
@@ -309,7 +315,7 @@ const Dashboard = () => {
     );
   
     // Details of the uploaded file
-    console.log(selectedFile);
+    // console.log(selectedFile);
   
     // Request made to the backend api
     // Send formData object
@@ -323,14 +329,16 @@ const Dashboard = () => {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
       'Authorization': 'Bearer '+ jwtToken
-  }});
+  }}).then( res => {
+    getImage();
+  });
   };
 
-  const imgSrc = () =>{
-    return(
-      profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'
-    )
-  }
+  // const imgSrc = () =>{
+  //   return(
+  //     profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'
+  //   )
+  // }
 
  const handleOnclose = () =>{
         setError(null);
@@ -349,15 +357,18 @@ const Dashboard = () => {
           <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'40%', height:'80vh'}}>
             <div className="flex flex-col  p-2">
               <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
-                <img style={{borderRadius: '40px',margin:'auto'}}  src={imgSrc()}/>
-                
+              <label for={"pic-upload"} className=" cursor-pointer">
+                <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic'  />
+                {/* src={profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'} */}
+                </label> 
               </div>
-              <div><input className="text-xs " style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-                <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
+              <div>
+                <input className="text-xs hidden" id='pic-upload' style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
+                {/* <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
                   <p className="text-xs">Upload!</p>
-                </button>
+                </button> */}
               </div>
-              <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div>
+              {/* <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div> */}
               <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}</div>
               <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
               <div id="upgradeUserDiv">
