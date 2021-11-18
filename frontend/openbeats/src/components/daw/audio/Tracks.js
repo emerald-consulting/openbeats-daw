@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import { useLocation } from "react-router-dom";
 
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
@@ -23,6 +24,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../../model/session/Session";
 import { setMaxDuration } from "../../../model/audio/Audio";
+import { setUserEmail , setUserToken } from "../../../model/user/User";
+import UserContextProvider, {UserContext} from "../../../model/user-context/UserContext";
+import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../../model/session/Session";
 
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
 import audioFile_Z from './components/AudioPlayer/Dsc_Oh.mp3'
@@ -102,7 +106,10 @@ function Tracks() {
   const _audio = useSelector(_state => _state.audio);
   const user = useSelector(_state => _state.user);
   const maxDuration = _audio?_audio.maxDuration:1;
+  const search = useLocation().search;
   console.log(maxDuration);
+  
+  const [state, dispatch] = useContext(UserContext);
 
    let jwtToken = `${user.jwtToken}`;
     console.log("from Track js this is the jwt token"+jwtToken);
@@ -550,23 +557,94 @@ async function getAllFiles() {
 //   }
 // }, [files])
 
+// useEffect(() => {
+//   connect();
+//   getFileNames();
+// }, [])
+
+async function getSpotifyUserDetails(token,email){
+  console.log('get getSpotifyUserDetails');
+  await dispatch2(setUserToken(token));
+  await dispatch2(setUserEmail(email));
+  axios.get(url+"/getUserDetails?emailId="+email,{headers: {
+                     'Content-Type': 'application/json',
+                     'Authorization': 'Bearer '+ token
+             }}).then((response1) => {
+                 if(response1.data.status==207){
+
+
+                 }
+                 else if(response1.data){
+                      dispatch({
+                                             type: "LOAD_USER",
+                                             payload: response1.data.data
+                                           });
+                     console.log(response1.data.data)
+
+
+                 }
+             });
+  let sessionId = null;
+  if(search){
+    sessionId =  new URLSearchParams(search).get('sessionId');
+    connect( sessionId);
+    getFileNames( sessionId);
+  }
+  let formdata = JSON.stringify({
+    sessionId:sessionId,
+    email: email,
+    })
+  console.log(formdata)
+
+  axios.post(url+"/connect", formdata,{headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+          "Access-Control-Allow-Headers" : "Content-Type",
+          // "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          'Authorization': 'Bearer '+ jwtToken
+      }}).then((response) => {
+          console.log(response.data);
+          dispatch2(setSessionId(response.data.sessionId));
+          dispatch2(setSessionName(response.data.sessionName));
+          dispatch2(setParticipants(response.data.participants));
+          dispatch2(setBucketName(response.data.bucketName));
+       })
+      .catch((error)=>{
+          console.log(error);
+      });
+  
+}
+
 useEffect(() => {
-  connect();
-  getFileNames();
-}, [])
+  if ( jwtToken && jwtToken != "undefined"){
+    connect();
+    getFileNames();
+  }
+  else{
+    let token = localStorage.getItem("auth-token");
+    if(token){
+      let email = localStorage.getItem("emailId");
+      getSpotifyUserDetails(token,email);
+    } else {
+      window.location.href = '/signin';
+    }
+  }
+
+}, []);
 
 useEffect(() => {
   getAllFiles();
 }, [session.audioTracks])
 
-function getFileNames() {
+function getFileNames( sessionId = session.sessionId ) {
   const formData = new FormData();
   formData.append(
-    'sessionId',session.sessionId
+    'sessionId',sessionId
   );
   let encodeString = 'test@test.com:test1234';
   const encodedString = Buffer.from(encodeString).toString('base64');
-  axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+  axios.get(url+"/getStudioSession?sessionId="+sessionId,{headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
     "Access-Control-Allow-Headers" : "Content-Type",
@@ -583,14 +661,14 @@ function getFileNames() {
   
 }    
 
-const connect = () => {
+const connect = ( sessionId = session.sessionId) => {
   console.log("connecting to the session");
   let socket = new SockJS(url+"/studioSession");
   //{headers : {"Access-Control-Allow-Origin": "*" }}
   let stompClient = Stomp.over(socket);
   stompClient.connect({}, function (frame) {
     console.log("connected to the frame: " + frame);
-    stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+    stompClient.subscribe("/topic/session-progress/"+sessionId, function (response) {
         let data = JSON.parse(response.body);
         console.log(data);
         getFileNames();
