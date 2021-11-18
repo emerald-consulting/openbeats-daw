@@ -1,4 +1,4 @@
-import React, {useContext, useRef} from 'react'
+import React, {useContext, useRef, useEffect} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
@@ -17,9 +17,9 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
 
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+const url = "http://192.168.1.166:5000"
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
 const RecordView = () => {
     const {
       status,
@@ -130,7 +130,7 @@ const Daw = () => {
                         <p className=" p-5 bg-gr2 hover:bg-gr3  " style={{textAlign:'center'}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {session.participants.map((p)=>(<p>{p.firstName}</p>))}
-                        <button onClick={connect}>Connect</button>
+                        {/* <button onClick={connect}>Connect</button> */}
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
