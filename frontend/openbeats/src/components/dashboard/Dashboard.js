@@ -287,8 +287,8 @@ const Dashboard = () => {
           state.user.subscriptionType='paid';
               var x = document.getElementById("upgradeUserDiv");
 
-                x.style.display = "none";
-
+                x.innerHTML= '<h1 className="bg-gr4 p-2 mt-1 rounded">*now Logged-in as Premium user*</h1>';
+                // x.innerHTML= 'now Logged-in as Premium user';
         }
       });
     }
@@ -378,10 +378,11 @@ const Dashboard = () => {
  
 
           </div>
-          <div className="p-10 " style={{width:'60%', height:'80vh'}}><h1 class="text-4xl text-gr4 pt-2 " style={{textAlign:'end',width:'100%'}}>Sessions</h1>
-            <div className="flex flex-row  m-auto  " style={{width:'100%'}}> 
+          <div className="p-10 " style={{width:'60%', height:'80vh'}}>
+            <h1 class="text-4xl text-gr4 pt-2 px-8" style={{textAlign:'end'}}>Sessions</h1>
+            <div className="flex flex-row" style={{width:'100%'}}> 
               
-              <div className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
+              <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
                 <h1 className="text-2xl " >Saved sessions</h1>
                 <div className="overflow-y-auto overflow-x-hidden " >
                   {
@@ -393,7 +394,7 @@ const Dashboard = () => {
                   }
                 </div>
               </div>
-              <div className=" rounded  ">
+              <div style={{width:'50%'}} className=" rounded  ">
                 <div className="rounded-lg bg-gr4 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
                   <h1 className="text-2xl ">Create a Session</h1>
                   <form onSubmit={createWorkspace}>
