@@ -20,6 +20,19 @@ public class TokenProvider {
     @Autowired
     private Environment env;
 
+    public String createToken(String email) {
+
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 1000*24*100);
+
+        return Jwts.builder()
+                .setSubject(email)
+                .setIssuer("FormLogin")
+                .setIssuedAt(new Date())
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, env.getProperty("tokenSecret"))
+                .compact();
+    }
 
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
@@ -28,11 +41,30 @@ public class TokenProvider {
         Date expiryDate = new Date(now.getTime() + 1000*24*100);
 
         return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
+                .setSubject(userPrincipal.getEmail())
+                .setIssuer("Oauth")
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, env.getProperty("tokenSecret"))
                 .compact();
+    }
+
+    public String getEmailId(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(env.getProperty("tokenSecret"))
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject();
+    }
+
+    public String getIssuer(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(env.getProperty("tokenSecret"))
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getIssuer();
     }
 
     public Long getUserIdFromToken(String token) {

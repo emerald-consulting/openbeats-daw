@@ -17,8 +17,8 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
 
-// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-const url = "http://192.168.1.166:5000"
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
 
 const RecordView = () => {
     const {
@@ -63,56 +63,49 @@ const Daw = () => {
     let clientRef = useRef(null);
     
     const session = useSelector(_state => _state.session);
+    const user = useSelector(_state => _state.user);
     const dispatch2 = useDispatch();
+    let jwtToken = `${user.jwtToken}`;
+    console.log("this is the jwt token"+jwtToken);
+    const sendMessage = (msg) => {
+      console.log("sending...")
+      clientRef.sendMessage('/topics/all', msg);
+    }
 
-    // const sendMessage = (msg) => {
-    //   console.log("sending...")
-    //   clientRef.sendMessage('/topics/all', msg);
-    // }
+    const connect = () => {
+      console.log("connecting to the game");
+      let socket = new SockJS(url+"/studioSession");
+      //{headers : {"Access-Control-Allow-Origin": "*" }}
+      let stompClient = Stomp.over(socket);
+      stompClient.connect({}, function (frame) {
+        console.log("connected to the frame: " + frame);
+        stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
+            let data = JSON.parse(response.body);
+            console.log(data);
+            // displayResponse(data);
+        })
+      })
+      const formData = new FormData();
+      formData.append(
+        'sessionId',session.sessionId
+      );
+      let encodeString = 'test@test.com:test1234';
+      const encodedString = Buffer.from(encodeString).toString('base64');
+      axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        "Access-Control-Allow-Headers" : "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        'Authorization': 'Bearer '+ jwtToken
 
-    // useEffect(() => {
-    //   connect();
-    //   getFileNames();
-    // }, [])
-
-    // const getFileNames = () => {
-    //   const formData = new FormData();
-    //   formData.append(
-    //     'sessionId',session.sessionId
-    //   );
-    //   let encodeString = 'test@test.com:test1234';
-    //   const encodedString = Buffer.from(encodeString).toString('base64');
-    //   axios.get(url+"/getStudioSession?sessionId="+session.sessionId,{headers: {
-    //     'Accept': 'application/json',
-    //     'Content-Type': 'application/json',
-    //     "Access-Control-Allow-Headers" : "Content-Type",
-    //     "Access-Control-Allow-Origin": "*",
-    //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-    //     'Authorization': 'Basic '+ encodedString
-    
-    //   }}).then((res)=>{
-    //     console.log(res)
-    //     if(res.data){
-    //       dispatch2(setAudioTracks(res.data.audioTracks))
-    //     }
-    //   }).catch(error => {console.log(error)});
-    // }    
-
-    // const connect = () => {
-    //   console.log("connecting to the session");
-    //   let socket = new SockJS(url+"/studioSession");
-    //   //{headers : {"Access-Control-Allow-Origin": "*" }}
-    //   let stompClient = Stomp.over(socket);
-    //   stompClient.connect({}, function (frame) {
-    //     console.log("connected to the frame: " + frame);
-    //     stompClient.subscribe("/topic/session-progress/"+session.sessionId, function (response) {
-    //         let data = JSON.parse(response.body);
-    //         console.log(data);
-    //         getFileNames();
-    //         // displayResponse(data);
-    //     })
-    //   })
-    // }
+      }}).then((res)=>{
+        console.log(res)
+        if(res.data){
+          dispatch2(setAudioTracks(res.data.audioTracks))
+        }
+      }).catch(error => {console.log(error)});
+    }
 
     return (
       // <div><LogNavbar/>

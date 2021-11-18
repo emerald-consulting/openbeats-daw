@@ -48,13 +48,14 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 
-        String  targetUrl="http://openbeats-daw.us-east-2.elasticbeanstalk.com/dashboard";
+        String  targetUrl="http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/dashboard";
 
 
         String token = tokenProvider.createToken(authentication);
-
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
+                .queryParam("email",userPrincipal.getEmail())
                 .build().toUriString();
     }
 

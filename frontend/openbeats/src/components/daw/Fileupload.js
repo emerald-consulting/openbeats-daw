@@ -1,9 +1,15 @@
 import React,{useState, useContext} from 'react'
 import axios from "axios"
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
-
+import { useSelector, useDispatch } from 'react-redux'
+const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+//const url="http://localhost:8080"
 
 const Fileupload = () => {
+
+     const user = useSelector(_state => _state.user);
+      let jwtToken = `${user.jwtToken}`;
+         console.log("from Track js this is the jwt token"+jwtToken);
     const [selectedFile, setSelectedFile] = useState(null);
     // const [state, dispatch] = useContext(UserContext);
     // dispatch({
@@ -17,7 +23,7 @@ const Fileupload = () => {
   
   };
   const onFileUpload = () => {
-    
+
     // Create an object of formData
     const formData = new FormData();
 
@@ -37,13 +43,13 @@ const Fileupload = () => {
     let encodeString = 'c@gmail.com:test';
     const encodedString = Buffer.from(encodeString).toString('base64');
     
-    axios.post("http://openbeats-daw.us-east-2.elasticbeanstalk.com/upload", formData,{headers: {
+    axios.post(url+"/upload", formData,{headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Basic '+ encodedString
+       'Authorization': 'Bearer '+ jwtToken
   }});
   };
   const fileData = () => {
