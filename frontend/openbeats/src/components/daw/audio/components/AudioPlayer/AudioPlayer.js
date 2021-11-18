@@ -137,6 +137,8 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
       }  else if(file.blob){
         wavesurfer.current.loadBlob(file.blob);
         
+      } else if (typeof file == "string"){
+        wavesurfer.current.load(file)
       } else {
         // let audio = new Audio();
         // audio.src = URL.createObjectURL(file)

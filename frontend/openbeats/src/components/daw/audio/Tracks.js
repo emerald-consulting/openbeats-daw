@@ -17,8 +17,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 // import createBuffer from "audio-buffer-from"
 // import AWS from 'aws-sdk';
 
-import SocketRecord from "../socket/SocketRecord";
-import Fileupload from "../Fileupload";
+// import SocketRecord from "../socket/SocketRecord";
+// import Fileupload from "../Fileupload";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../../model/session/Session";
@@ -124,9 +124,11 @@ function Tracks() {
     console.log(file.blob)
     if (file.blob){
       _file = new File([file.blob], 'audio.mp3');
-    } else {
+    } else if (typeof file == "string"){
       console.log(file.substring(5))
       _file = new File([new Blob(file.substring(5))], 'audio.mp3')
+    } else {
+      _file = file;
     }
     formData.append(
       'file',_file
@@ -378,7 +380,18 @@ const handleRecord = () => {
 async function exportAsWav() {
   setIsLoading(true)
   let crunker = new Crunker();
-  let expBuffer = await crunker.fetchAudio(...files);
+  let temp=[];
+  files.forEach(f=>{
+    if (f.url){
+      temp.push(f.url);
+    } else if (typeof f == "string"){
+      temp.push(f);
+    } else {
+      let _file = URL.createObjectURL(f);
+      temp.push(_file);
+    }
+  });
+  let expBuffer = await crunker.fetchAudio(...temp);
   let mergedBuffer = await crunker.mergeAudio(expBuffer);
   let exportedAudio = await crunker.export(mergedBuffer,'audio/wav');
   await crunker.download(exportedAudio.blob, "merged");
@@ -604,7 +617,7 @@ const connect = () => {
                 File+</label> 
             <input id={"file-upload"} className="text-xs hidden" style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
         </div>
-        <Fileupload/>
+        {/* <Fileupload/> */}
         <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
           <Checkbox style={{color: "#00e676" }} checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
           <p className="pt-3 pr-1" >Select All</p>
@@ -629,11 +642,11 @@ const connect = () => {
           </button>
         </div>
         <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
-          <button onClick={exportAsWav}>Download</button>
+          <button onClick={exportAsWav}>Export as WAV</button>
         </div>
-        <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+        {/* <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
           <button onClick={getAllFiles}>Reload</button>
-        </div>
+        </div> */}
         
         
       </div>    
