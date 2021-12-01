@@ -21,7 +21,7 @@ repositories {
 
 apply plugin: 'application'
 
-//mainClassName = "<path to main class>"
+mainClassName = "com.openbeats.openbeatsdaw.OpenbeatsDawApplication"
 applicationDefaultJvmArgs = ["-Dkms.url=ws://192.168.88.135:8888/kurento"]
 
 ext {
