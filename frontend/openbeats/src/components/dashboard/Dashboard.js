@@ -13,14 +13,16 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
-//const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-const url = "http://192.168.1.166:5000"
+// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+// const url = "http://192.168.1.166:5000"
 // const url = "http://localhost:8080";
+const url = "http://127.0.0.1:5000"
+
 const Dashboard = () => {
 
   const search = useLocation().search;
   const [state, dispatch] = useContext(UserContext);
-  // const [profilePic, setProfilePic] = useState(null);
+  const [profilePic, setProfilePic] = useState(false);
   const [sessionList, setSessionList] = useState([]);
   const [error, setError] = useState(null);
   const user = useSelector(_state => _state.user);
@@ -263,14 +265,12 @@ const Dashboard = () => {
         // setProfilePic(response.data)
         const picSrc = URL.createObjectURL(response.data);
         document.getElementById('profilePic').src=picSrc;
+        setProfilePic(true);
       }
     });
   }
 
     const upgradeUser = () => {
-
-      let encodeString = 'c@gmail.com:test';
-      const encodedString = Buffer.from(encodeString).toString('base64');
         const formData = new FormData();
            formData.append(
              'email',state.user.emailId
@@ -318,14 +318,6 @@ const Dashboard = () => {
     formData.append(
       'email',state.user.emailId
     );
-  
-    // Details of the uploaded file
-    // console.log(selectedFile);
-  
-    // Request made to the backend api
-    // Send formData object
-    let encodeString = 'c@gmail.com:test';
-    const encodedString = Buffer.from(encodeString).toString('base64');
     
     axios.post(url+"/uploadProfilePic", formData,{headers: {
       'Accept': 'application/json',
@@ -339,18 +331,14 @@ const Dashboard = () => {
   });
   };
 
-  // const imgSrc = () =>{
-  //   return(
-  //     profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'
-  //   )
-  // }
-
  const handleOnclose = () =>{
         setError(null);
 
 
     }
     
+    const pic = <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic'  />
+    const defaultPic = <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic' src="https://cdn-icons-png.flaticon.com/256/149/149071.png" />
   
               
 
@@ -365,8 +353,7 @@ const Dashboard = () => {
               <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
               <label for={"pic-upload"} className=" cursor-pointer">
                 <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic'  />
-                {/* src={profilePic?profilePic:'https://cdn-icons-png.flaticon.com/256/149/149071.png'} */}
-                </label> 
+              </label> 
               </div>
               <div>
                 <input className="text-xs hidden" id='pic-upload' style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
