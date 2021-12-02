@@ -4,14 +4,16 @@ services:
   db:
     container_name: db
     image: postgres:latest
-    restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: openbeats
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testdb
       PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - /var/lib/postgresql/data
+    restart: always
 
   openbeats_611_pgadmin:
     container_name: openbeats_611_pgadmin
@@ -31,10 +33,7 @@ services:
     depends_on:
       - db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/db
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/testdb
     ports:
       - '5001:5001'
 
@@ -50,5 +49,8 @@ services:
       context: ./web
     volumes:
       - ./web:/app # live updates
+
+
+
 
 
