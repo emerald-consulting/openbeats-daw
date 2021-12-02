@@ -245,6 +245,26 @@ public class OpenBeatsRestController {
     }
 
 
+    @PostMapping("/updateProfile")
+    public ResponseEntity<Object> updateProfile(@RequestParam("email") String email,
+                                                   @RequestParam(value = "name") String name, HttpServletRequest request) throws Exception {
+
+        Optional<User> user = createUser.findUser(email);
+
+        if(!user.isEmpty()){
+            User usr = user.get();
+            log.info("user email is:"+usr.getEmailId());
+
+            usr.setFirstName(name);
+            User usr_response = createUser.updateUser(usr);
+            return ResponseHandler.generateResponse("success", HttpStatus.OK,usr_response);
+        }else {
+            return ResponseHandler.generateResponse("fail", HttpStatus.BAD_REQUEST,false);
+        }
+
+    }
+
+
     private String getSiteURL(HttpServletRequest request) {
         String siteURL = request.getRequestURL().toString();
         log.info(siteURL);

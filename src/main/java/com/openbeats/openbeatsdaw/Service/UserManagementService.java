@@ -61,6 +61,11 @@ public class UserManagementService implements UserDetailsService {
 
     }
 
+    public User updateUser(User user){
+        userRepository.save(user);
+        return user;
+    }
+
     private void sendVerificationEmail(User user, String siteURL) throws MessagingException, UnsupportedEncodingException, javax.mail.MessagingException {
         String toAddress = user.getEmailId();
         String fromAddress = env.getProperty("spring.mail.username");
