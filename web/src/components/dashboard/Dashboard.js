@@ -10,8 +10,7 @@ import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+const url = "http://localhost:5001" || "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 
 const Dashboard = () => {
 

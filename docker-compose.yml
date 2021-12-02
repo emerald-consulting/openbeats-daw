@@ -1,18 +1,42 @@
 version: "3.9"
 
 services:
+  db:
+    container_name: db
+    image: postgres:latest
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: openbeats
+      PGDATA: /var/lib/postgresql/data/pgdata
+
+  openbeats_611_pgadmin:
+    container_name: openbeats_611_pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@openbeats716.com
+      PGADMIN_DEFAULT_PASSWORD: password
+    ports:
+      - "80:80"
+      - "5050:5050"
+
   openbeats_611_api:
     container_name: openbeats_611_api
     build:
       dockerfile: Dockerfile
       context: ./api
     depends_on:
-      - openbeats_611_mysql
+      - db
     environment:
-      DATABASE_URL: postgres://user:password@postgres:5432/db
-      NODE_ENV: development
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
     ports:
-      - '8080:8080'
+      - '5001:5001'
 
   openbeats_611_web:
     container_name: openbeats_611_web
@@ -27,15 +51,4 @@ services:
     volumes:
       - ./web:/app # live updates
 
-  openbeats_611_mysql:
-    container_name: openbeats_611_mysql
-    platform: linux/x86_64
-    image: mysql:5.7
-    restart: always
-    environment:
-      MYSQL_DATABASE: 'openbeats'
-      MYSQL_ROOT_PASSWORD: 'admin'
-    ports:
-      - '3306:3306'
-    expose:
-      - '3306'
+

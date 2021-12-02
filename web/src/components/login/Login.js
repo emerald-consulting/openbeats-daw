@@ -8,8 +8,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { loadUser, setUserEmail, setUserPassword } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
+//const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
+const url = "localhost:5000"
 
 const Login = () => {
     const [state, dispatch] = useContext(UserContext);

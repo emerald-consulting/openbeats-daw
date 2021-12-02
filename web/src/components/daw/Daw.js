@@ -17,8 +17,7 @@ import axios from "axios"
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../model/session/Session";
 
-const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
+const url = "localhost:5001"
 
 const RecordView = () => {
     const {
