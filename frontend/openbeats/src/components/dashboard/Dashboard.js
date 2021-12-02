@@ -12,6 +12,7 @@ import { setSession, setSessionId, setSessionName, setParticipants, setBucketNam
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import LoadingOverlay from "react-loading-overlay";
 
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
 // const url = "http://192.168.1.166:5000"
@@ -23,6 +24,7 @@ const Dashboard = () => {
   const search = useLocation().search;
   const [state, dispatch] = useContext(UserContext);
   const [profilePic, setProfilePic] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [sessionList, setSessionList] = useState([]);
   const [error, setError] = useState(null);
   const user = useSelector(_state => _state.user);
@@ -94,6 +96,7 @@ const Dashboard = () => {
 
   function getSessions( email = user.emailId){
     console.log('get session')
+    setIsLoading(true);
     axios.get(url+"/getSessionDetails?emailId="+email,{headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
@@ -104,9 +107,11 @@ const Dashboard = () => {
       }}).then((response) => {
           console.log(response.data.data);
           setSessionList(response.data.data);
+          setIsLoading(false);
        })
-      .catch((error)=>{
-          console.log(error);
+      .catch((_error)=>{
+          setError(_error);
+          setIsLoading(false);
       });
   }
 
@@ -260,12 +265,15 @@ const Dashboard = () => {
       //   // });
       //   setProfilePic(response.data)
       // }
-      if(response){
+      if(response.data && (response.data.size != 0)){
         // console.log(response.data)
         // setProfilePic(response.data)
         const picSrc = URL.createObjectURL(response.data);
         document.getElementById('profilePic').src=picSrc;
         setProfilePic(true);
+      }
+      else{
+        document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
       }
     });
   }
@@ -336,11 +344,6 @@ const Dashboard = () => {
 
 
     }
-    
-    const pic = <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic'  />
-    const defaultPic = <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic' src="https://cdn-icons-png.flaticon.com/256/149/149071.png" />
-  
-              
 
     return (
       <div className='h-screen' style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}>
@@ -350,10 +353,10 @@ const Dashboard = () => {
         
           <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'40%', height:'80vh'}}>
             <div className="flex flex-col  p-2">
-              <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '150px',width:'50%', margin:'auto'}}>
-              <label for={"pic-upload"} className=" cursor-pointer">
-                <img style={{borderRadius: '40px',margin:'auto'}} id='profilePic'  />
-              </label> 
+              <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '50%', margin:'auto'}}>
+                <label for={"pic-upload"} className=" cursor-pointer">
+                  <img style={{borderRadius: '50%',margin:'auto',width:'250px',height:'250px',objectFit:'cover'}} id='profilePic'  />
+                </label> 
               </div>
               <div>
                 <input className="text-xs hidden" id='pic-upload' style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
@@ -364,8 +367,8 @@ const Dashboard = () => {
               {/* <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div> */}
               <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}</div>
               <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
-              <div id="upgradeUserDiv">
-                {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="rounded font-bold hover:bg-gr3 bg-gr4 mt-1 p-2">Upgrade to Premium</button>}
+              <div id="upgradeUserDiv" className='flex justify-center p-5'>
+                {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="p-2 text-w bg-gr3 hover:bg-gr2 font-bold rounded">Upgrade to Premium</button>}
               </div>
             </div>
  
@@ -377,15 +380,21 @@ const Dashboard = () => {
               
               <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
                 <h1 className="text-2xl " >Saved sessions</h1>
-                <div className="overflow-y-auto overflow-x-hidden " >
-                  {
-                    sessionList.map((session)=>(
-                      <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 hover:bg-gr2 m-1 font-bold rounded" style={{fontSize:15}} >
-                        {session.sessionId} : {session.sessionName}
-                      </button>
-                    ))
-                  }
-                </div>
+                <LoadingOverlay
+                  active={isLoading}
+                  spinner
+                  text='Please wait...'
+                >
+                  <div className="overflow-y-auto overflow-x-hidden " style={{height:'38.5vh'}}>
+                    {
+                      sessionList.map((session)=>(
+                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 hover:bg-gr2 m-1 font-bold rounded" style={{fontSize:15}} >
+                          {session.sessionId} : {session.sessionName}
+                        </button>
+                      ))
+                    }
+                  </div>
+                </LoadingOverlay>
               </div>
               <div style={{width:'50%'}} className=" rounded  ">
                 <div className="rounded-lg bg-gr4 w-96 rounded ml-0.5 mb-0.5 shadow-default py-10 px-16">
@@ -397,6 +406,7 @@ const Dashboard = () => {
                               className={`w-full p-2 text-primary border-gr4 border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                               id='sessionid'
                               placeholder='Enter session name'
+                              required
                           />
                       </div>
 
@@ -417,6 +427,7 @@ const Dashboard = () => {
                               className={`w-full p-2 border-gr4 border text-primary  rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
                               id='sessionJoinId'
                               placeholder='Enter session id'
+                              required
                           />
                       </div>
                       <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={handleOnclose}
@@ -430,7 +441,7 @@ const Dashboard = () => {
                                                       <CloseIcon />
                                                   </IconButton>
                                                   }
-                                              message={"ERROR :"+error} open={error}/>
+                                              message={error} open={error}/>
 
                       <div className='flex justify-center items-center '>
                           <button className={`bg-gr3 font-bold hover:bg-gr2 py-2 px-4 rounded`}>

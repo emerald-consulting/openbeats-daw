@@ -15,6 +15,8 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../../model/session/Session";
@@ -92,6 +94,8 @@ function Tracks() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [stopPlaying, setStopPlaying] = useState(0);
   const [selected, setSelected] = useState([]);
+  const [allSelected, setAllSelected] = useState(false);
+  const [error, setError] = useState(null);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -226,12 +230,18 @@ function Tracks() {
 
   const toggleSelectAll = event => {
     var temp=[];
-    console.log(selected);
-    selected.forEach((t) => {
-      temp.push(!t);
-    });
+    if(allSelected){
+      selected.forEach((t) => {
+        temp.push(false);
+      });
+      setAllSelected(false)
+    } else {
+      selected.forEach((t) => {
+        temp.push(true);
+      });
+      setAllSelected(true)
+    }
     setSelected(temp);
-    console.log(temp);
     
   }
 
@@ -343,6 +353,7 @@ const handleRecord = () => {
   if(recording==false){
     download();
     soundsPLayed=new Array();
+    setError('Please wait while the recorded track renders!!')
   }
 
 };
@@ -374,8 +385,11 @@ async function getAllFiles() {
     return;
   }
   setFiles([]);
+  setPlayTracks([])
+  setSelected([])
   setIsLoading(true)
   let fileArray = []
+  let boolArray = []
   for (var i=0; i<session.audioTracks.length;i++){
     const formData = new FormData();
     // console.log(s.file);
@@ -391,7 +405,6 @@ async function getAllFiles() {
 
     let res = await axios.post(url+"/getFile", formData,{ responseType: 'arraybuffer',headers: {
       'Accept': 'application/json',
-      'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
@@ -403,10 +416,12 @@ async function getAllFiles() {
       type: 'audio/mp3'
     });
     fileArray.push(_file)
+    boolArray.push(false)
   }
   setFiles(fileArray)
+  setPlayTracks(boolArray)
+  setSelected(boolArray)
   setIsLoading(false)
-  
 }
 
 async function getSpotifyUserDetails(token,email){
@@ -435,7 +450,6 @@ async function getSpotifyUserDetails(token,email){
   if(search){
     sessionId =  new URLSearchParams(search).get('sessionId');
     connect( sessionId);
-    getFileNames( sessionId);
   }
   let formdata = JSON.stringify({
     sessionId:sessionId,
@@ -456,9 +470,10 @@ async function getSpotifyUserDetails(token,email){
           dispatch2(setSessionName(response.data.sessionName));
           dispatch2(setParticipants(response.data.participants));
           dispatch2(setBucketName(response.data.bucketName));
+          getFileNames( sessionId);
        })
-      .catch((error)=>{
-          console.log(error);
+      .catch((_error)=>{
+          console.log(_error);
       });
   
 }
@@ -484,10 +499,6 @@ useEffect(() => {
   getAllFiles();
 }, [session.audioTracks])
 
-useEffect(() => {
-  console.log(files);
-})
-
 function getFileNames( sessionId = session.sessionId ) {
   const formData = new FormData();
   formData.append(
@@ -508,7 +519,7 @@ function getFileNames( sessionId = session.sessionId ) {
     if(res.data){
       dispatch2(setAudioTracks(res.data.audioTracks));
     }
-  }).catch(error => {console.log(error)});
+  }).catch(_error => {console.log(_error)});
   
 }    
 
@@ -548,7 +559,7 @@ const connect = ( sessionId = session.sessionId) => {
         </div>
         {/* <Fileupload/> */}
         <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
-          <Checkbox style={{color: "#00e676" }} checked={selected.every(Boolean)} onChange={toggleSelectAll} /> 
+          <Checkbox style={{color: "#00e676" }} checked={allSelected || false} onChange={e=>toggleSelectAll(e)} /> 
           <p className="pt-3 pr-1" >Select All</p>
         </div>
         <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">{transportPlayButton}</div>
@@ -579,14 +590,14 @@ const connect = ( sessionId = session.sessionId) => {
         
         
       </div>    
-      <div className=" p-0.5 pt-0.5" style={{width:'100%'}}>
-        <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/>
+      <div className=" p-0.5 pt-2.5" style={{width:'100%'}}>
+        {/* <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/> */}
       </div>             
       <Grid container direction="column" >
         {files.map((file, index) => (
           <Grid key={index} container >
             <Grid item md={0.2}>
-            <Checkbox    style ={{  color: "#00e676" }} checked={selected[index]} onChange={(e)=>toggleSelectOne(e,index)}  /> 
+            <Checkbox style ={{  color: "#00e676" }} checked={selected[index] || false} onChange={(e)=>toggleSelectOne(e,index)}  /> 
             </Grid>
             <Grid item md={11}>
             <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} />
@@ -600,6 +611,18 @@ const connect = ( sessionId = session.sessionId) => {
           </Grid>
         ))}
       </Grid>
+      <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={e=>setError(null)}
+                                              action={
+                                                  <IconButton
+                                                      aria-label="close"
+                                                      color="inherit"
+                                                      sx={{ p: 0.5 }}
+                                                      onClick={e=>setError(null)}
+                                                      >
+                                                      <CloseIcon />
+                                                  </IconButton>
+                                                  }
+                                              message={error} open={error}/>
     </div>
     </LoadingOverlay>
   );
