@@ -24,6 +24,7 @@ import { setMaxDuration } from "../../../model/audio/Audio";
 import { setUserEmail , setUserToken } from "../../../model/user/User";
 import UserContextProvider, {UserContext} from "../../../model/user-context/UserContext";
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../../model/session/Session";
+import { url } from '../../../utils/constants' 
 
 import audioFile_N from './components/AudioPlayer/Brk_Snr.mp3'
 import audioFile_Z from './components/AudioPlayer/Dsc_Oh.mp3'
@@ -52,10 +53,6 @@ import audio_B from './components/AudioPlayer/B.mp3'
 import Crunker from 'crunker'
 var recording=false;
 const map1 = new Map();
-
-// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
-const url = "http://127.0.0.1:5000"
 
 var soundsPLayed=new Array();
 
@@ -114,7 +111,6 @@ function Tracks() {
    let jwtToken = `${user.jwtToken}`;
 
   const uploadFIle = file => {
-    let encodeString = 'test@test.com:test1234';
     const formData = new FormData();
 
     formData.append(
@@ -142,7 +138,6 @@ function Tracks() {
       'bucketName',session.bucketName
     );
     let requestsParams = "fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName;
-    const encodedString = Buffer.from(encodeString).toString('base64');
     axios.post(url+"/studioSession",formData,{headers: {
     // axios.post(url+"/studioSession",formData,{headers: {
       'Accept': 'application/json',

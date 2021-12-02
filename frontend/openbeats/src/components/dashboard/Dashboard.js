@@ -13,11 +13,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import LoadingOverlay from "react-loading-overlay";
-
-// const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-// const url = "http://192.168.1.166:5000"
-// const url = "http://localhost:8080";
-const url = "http://127.0.0.1:5000"
+import { url } from '../../utils/constants' 
 
 const Dashboard = () => {
 
@@ -110,7 +106,7 @@ const Dashboard = () => {
           setIsLoading(false);
        })
       .catch((_error)=>{
-          setError(_error);
+          // setError(_error);
           setIsLoading(false);
       });
   }
