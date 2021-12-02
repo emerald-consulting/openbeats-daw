@@ -15,11 +15,6 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import StopIcon from "@material-ui/icons/Stop";
 import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from '@material-ui/core/Checkbox';
-// import createBuffer from "audio-buffer-from"
-// import AWS from 'aws-sdk';
-
-// import SocketRecord from "../socket/SocketRecord";
-// import Fileupload from "../Fileupload";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { setAudioTracks } from "../../../model/session/Session";
@@ -57,7 +52,8 @@ var recording=false;
 const map1 = new Map();
 
 // const url = "http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com"
-const url = "http://192.168.1.166:5000"
+// const url = "http://192.168.1.166:5000"
+const url = "http://127.0.0.1:5000"
 
 var soundsPLayed=new Array();
 
@@ -107,18 +103,11 @@ function Tracks() {
   const user = useSelector(_state => _state.user);
   const maxDuration = _audio?_audio.maxDuration:1;
   const search = useLocation().search;
-  console.log(maxDuration);
+  // console.log(maxDuration);
   
   const [state, dispatch] = useContext(UserContext);
 
    let jwtToken = `${user.jwtToken}`;
-    console.log("from Track js this is the jwt token"+jwtToken);
-    
-  // const onFileChange = event => {
-  //   var blobUrl = URL.createObjectURL(event.target.files[0])
-  //   setSelectedFile(event.target.files[0]);
-  //   pushFile(URL.createObjectURL(event.target.files[0]))
-  // };
 
   const uploadFIle = file => {
     let encodeString = 'test@test.com:test1234';
@@ -173,15 +162,6 @@ function Tracks() {
     setFiles([...files, file]);
     setPlayTracks([...playTracks, false])
     setSelected([...selected, false])
-    // console.log(file.blob)
-    // let fileurl=""
-    // if (file.blobURL){
-    //   fileurl=file.blobURL
-    // } else {
-    //   fileurl=URL.createObjectURL(file.blob)
-    // }
-    // console.log(fileurl)
-    
   };
 
   const remove = index => {
@@ -339,23 +319,6 @@ async function download() {
     formData.append(
       'bucket','myawsbucket-3'
     );
-    // let bucketname="myawsbucket-1"
-    // formData.append(
-    //   'email',state.user.emailId
-    // );
-
-    let encodeString = 'c@gmail.com:test';
-    const encodedString = Buffer.from(encodeString).toString('base64');
-
-  //   axios.post(url+"/upload", formData,{headers: {
-  //     'Accept': 'application/json',
-  //     'Content-Type': 'application/json',
-  //     "Access-Control-Allow-Headers" : "Content-Type",
-  //     "Access-Control-Allow-Origin": "*",
-  //     "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-  //     'Authorization': 'Basic '+ encodedString
-
-  // }});
 
 }
 
@@ -405,40 +368,17 @@ async function exportAsWav() {
   setIsLoading(false)
 }
 
-// function* getFileCall(){
-//   session.audioTracks.forEach(async function* (s) {
-//     const formData = new FormData();
-//     console.log(s.file);
-//     formData.append(
-//       'fileName',s.file
-//     );
-//     formData.append(
-//       'bucketName',session.bucketName
-//     );
-//     let encodeString = 'test@test.com:test1234';
-//     const encodedString = Buffer.from(encodeString).toString('base64');
-
-
-//     yield await axios.post(url+"/getFile", formData,{ responseType: 'arraybuffer',headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json',
-//       "Access-Control-Allow-Headers" : "Content-Type",
-//       "Access-Control-Allow-Origin": "*",
-//       "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
-
-//       'Authorization': 'Basic '+ encodedString
-  
-//       }});
-//     })
-// }
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-async function getFileByNum(i){
-  if(session.audioTracks[i]){
+async function getAllFiles() {
+  if (session.audioTracks.length <= files.length){
+    setIsLoading(false);
+    return;
+  }
+  setFiles([]);
+  setIsLoading(true)
+  let fileArray = []
+  for (var i=0; i<session.audioTracks.length;i++){
     const formData = new FormData();
+    // console.log(s.file);
     formData.append(
       'fileName',session.audioTracks[i].file
     );
@@ -462,105 +402,12 @@ async function getFileByNum(i){
     const _file = new Blob([res.data], {
       type: 'audio/mp3'
     });
-    pushFile(_file);
-    await sleep(3000);
+    fileArray.push(_file)
   }
-}
-
-async function getAllFiles() {
-  // setFileIterator(0);
-  // setFiles([]);
-  // setIsUpdating(true);
-  setIsLoading(true)
-  // if (session.audioTracks[0]){
-  //   getFileByNum(0);
-  // }
-  
-
-
-
-  // setIsLoading(true)
-  let fileArray = []
-  // setFiles([]);
-  // for await (let _file of getFileCall()) {
-  //   pushFile(_file)
-  // }
-  if (session.audioTracks.length == files.length){
-    setIsLoading(false);
-    return;
-  }
-  await session.audioTracks.forEach(async (s) => {
-    const formData = new FormData();
-    console.log(s.file);
-    formData.append(
-      'fileName',s.file
-    );
-    formData.append(
-      'bucketName',session.bucketName
-    );
-    let encodeString = 'test@test.com:test1234';
-    const encodedString = Buffer.from(encodeString).toString('base64');
-
-
-    let res = await axios.post(url+"/getFile", formData,{ responseType: 'arraybuffer',headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Access-Control-Allow-Headers" : "Content-Type",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
-
-      'Authorization': 'Bearer '+ jwtToken
-  
-      }});
-    const _file = new Blob([res.data], {
-      type: 'audio/mp3'
-    });
-    pushFile(_file);
-
-    // await axios.post(url+"/getFile", formData,{ responseType: 'arraybuffer',headers: {
-    //   'Accept': 'application/json',
-    //   'Content-Type': 'application/json',
-    //   "Access-Control-Allow-Headers" : "Content-Type",
-    //   "Access-Control-Allow-Origin": "*",
-    //   "Access-Control-Allow-Methods": "OPTIONS,POST,GET", 'Content-Type': 'audio/mpeg' ,
-
-    //   'Authorization': 'Basic '+ encodedString
-  
-    // }}).then( res =>{
-    //   if (res.data){
-    //     console.log(res.data)
-    //     const _file = new Blob([res.data], {
-    //       type: 'audio/mp3'
-    //     })
-    //     pushFile(_file);
-    //     fileArray.push(_file);
-    //     console.log(fileArray);
-    //     //setFiles(fileArray);
-    //   }
-    // }).catch( error => {console.log(error)});
-  })
+  setFiles(fileArray)
   setIsLoading(false)
   
 }
-
-// useEffect(() => {
-//   if(isUpdating)
-//   {
-//     console.log(fileIterator)
-//     if(files.length == session.audioTracks.length){
-//       setIsUpdating(false);
-//       setIsLoading(false);
-//     } else{
-//       getFileByNum(fileIterator+1);
-//       setFileIterator(fileIterator+1);
-//     }
-//   }
-// }, [files])
-
-// useEffect(() => {
-//   connect();
-//   getFileNames();
-// }, [])
 
 async function getSpotifyUserDetails(token,email){
   console.log('get getSpotifyUserDetails');
@@ -636,6 +483,10 @@ useEffect(() => {
 useEffect(() => {
   getAllFiles();
 }, [session.audioTracks])
+
+useEffect(() => {
+  console.log(files);
+})
 
 function getFileNames( sessionId = session.sessionId ) {
   const formData = new FormData();

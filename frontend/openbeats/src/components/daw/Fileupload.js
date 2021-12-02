@@ -37,11 +37,6 @@ const Fileupload = () => {
   
     // Details of the uploaded file
     console.log(selectedFile);
-  
-    // Request made to the backend api
-    // Send formData object
-    let encodeString = 'c@gmail.com:test';
-    const encodedString = Buffer.from(encodeString).toString('base64');
     
     axios.post(url+"/upload", formData,{headers: {
       'Accept': 'application/json',
