@@ -194,7 +194,18 @@ public class SessionMgmtService {
             throw new Exception("Session is not valid");
         }
 
-        studioSession.getParticipants().add(user.get());
+        User tempUser = user.get();
+
+        boolean flag = true;
+        for(User user1:studioSession.getParticipants()){
+            if (user1.getEmailId().equals(tempUser.getEmailId())){
+                flag = false;
+            }
+        }
+
+        if(flag){
+            studioSession.getParticipants().add(tempUser);
+        }
         SessionStorage.getInstance().setStudioSession(studioSession);
 
         return studioSession;
