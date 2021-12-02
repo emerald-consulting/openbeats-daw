@@ -13,7 +13,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import LoadingOverlay from "react-loading-overlay";
-import { url } from '../../utils/constants' 
+import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+import CancelIcon from '@material-ui/icons/CancelOutlined';
+import { url } from '../../utils/constants'; 
 
 const Dashboard = () => {
 
@@ -57,11 +60,6 @@ const Dashboard = () => {
       }
 
    }, []);
-
-
-  // useEffect(() => {
-  //   getSessions();
-  // }, [])
 
 
    async function getSpotifyUserDetails(token,email){
@@ -139,12 +137,6 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
-            // let s = {
-            //   "sessionId": response.data.sessionId,
-            //   "sessionName": response.data.sessionName,
-            //   "participants":[]
-            // }
-            // dispatch2(setSession(s));
            history.push('/daw?sessionId='+response.data.sessionId);
             }
 
@@ -171,7 +163,6 @@ const Dashboard = () => {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
-            // "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
             'Authorization': 'Bearer '+ jwtToken
         }}).then((response) => {
@@ -231,39 +222,20 @@ const Dashboard = () => {
 
   }
 
-  // const [selectedFile, setSelectedFile] = useState(null);
   const onFileChange = event => {
-    
-    // Update the state
-    //setSelectedFile(event.target.files[0]);
     onFileUpload(event.target.files[0]);
   
   };
 
   const getImage = (email = state.user.emailId) => {
-    // console.log(profilePic);
-    // let encodeString = 'c@gmail.com:test';
-    // const encodedString = Buffer.from(encodeString).toString('base64');
     document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
     axios.get(url+"/getImage?email="+email,{ responseType: 'blob' },{headers: {
-      //'Accept': 'MediaType.IMAGE_JPEG',
-      //'Accept': 'application/json',
-      //'Content-Type': 'application/json',
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
       'Authorization': 'Bearer '+ jwtToken
     }}).then((response) => {
-      // if(response.data){
-      //   // dispatch({
-      //   //   type: "STORE_IMAGE",
-      //   //   payload: response.data
-      //   // });
-      //   setProfilePic(response.data)
-      // }
       if(response.data && (response.data.size != 0)){
-        // console.log(response.data)
-        // setProfilePic(response.data)
         const picSrc = URL.createObjectURL(response.data);
         document.getElementById('profilePic').src=picSrc;
         setProfilePic(true);
@@ -308,13 +280,6 @@ const Dashboard = () => {
     
     // Create an object of formData
     const formData = new FormData();
-  
-    // Update the formData object
-    // formData.append(
-    //   "myFile",
-    //   selectedFile,
-    //   selectedFile.name
-    // );
     formData.append(
       'image',file
     );
@@ -340,6 +305,49 @@ const Dashboard = () => {
 
 
     }
+  
+  const startEditName = () => {
+    document.getElementById("firstName").style.display='none';
+    document.getElementById("editingFirstName").style.display='block';
+    let fname = state.user?.firstName;
+    let textField = document.getElementById("newName");
+    textField.focus();
+    textField.value = fname;
+  }
+
+  const cancelEditName=()=>{
+    document.getElementById("firstName").style.display='block';
+    document.getElementById("editingFirstName").style.display='none';
+  }
+
+  async function completeEditName(e){
+    e.preventDefault();
+    let email = state.user.emailId
+    let fname = document.getElementById("newName").value;
+    let ok = await axios.post(url+"/updateProfile?email="+email+'&name='+fname,{ responseType: 'blob' },{headers: {
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Bearer '+ jwtToken
+    }})
+    axios.get(url+"/getUserDetails?emailId="+email,{headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer '+ jwtToken
+    }}).then((response1) => {
+      if(response1.data.status==207){
+        console.log('207')
+      }
+      else if(response1.data){
+          dispatch({
+                                  type: "LOAD_USER",
+                                  payload: response1.data.data
+                                });
+          console.log(response1.data.data)
+      }
+    });
+    document.getElementById("firstName").style.display='block';
+    document.getElementById("editingFirstName").style.display='none';
+  }
 
     return (
       <div className='h-screen' style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}>
@@ -361,7 +369,14 @@ const Dashboard = () => {
                 </button> */}
               </div>
               {/* <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div> */}
-              <div className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}</div>
+              <div id='firstName' className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}<EditIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>startEditName()}/></div>
+              <div id='editingFirstName' style={{display: "none"}} className="p-2 mt-1 bg-gr4 font-bold rounded ">
+                <form>
+                  <input type='text' id='newName' placeholder='Enter a new first name' />
+                  <DoneIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>completeEditName(e)}/>
+                  <CancelIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>cancelEditName()}/>
+                </form>
+              </div>
               <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
               <div id="upgradeUserDiv" className='flex justify-center p-5'>
                 {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="p-2 text-w bg-gr3 hover:bg-gr2 font-bold rounded">Upgrade to Premium</button>}
