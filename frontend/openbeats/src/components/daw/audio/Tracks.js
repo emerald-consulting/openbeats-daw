@@ -499,8 +499,6 @@ function getFileNames( sessionId = session.sessionId ) {
   formData.append(
     'sessionId',sessionId
   );
-  let encodeString = 'test@test.com:test1234';
-  const encodedString = Buffer.from(encodeString).toString('base64');
   axios.get(url+"/getStudioSession?sessionId="+sessionId,{headers: {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
@@ -528,7 +526,7 @@ const connect = ( sessionId = session.sessionId) => {
     stompClient.subscribe("/topic/session-progress/"+sessionId, function (response) {
         let data = JSON.parse(response.body);
         console.log(data);
-        getFileNames();
+        getFileNames(session.sessionId||data.sessionId);
         // displayResponse(data);
     })
   })

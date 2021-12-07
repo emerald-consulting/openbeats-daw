@@ -3,10 +3,10 @@ import { createSlice } from '@reduxjs/toolkit'
 export const sessionSlice = createSlice({
   name: 'session',
   initialState: {
-    "sessionId": "NA",
-    "sessionName": "NA",
+    "sessionId": "",
+    "sessionName": "",
     "participants":[],
-    "bucketName":"NA",
+    "bucketName":"",
     "audioTracks":[],
   },
   reducers: {
