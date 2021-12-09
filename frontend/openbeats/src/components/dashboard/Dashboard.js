@@ -357,10 +357,13 @@ const Dashboard = () => {
         
           <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'40%', height:'50vh'}}>
             <div className="flex flex-col  p-2">
-              <div className="p-2 m-1 bg-gr4 rounded " style={{borderRadius: '50%', margin:'auto'}}>
+              <div className="p-2 m-1 bg-gr4 rounded  " style={{borderRadius: '50%', margin:'auto'}}>
                 <label for={"pic-upload"} className=" cursor-pointer">
-                  <img style={{borderRadius: '50%',margin:'auto',width:'250px',height:'250px',objectFit:'cover'}} id='profilePic'  />
+                  <img className=" hover:bg-gr1" style={{borderRadius: '50%',margin:'auto',width:'250px',height:'250px',objectFit:'cover'}} id='profilePic'  />
                 </label> 
+                <div className="transition duration-500 ease-in-out hover:bg-gr4">
+
+                </div>
               </div>
               <div>
                 <input className="text-xs hidden" id='pic-upload' style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />

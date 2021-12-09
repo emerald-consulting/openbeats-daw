@@ -31,4 +31,7 @@ public class File {
     @Column(name="session_id")
     private Long sessionId;
 
+    @Column(name = "created_by")
+    private String artist_name;
+
 }

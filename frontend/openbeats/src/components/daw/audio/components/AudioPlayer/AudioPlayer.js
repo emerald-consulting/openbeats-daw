@@ -292,8 +292,8 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
             <VolumeUp />
           </Grid> */}
           <VolumeDown className='mt-7'/>
-          <input className="no-border " step='0.01' type="range"  value={volume} 
-            onChange={handleVolumeChange} min='0' max='1' className="w-20"/>
+          <input className="no-border w-20" step='0.01' type="range"  value={volume} 
+            onChange={handleVolumeChange} min='0' max='1'/>
           {/* <VolumeUp className='mt-7'/> */}
           <Grid item  >
             <List className={classes.list} >
