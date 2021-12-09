@@ -196,16 +196,21 @@ public class SessionMgmtService {
 
         User tempUser = user.get();
 
+        List<User> tempUsers = new ArrayList<>();
         boolean flag = true;
         for(User user1:studioSession.getParticipants()){
             if (user1.getEmailId().equals(tempUser.getEmailId())){
                 flag = false;
+                tempUsers.add(tempUser);
+                continue;
             }
+            tempUsers.add(user1);
         }
-
-        if(flag){
-            studioSession.getParticipants().add(tempUser);
-        }
+        studioSession.setParticipants(tempUsers);
+        /*if(flag){
+            studioSession.setParticipants(tempUsers);
+            // studioSession.getParticipants().add(tempUser);
+        }*/
         SessionStorage.getInstance().setStudioSession(studioSession);
 
         return studioSession;
