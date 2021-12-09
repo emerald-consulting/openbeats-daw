@@ -91,7 +91,7 @@ const useStyles = makeStyles(theme => ({
 avatar username ostalo layout sa grid
 
 */
-function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
+function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom, owner }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
   const [volume, setVolume] = useState(1);
@@ -270,6 +270,26 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
        });
    }
 
+  const addWindow = () => {
+    wavesurfer.current.addPlugin(
+      WaveSurfer.regions.create(
+        {
+          regionsMinLength: 0.5,
+          regions: [
+              {
+                  start: 0.5,
+                  end: 1.5,
+                  loop: isLoop,
+                  color: 'hsla(400, 100%, 30%, 0.5)'
+              }
+          ],
+          dragSelection: {
+              slop: 5
+          }
+        }
+      )
+    )
+  }
 
   let transportFastForwardButton;
 
@@ -314,7 +334,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
                       <Avatar className={classes.avatar}  />
                     </ListItemAvatar> */}
                 <ListItemText className="pt-4"
-                  primary={state.user.firstName}
+                  primary={owner?owner:state.user.firstName}
                   // secondary="@username · 11h ago"
                 />
                 <Grid item   className={classes.buttons}>
@@ -337,8 +357,8 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} style={{width:'65%'}} className={classes.scroll+" mt-5"}/>
-          <CropIcon className="mt-7 ml-3"/>
+          <Grid item id={wavesurferId} style={{width:'60%'}} className={classes.scroll+" mt-5"}/>
+          <CropIcon className="mt-7 ml-2" onClick={addWindow}/>
         </Grid>
       </Card>
       <br/>

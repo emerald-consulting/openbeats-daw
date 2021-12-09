@@ -140,6 +140,11 @@ function Tracks() {
     formData.append(
       'bucketName',session.bucketName
     );
+
+    formData.append(
+      'owner',state.user.firstName
+    );
+
     let requestsParams = "fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName;
     axios.post(url+"/studioSession",formData,{headers: {
     // axios.post(url+"/studioSession",formData,{headers: {
@@ -538,6 +543,9 @@ const connect = ( sessionId = session.sessionId) => {
     stompClient.subscribe("/topic/session-progress/"+sessionId, function (response) {
         let data = JSON.parse(response.body);
         console.log(data);
+        if(data.participants){
+          dispatch2(setParticipants(data.participants));
+        }
         getFileNames(session.sessionId||data.sessionId);
         // displayResponse(data);
     })
@@ -611,7 +619,7 @@ const connect = ( sessionId = session.sessionId) => {
             <Checkbox style ={{  color: "#00e676" }} checked={selected[index] || false} onChange={(e)=>toggleSelectOne(e,index)}  /> 
             </Grid>
             <Grid item md={11}>
-            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} zoom={zoom}/>
+            <AudioPlayer file={file} playTrack={playTracks[index]} stopPlaying={stopPlaying} seek={seekValue} zoom={zoom} owner={session.audioTracks[index]?session.audioTracks[index].owner:null}/>
             </Grid>
             <Grid item md={0.5}>
             <IconButton onClick={()=>remove(index) }  className="float-right">
