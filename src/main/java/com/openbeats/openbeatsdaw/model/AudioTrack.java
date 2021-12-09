@@ -25,4 +25,6 @@ public class AudioTrack {
 
     @Column(name="file_name")
     private String file;
+
+    private String owner;
 }

@@ -24,13 +24,14 @@ public class AudioFileService {
     @Autowired
     SessionMgmtService sessionMgmtService;
 
-    public boolean saveAudioFileDetails(String fileName,String userEmail,String fileType,String joinCode){
+    public boolean saveAudioFileDetails(String fileName,String userEmail,String fileType,String joinCode,String owner){
         Session session=sessionMgmtService.findSessionByjoinCode(joinCode);
         File file=new File();
         file.setFileName(fileName);
         file.setSessionId(session.getSessionId());
         file.setFileType(fileType);
         file.setUserEmail("abheejeet24");
+        file.setArtist_name(owner);
         fileRepository.save(file);
 
     return true;

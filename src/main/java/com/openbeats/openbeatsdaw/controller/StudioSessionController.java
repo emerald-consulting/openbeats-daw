@@ -129,7 +129,10 @@ public class StudioSessionController {
         responseHeaders.set("Access-Control-Allow-Headers","Content-Type,Authorization");
         responseHeaders.set("Access-Control-Allow-Methods","GET,PUT,POST,DELETE,OPTIONS");*/
         collaboratorMgmtService.joinSession(request.getEmail(), request.getSessionId(),"USER");
-        return ResponseEntity.ok().headers(responseHeaders).body(sessionMgmtService.connectToStudioSession(request.getEmail(), request.getSessionId()));
+        //StudioSession  = sessionMgmtService.getStudioSession(request.getSessionId());
+        StudioSession studioSession = sessionMgmtService.connectToStudioSession(request.getEmail(), request.getSessionId());
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + request.getSessionId(),studioSession);
+        return ResponseEntity.ok().headers(responseHeaders).body(studioSession);
     }
 
     //@CrossOrigin(origins = "http://localhost:3000")
@@ -137,11 +140,12 @@ public class StudioSessionController {
     public ResponseEntity<StudioSessionResponse> studioSession(@RequestParam(value = "fileName") String fileName,
                                                                @RequestParam(value = "file") MultipartFile file,
                                                                @RequestParam(value = "bucketName") String bucketName,
-                                                               @RequestParam(value = "sessionId") String sessionId) throws Exception {
+                                                               @RequestParam(value = "sessionId") String sessionId,
+                                                               @RequestParam(value = "owner") String owner) throws Exception {
         log.info("session info received: {}", sessionId);
         HttpHeaders responseHeaders = new HttpHeaders();
         //responseHeaders.set("Access-Control-Allow-Origin", "*");
-        StudioSession studioSession = sessionMgmtService.studioSession(fileName,file,sessionId,bucketName);
+        StudioSession studioSession = sessionMgmtService.studioSession(fileName,file,sessionId,bucketName,owner);
         log.info("Studio session {}",studioSession);
         simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
 
