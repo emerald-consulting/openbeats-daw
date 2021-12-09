@@ -26,7 +26,6 @@ import VolumeUp from '@material-ui/icons/VolumeUp';
 import Slider from '@material-ui/core/Slider';
 import { UserContext } from "../../../../../model/user-context/UserContext";
 
-var isLoop=false;
 const useStyles = makeStyles(theme => ({
   card: {
     maxWidth: '100%',
@@ -101,6 +100,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
   const _audio = useSelector(_state => _state.audio);
   const maxDuration = _audio?_audio.maxDuration:-1;
   const dispatch2 = useDispatch();
+  var isLoop=false;
 
   const handleVolumeChange = (e,v) => {
     // console.log(e.target.value,v);
