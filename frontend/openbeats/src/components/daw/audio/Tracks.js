@@ -590,7 +590,7 @@ const connect = ( sessionId = session.sessionId) => {
         <p className="text-gr4 pl-20" >Zoom in/out the track waveforms</p>
       </Typography>
       <div className="pl-20 pr-20">
-      <Slider aria-label="Volume" color="secondary" value={zoom} onChange={(e,v)=>{setZoom(v)}} valueLabelDisplay="on"   max="400"/>
+      <Slider aria-label="Volume" color="#2d4858" value={zoom} onChange={(e,v)=>{setZoom(v)}} valueLabelDisplay="on"   max="400"/>
       </div>
       <div className=" p-0.5 pt-2.5" style={{width:'100%'}}>
         {/* <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/> */}

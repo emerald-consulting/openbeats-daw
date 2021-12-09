@@ -66,7 +66,10 @@ const useStyles = makeStyles(theme => ({
   slider:{
     width:'60px',
     marginLeft: '4px',
-    marginRight: '4px'
+    marginRight: '4px',
+    marginTop:'25px',
+    color:'#2d4858'
+    
   },
   scroll: {
     paddingTop: '6px',
@@ -80,6 +83,8 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: 'rgba(0,0,0,.1)',
       outline: '1px solid slategrey'
     }
+    
+
   }
 }));
 /*
@@ -96,10 +101,11 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
   const maxDuration = _audio?_audio.maxDuration:-1;
   const dispatch2 = useDispatch();
 
-  const handleVolumeChange = e => {
-    console.log(e.target.value);
-    setVolume(e.target.value);
-    wavesurfer.current.setVolume (e.target.value);
+  const handleVolumeChange = (e,v) => {
+    // console.log(e.target.value,v);
+    // setVolume(e.target.value);
+    setVolume(v);
+    wavesurfer.current.setVolume (v);
   }
 
   const [playerReady, setPlayerReady] = useState(false);
@@ -291,9 +297,12 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
             <Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} min='0' max='1' step='0.01' className={classes.slider}/>
             <VolumeUp />
           </Grid> */}
-          <VolumeDown className='mt-7'/>
-          <input className="no-border w-20" step='0.01' type="range"  value={volume} 
-            onChange={handleVolumeChange} min='0' max='1'/>
+          {/* <VolumeDown className='mt-7'/> */}
+          
+            <VolumeDown className='mt-7'/>
+          {/* <input  className={classes.scroll +" no-border w-20"}  step='0.01' type="range"  value={volume} 
+            onChange={handleVolumeChange} min='0' max='1'/> */}
+          <Slider  value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01} className={classes.slider}/>
           {/* <VolumeUp className='mt-7'/> */}
           <Grid item  >
             <List className={classes.list} >
@@ -309,7 +318,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
                 />
                 <Grid item   className={classes.buttons}>
                   <Grid container item > 
-                    <div>{transportPlayButton}</div>
+                    <div className="pt-1">{transportPlayButton}</div>
                     <IconButton onClick={stopPlayback}>
                       <StopIcon className={classes.icon} />
                     </IconButton>
@@ -327,7 +336,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} style={{width:'60%'}} className={classes.scroll}/>
+          <Grid item id={wavesurferId} style={{width:'60%'}} className={classes.scroll+" mt-5"}/>
         </Grid>
         
       </Card>
