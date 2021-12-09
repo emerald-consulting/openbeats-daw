@@ -20,6 +20,9 @@ import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
+import VolumeDown from "@material-ui/icons/VolumeDown";
+import VolumeUp from '@material-ui/icons/VolumeUp';
+import Slider from '@material-ui/core/Slider';
 import { UserContext } from "../../../../../model/user-context/UserContext";
 
 var isLoop=false;
@@ -59,13 +62,31 @@ const useStyles = makeStyles(theme => ({
   },
   avatar: {
     display: "inline-block"
+  },
+  slider:{
+    width:'60px',
+    marginLeft: '4px',
+    marginRight: '4px'
+  },
+  scroll: {
+    paddingTop: '6px',
+    '&::-webkit-scrollbar': {
+      width: '0.4em'
+    },
+    '&::-webkit-scrollbar-track': {
+      '-webkit-box-shadow': 'inset 0 0 6px rgba(0,0,0,0.00)'
+    },
+    '&::-webkit-scrollbar-thumb': {
+      backgroundColor: 'rgba(0,0,0,.1)',
+      outline: '1px solid slategrey'
+    }
   }
 }));
 /*
 avatar username ostalo layout sa grid
 
 */
-function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
+function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
   const [volume, setVolume] = useState(1);
@@ -76,6 +97,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
   const dispatch2 = useDispatch();
 
   const handleVolumeChange = e => {
+    console.log(e.target.value);
     setVolume(e.target.value);
     wavesurfer.current.setVolume (e.target.value);
   }
@@ -90,16 +112,16 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
       waveColor: "#FFFFFF",
       progressColor: "#006622",
 
-      height: 30,
-      width:70,
+      height: 60,
       cursorWidth: 1,
-      cursorColor: "lightgray",
+      cursorColor: "red",
       barWidth: 1,
       normalize: true,
-      responsive: true,
-      fillParent: true,
+      fillParent: false,
+      minPxPerSec: 50,
+      // responsive: true,
       
-      // scrollParent:true
+      scrollParent:true
     });
 
     // const wav = require("../../static/12346 3203.ogg");
@@ -107,8 +129,15 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
 
     // console.log("wav", wav);
     wavesurfer.current.load(wav);
+    
+    // wavesurfer.current.zoom(0.5);
     // wavesurfer.current.setVolume(newVolume)
     wavesurfer.current.on("ready", () => {
+      // wavesurfer.current.skip(0.5);
+      wavesurfer.current.zoom(100);
+      // wavesurfer.current.setHeight(60);
+      // wavesurfer.current.toggleScroll()
+      // wavesurfer.current.setCursorColor('red');
       setPlayerReady(true);
       let cDur = wavesurfer.current.getDuration();
       console.log(cDur)
@@ -166,6 +195,12 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
     wavesurfer.current.seekAndCenter(parseInt(seek));
     
   }, [seek]);
+
+  useEffect(() => {
+    console.log("zoom", zoom);
+    wavesurfer.current.zoom(parseInt(zoom));
+    
+  }, [zoom]);
 
   
   useEffect(() => {
@@ -251,8 +286,15 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
       <Card className={classes.card } container >
 
         <Grid container >
+          {/* <Grid container > 
+            <VolumeDown />
+            <Slider aria-label="Volume" value={volume} onChange={handleVolumeChange} min='0' max='1' step='0.01' className={classes.slider}/>
+            <VolumeUp />
+          </Grid> */}
+          <VolumeDown className='mt-7'/>
           <input className="no-border " step='0.01' type="range"  value={volume} 
-            onChange={handleVolumeChange} min='0' max='1'/>
+            onChange={handleVolumeChange} min='0' max='1' className="w-20"/>
+          {/* <VolumeUp className='mt-7'/> */}
           <Grid item  >
             <List className={classes.list} >
               <ListItem alignItems="flex-start" className={classes.listItem}>
@@ -285,8 +327,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0 }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} style={{width:'55%'}} className="pt-6"/>
-
+          <Grid item id={wavesurferId} style={{width:'60%'}} className={classes.scroll}/>
         </Grid>
         
       </Card>
