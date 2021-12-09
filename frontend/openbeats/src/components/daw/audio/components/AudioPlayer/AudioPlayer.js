@@ -13,6 +13,7 @@ import StopIcon from "@material-ui/icons/Stop";
 import FastForwardIcon from "@material-ui/icons/FastForward";
 import FastRewindIcon from "@material-ui/icons/FastRewind";
 import LoopIcon from "@material-ui/icons/Loop";
+import CropIcon from '@material-ui/icons/Crop';
 
 import PauseIcon from "@material-ui/icons/Pause";
 import Grid from "@material-ui/core/Grid";
@@ -122,7 +123,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
       cursorWidth: 1,
       cursorColor: "red",
       barWidth: 1,
-      normalize: true,
+      // normalize: true,
       fillParent: false,
       minPxPerSec: 50,
       // responsive: true,
@@ -140,7 +141,7 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
     // wavesurfer.current.setVolume(newVolume)
     wavesurfer.current.on("ready", () => {
       // wavesurfer.current.skip(0.5);
-      wavesurfer.current.zoom(100);
+      // wavesurfer.current.zoom(100);
       // wavesurfer.current.setHeight(60);
       // wavesurfer.current.toggleScroll()
       // wavesurfer.current.setCursorColor('red');
@@ -336,9 +337,9 @@ function AudioPlayer({ file, playTrack, stopPlaying, seek=0, zoom }) {
               </ListItem>
             </List>
           </Grid>
-          <Grid item id={wavesurferId} style={{width:'60%'}} className={classes.scroll+" mt-5"}/>
+          <Grid item id={wavesurferId} style={{width:'65%'}} className={classes.scroll+" mt-5"}/>
+          <CropIcon className="mt-7 ml-3"/>
         </Grid>
-        
       </Card>
       <br/>
     </>

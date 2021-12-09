@@ -100,7 +100,7 @@ function Tracks() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [fileIterator, setFileIterator] = useState(0);
   const [seekValue, setSeekValue] = useState(0);
-  const [zoom, setZoom] = React.useState(30);
+  const [zoom, setZoom] = React.useState(90);
   const session = useSelector(_state => _state.session);
   const dispatch2 = useDispatch();
   const _audio = useSelector(_state => _state.audio);
