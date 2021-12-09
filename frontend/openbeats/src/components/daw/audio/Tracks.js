@@ -260,9 +260,9 @@ function Tracks() {
   //   console.log(selected)
   // },[selected]);
 
-  React.useEffect(() => {
-    document.addEventListener('keydown', handleKeydown);
-}, [])
+//   React.useEffect(() => {
+//     document.addEventListener('keydown', handleKeydown);
+// }, [])
 
 function concatAudioBuffer(buffers){
   let crunker = new Crunker();
@@ -344,10 +344,12 @@ const handleRecord = () => {
   setChangeRecordLabel(!changeRecordLabel)
 
   if(recording==true){
+    document.addEventListener('keydown', handleKeydown);
     console.log("Recording");
   }
 
   if(recording==false){
+    document.removeEventListener('keydown', handleKeydown);
     download();
     soundsPLayed=new Array();
     setError('Please wait while the recorded track renders!!')

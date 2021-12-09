@@ -135,6 +135,9 @@ const firstSoundsGroup = [
 
     React.useEffect(() => {
         document.addEventListener('keydown', handleKeydown);
+        return () => {
+          document.removeEventListener('keydown', handleKeydown);
+        }
     }, [])
 
     return (
