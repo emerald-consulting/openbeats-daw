@@ -2,3 +2,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@material-ui /core/Grid;
+
+
+  div::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: rgb(201, 201, 201);
+  }
+  
+  div::-webkit-scrollbar {
+    width: 5px;
+    background-color:rgb(201, 201, 201) ;
+  }
+  
+  div::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #355;
+  }
+
+  wave::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: rgb(201, 201, 201);
+  }
+  
+  wave::-webkit-scrollbar {
+    height:5px;
+    /* border-radius: 5px; */
+    background-color: rgb(201, 201, 201);
+  }
+  
+  wave::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    width:4px;
+    -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, .3);
+    background-color: #355;
+  }

@@ -52,6 +52,7 @@ import audio_B from './components/AudioPlayer/B.mp3'
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
 import Crunker from 'crunker'
 import { Slider } from "@material-ui/core";
+import Typography from '@material-ui/core/Typography';
 var recording=false;
 const map1 = new Map();
 
@@ -99,7 +100,7 @@ function Tracks() {
   const [isUpdating, setIsUpdating] = useState(false);
   const [fileIterator, setFileIterator] = useState(0);
   const [seekValue, setSeekValue] = useState(0);
-  const [zoom, setZoom] = React.useState(60);
+  const [zoom, setZoom] = React.useState(30);
   const session = useSelector(_state => _state.session);
   const dispatch2 = useDispatch();
   const _audio = useSelector(_state => _state.audio);
@@ -583,8 +584,14 @@ const connect = ( sessionId = session.sessionId) => {
           <button onClick={getAllFiles}>Reload</button>
         </div> */}
         
-        <Slider aria-label="Volume" value={zoom} onChange={(e,v)=>{setZoom(v)}} valueLabelDisplay="on" className="mt-4" max="400"/>
+        {/* <Slider aria-label="Volume" color="secondary" value={zoom} onChange={(e,v)=>{setZoom(v)}} valueLabelDisplay="on" className="mt-16" max="400"/> */}
       </div>    
+      <Typography  gutterBottom>
+        <p className="text-gr4 pl-20" >Zoom in/out the track waveforms</p>
+      </Typography>
+      <div className="pl-20 pr-20">
+      <Slider aria-label="Volume" color="secondary" value={zoom} onChange={(e,v)=>{setZoom(v)}} valueLabelDisplay="on"   max="400"/>
+      </div>
       <div className=" p-0.5 pt-2.5" style={{width:'100%'}}>
         {/* <input   step='0.01' type="range"  min='0' max='1' value={seekValue} onChange={e=>setSeekValue(e.target.value)} style={{width:'50%',marginLeft:'515px'}}/> */}
       </div>             
