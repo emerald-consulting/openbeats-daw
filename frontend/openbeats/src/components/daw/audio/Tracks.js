@@ -156,9 +156,16 @@ function Tracks() {
   const onFileChange = event => {
     //var blobUrl = URL.createObjectURL(event.target.files[0])
     // setSelectedFile(event.target.files[0]);
+    // console.log(event.target.files[0])
     pushFile(URL.createObjectURL(event.target.files[0]));
     uploadFIle(event.target.files[0]);
   };
+
+  const onMicInput = file =>  {
+    // console.log(file);
+    pushFile(file);
+    uploadFIle(file);
+  }
 
   const pushFile = file => {
     setFiles([...files, file]);
@@ -548,7 +555,7 @@ const connect = ( sessionId = session.sessionId) => {
       {/* <NavBar /> */}
       <div className="flex flex-row pl-20">
         <div className="  bg-gr2 hover:bg-gr3">
-          <Microphone style={{}}  pushFile={pushFile} />
+          <Microphone style={{}}  pushFile={onMicInput} />
         </div>
         <div className="p-2 ml-0.5  pt-5  bg-gr2 hover:bg-gr3">
             <label for={"file-upload"} className=" cursor-pointer">
