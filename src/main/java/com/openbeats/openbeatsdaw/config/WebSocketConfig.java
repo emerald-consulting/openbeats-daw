@@ -24,8 +24,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         //registry.addEndpoint("/studioSession").setAllowedOrigins("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/").withSockJS();
-        registry.addEndpoint("/studioSession").setAllowedOrigins("http://localhost:3000").withSockJS();
-        //registry.addEndpoint("/studioSession").setAllowedOrigins("https://d2truiiempih7a.cloudfront.net").withSockJS();
+        //registry.addEndpoint("/studioSession").setAllowedOrigins("http://localhost:3000").withSockJS();
+        registry.addEndpoint("/studioSession").setAllowedOrigins("https://d2truiiempih7a.cloudfront.net").withSockJS();
     }
 
     @Override

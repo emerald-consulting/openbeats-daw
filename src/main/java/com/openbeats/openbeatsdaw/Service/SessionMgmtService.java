@@ -205,12 +205,13 @@ public class SessionMgmtService {
                 continue;
             }
             tempUsers.add(user1);
+            log.info("temp user {}",tempUsers);
         }
         studioSession.setParticipants(tempUsers);
-        /*if(flag){
-            studioSession.setParticipants(tempUsers);
+        if(flag){
+            studioSession.getParticipants().add(tempUser);
             // studioSession.getParticipants().add(tempUser);
-        }*/
+        }
         SessionStorage.getInstance().setStudioSession(studioSession);
 
         return studioSession;
