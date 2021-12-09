@@ -48,10 +48,10 @@ const Daw = () => {
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
                 <div className="flex flex-row" style={{height:'30%'}}>
-                    <div className=" pr-5 " style={{width:'30%',whiteSpace:"break-spaces"}}>
+                    <div className=" pr-5 pl-10" style={{width:'30%',whiteSpace:"break-spaces"}}>
                         <Drum/>
                     </div>
-                    <div className="pt-5" style={{width:'70%'}}>
+                    <div className="pt-5 pl-10" style={{width:'70%'}}>
                         <Pianoui2/>
                     </div>
 
