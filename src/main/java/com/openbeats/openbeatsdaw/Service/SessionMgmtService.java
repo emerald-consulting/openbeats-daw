@@ -7,6 +7,7 @@ import com.openbeats.openbeatsdaw.Entity.Collaborators;
 import com.openbeats.openbeatsdaw.Entity.File;
 import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.Repository.FileRepository;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.model.AudioTrack;
 import com.openbeats.openbeatsdaw.model.CreateStudioRequest;
@@ -46,6 +47,7 @@ public class SessionMgmtService {
 
     @Autowired
     CollaboratorMgmtService collaboratorMgmtService;
+
 
     public boolean saveSession(String email, String bucketName,String userSessionName) {
         List<Session> existingSessions = sessionRepository.findByUserEmail(email);
@@ -217,7 +219,7 @@ public class SessionMgmtService {
         return studioSession;
     }
 
-    public StudioSession studioSession(String fileName,MultipartFile file, String sessionId,String bucketName, String owner) throws Exception {
+    public StudioSession studioSession(String fileName,MultipartFile file, String sessionId,String bucketName, String owner,String email) throws Exception {
 
         if(!SessionStorage.getInstance().getStudioSession().containsKey(sessionId)){
             throw new Exception("Session not found");
@@ -227,7 +229,7 @@ public class SessionMgmtService {
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
 
         String newFileName = awsStorageService.uploadFile(file,bucketName);
-        audioFileService.saveAudioFileDetails(newFileName,"","mp3",sessionId,owner);
+        audioFileService.saveAudioFileDetails(newFileName,email,"mp3",sessionId,owner);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);

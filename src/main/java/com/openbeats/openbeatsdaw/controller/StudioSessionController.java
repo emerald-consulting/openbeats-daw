@@ -143,11 +143,12 @@ public class StudioSessionController {
                                                                @RequestParam(value = "file") MultipartFile file,
                                                                @RequestParam(value = "bucketName") String bucketName,
                                                                @RequestParam(value = "sessionId") String sessionId,
-                                                               @RequestParam(value = "owner") String owner) throws Exception {
+                                                               @RequestParam(value = "owner") String owner,
+                                                               @RequestParam(value = "email") String email) throws Exception {
         log.info("session info received: {}", sessionId);
         HttpHeaders responseHeaders = new HttpHeaders();
         //responseHeaders.set("Access-Control-Allow-Origin", "*");
-        StudioSession studioSession = sessionMgmtService.studioSession(fileName,file,sessionId,bucketName,owner);
+        StudioSession studioSession = sessionMgmtService.studioSession(fileName,file,sessionId,bucketName,owner,email);
         log.info("Studio session {}",studioSession);
         simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
 

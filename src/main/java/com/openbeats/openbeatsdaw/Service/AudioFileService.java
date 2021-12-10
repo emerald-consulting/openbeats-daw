@@ -30,7 +30,7 @@ public class AudioFileService {
         file.setFileName(fileName);
         file.setSessionId(session.getSessionId());
         file.setFileType(fileType);
-        file.setUserEmail("abheejeet24");
+        file.setUserEmail(userEmail);
         file.setArtist_name(owner);
         fileRepository.save(file);
 

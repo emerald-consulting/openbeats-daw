@@ -2,12 +2,14 @@ package com.openbeats.openbeatsdaw.controller;
 
 import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.Repository.FileRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.Utils.LoginRequest;
 import com.openbeats.openbeatsdaw.Utils.ResponseHandler;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
+import com.openbeats.openbeatsdaw.model.SessionStorage;
 import com.openbeats.openbeatsdaw.model.StudioSession;
 import org.springframework.core.env.Environment;
 import org.springframework.data.repository.query.Param;
@@ -60,12 +62,14 @@ public class OpenBeatsRestController {
     @Autowired
     private TokenProvider tokenProvider;
 
-
     @Autowired
     AWSStorageService service;
 
     @Autowired
     SessionMgmtService sessionMgmtService;
+
+    @Autowired
+    FileRepository fileRepository;
 
     @PostMapping("/createUser")
     public ResponseEntity<Object> createUser(@RequestBody User user, HttpServletRequest request) {
@@ -113,13 +117,13 @@ public class OpenBeatsRestController {
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/confirmation");
+            redirectView.setUrl("https://d3bd7i1jol9mgp.cloudfront.net/confirmation");
             return redirectView;
 
         } else {
             log.info("User verified Unsuccessfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com");
+            redirectView.setUrl("https://d3bd7i1jol9mgp.cloudfront.net");
             return redirectView;
 
         }
@@ -257,6 +261,7 @@ public class OpenBeatsRestController {
 
             usr.setFirstName(name);
             User usr_response = createUser.updateUser(usr);
+            fileRepository.updateArtistName(email,name);
             return ResponseHandler.generateResponse("success", HttpStatus.OK,usr_response);
         }else {
             return ResponseHandler.generateResponse("fail", HttpStatus.BAD_REQUEST,false);
