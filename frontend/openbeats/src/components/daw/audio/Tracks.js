@@ -145,6 +145,10 @@ function Tracks() {
       'owner',state.user.firstName
     );
 
+    formData.append(
+      'email',state.user.emailId
+    );
+
     let requestsParams = "fileName=hello&file="+file+"&sessionId="+session.sessionId+"&bucketName="+session.bucketName;
     axios.post(url+"/studioSession",formData,{headers: {
     // axios.post(url+"/studioSession",formData,{headers: {
