@@ -383,6 +383,9 @@ async function exportAsWav() {
       temp.push(f.url);
     } else if (typeof f == "string"){
       temp.push(f);
+    } else if (f.blob){
+      let _file = URL.createObjectURL(f.blob);
+      temp.push(_file);
     } else {
       let _file = URL.createObjectURL(f);
       temp.push(_file);
