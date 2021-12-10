@@ -131,6 +131,8 @@ public class StudioSessionController {
         collaboratorMgmtService.joinSession(request.getEmail(), request.getSessionId(),"USER");
         //StudioSession  = sessionMgmtService.getStudioSession(request.getSessionId());
         StudioSession studioSession = sessionMgmtService.connectToStudioSession(request.getEmail(), request.getSessionId());
+        //log.info("Studio session partidipants {}",studioSession.getParticipants().size());
+        //log.info("Studio session partidipants {}",studioSession.getParticipants());
         simpMessagingTemplate.convertAndSend("/topic/session-progress/" + request.getSessionId(),studioSession);
         return ResponseEntity.ok().headers(responseHeaders).body(studioSession);
     }
