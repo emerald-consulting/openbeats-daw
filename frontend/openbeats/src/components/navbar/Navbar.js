@@ -29,7 +29,7 @@ const Navbar = () => {
           </div>
         </Scroll>
 
-        <Link className="cursor-pointer" style={{fontSize:28}}  to="/signin">
+        <Link className="cursor-pointer" style={{fontSize:28}}  to="/login">
         <div className="hover:bg-gr4 py-5 px-7 h-full">
           Login
           </div>

@@ -4,13 +4,13 @@ export const UserContext = createContext();
 
 const initialState = {
   user: {
-    "userid":13,
+    "userid":-1,
     "username":"",
     "password":"$2a$10$JPiZveE9IowoPsrQSyky5ec928qQhpR2xZbne1JqE4iJXouTP0oEe",
     "firstName":"testName",
     "lastName":"L",
     "preferredName":"testName",
-    "emailId":"nidic54688@proxiesblog.com",
+    "emailId":"",
     "subscriptionType":"free",
     "emailVerified":true,
     "authorities":null,

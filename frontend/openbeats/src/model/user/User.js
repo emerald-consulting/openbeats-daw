@@ -9,7 +9,7 @@ export const userSlice = createSlice({
     "firstName":"testName",
     "lastName":"L",
     "preferredName":"testName",
-    "emailId":"nidic54688@proxiesblog.com",
+    "emailId":"",
     "subscriptionType":"free",
     "emailVerified":true,
     "authorities":null,

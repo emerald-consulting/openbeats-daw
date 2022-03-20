@@ -6,7 +6,6 @@ import bgimg2 from '../bg2.jpg'
 import { useHistory } from "react-router";
 import axios from "axios";
 import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
-import LogNavbar from "../logNavbar/LogNavbar";
 import { useSelector, useDispatch } from 'react-redux'
 import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
 import Snackbar from '@material-ui/core/Snackbar';
@@ -55,7 +54,7 @@ const Dashboard = () => {
           // dispatch2(setUserEmail(email));
           getSpotifyUserDetails(token,email);
         } else {
-          window.location.href = '/signin';
+          window.location.href = '/login';
         }
       }
 
@@ -350,9 +349,9 @@ const Dashboard = () => {
   }
 
     return (
-      <div className='h-screen' style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',height:'100vh',backgroundRepeat:'no-repeat' }}>
+      <div style={{ backgroundImage: `url(${bgimg2})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }}>
          {/*          */}
-        <LogNavbar/>
+        {/* <LogNavbar/> */}
         <div className='flex flex-row'>
         
           <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'40%', height:'50vh'}}>
@@ -389,7 +388,7 @@ const Dashboard = () => {
 
           </div>
           <div className="p-10 " style={{width:'60%', height:'50vh'}}>
-            <h1 class="text-4xl text-gr4 pt-2 px-8" style={{textAlign:'end'}}>Sessions</h1>
+            {/* <h1 class="text-4xl text-gr4 pt-2 px-8" style={{textAlign:'end'}}>Sessions</h1> */}
             <div className="flex flex-row" style={{width:'100%'}}> 
               
               <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >

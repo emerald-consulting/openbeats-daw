@@ -14,7 +14,7 @@ const LogNavbar = () => {
   const logout = () => {
     localStorage.setItem('auth-token','');
     localStorage.setItem('emailId','');
-    window.location.href = '/signin';
+    window.location.href = '/login';
   }
   
   return (
