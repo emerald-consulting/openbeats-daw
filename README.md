@@ -19,10 +19,10 @@ Then replace code under @Bean from AWSStorageConfig in config package with -
 @Bean
     public AmazonS3 s3() {
         AWSCredentials awsCredentials =
-                new BasicAWSCredentials("<Key ID>", "<Secret Access Key>");
+                new BasicAWSCredentials(your_Key_ID, your_recret_Access_Key);
         return AmazonS3ClientBuilder
                 .standard()
-                .withRegion("us-east-2")
+                .withRegion(your_region)
                 .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
                 .build();
 
@@ -35,9 +35,9 @@ Step 2:
 Also if you have created mysql RDS instance on AWS, replace code in application.properties with
 
 spring.datasource.driver-class-name= com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://<RDS url>
-spring.datasource.username=<username>
-spring.datasource.password=<password>
+spring.datasource.url=jdbc:mysql://RDS_url
+spring.datasource.username=your_username
+spring.datasource.password=your_password
 
 server.port=5000
 
