@@ -37,16 +37,23 @@ public class AudioFileService {
     return true;
     }
 
+    public boolean updateAudioFileOffset(Long fileId, Integer offset){
+
+        fileRepository.updateFileOffset(fileId, offset);
+        return true;
+    }
+
     public AudioTrack convertFileToAudioTrack(File file,String joinCode){
         AudioTrack audioTrack=new AudioTrack();
         audioTrack.setAudioTrackId(file.getFileId());
         audioTrack.setSessionId(joinCode);
        audioTrack.setFile(file.getFileName());
+       audioTrack.setOffset(file.getOffset());
     return  audioTrack;
     }
 
     public List<File> findAllFilesInSession(Long sessionId){
-        return fileRepository.findBysessionId(sessionId);
+        return fileRepository.findAllBySessionId(sessionId);
     }
 
 

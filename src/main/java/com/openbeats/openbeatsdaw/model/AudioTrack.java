@@ -26,5 +26,9 @@ public class AudioTrack {
     @Column(name="file_name")
     private String file;
 
+
+    @Column(name="offset")
+    private Integer offset;
+
     private String owner;
 }

@@ -17,7 +17,11 @@ const initialState = {
     "enabled":true,
     "accountNonLocked":true,
     "accountNonExpired":true,
-    "credentialsNonExpired":true
+    "credentialsNonExpired":true,
+    "totalFollowing": 0,
+    "totalFollowers": 0,
+    "bio": null,
+    "createdAt": null,
   },
   userImage:null,
   sessions:[],

@@ -34,7 +34,7 @@
 }
 .topPane,
 .bottomPane {
-  height: 30vh !important;
+  height: 35vh !important;
   background-color: #ffff;
   margin: 10px;
   padding: 1rem;

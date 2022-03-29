@@ -1,14 +1,25 @@
 import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
+import Image from "react-bootstrap/Image";
+import IconButton from "@mui/material/IconButton";
+import Avatar from "@mui/material/Avatar";
+
 
 const SocialPost = (props) => {
   return (
-    <Card style={{ width: "65%", padding: '5px' }}>
+    <Card style={{ width: "65%", padding: "5px" }}>
       <Card.Body>
-        <Card.Title>Title</Card.Title>
+        <IconButton sx={{ p: 0 }}>
+          <Avatar alt="Harry" src="/static/images/avatar/2.jpg" />
+          <strong className={classes.username}>Ryan Dills</strong> <span className="ml-2">@ryandills</span>
+        </IconButton>
+        <br/>
+
+
+
         <Card.Text>
-          Some quick example text to build on the title and make up the
-          bulk of the post's content.
+          Some quick example text to build on the title and make up the bulk of
+          the post's content.
         </Card.Text>
       </Card.Body>
       <Card.Img

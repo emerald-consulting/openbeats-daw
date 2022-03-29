@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const userSlice = createSlice({
   name: 'user',
   initialState: {
-    "userid":13,
+    "userid":130,
     "username":"",
     "password":"$2a$10$JPiZveE9IowoPsrQSyky5ec928qQhpR2xZbne1JqE4iJXouTP0oEe",
     "firstName":"testName",
@@ -16,7 +16,11 @@ export const userSlice = createSlice({
     "enabled":true,
     "accountNonLocked":true,
     "accountNonExpired":true,
-    "credentialsNonExpired":true
+    "credentialsNonExpired":true,
+    "totalFollowing": 0,
+    "totalFollowers": 0,
+    "bio": null,
+    "createdAt": null,
   },
   reducers: {
     loadUser: (state, action) => {

@@ -12,7 +12,7 @@ const About = () => {
         }
 
   return (
-    <div ref={titleRef} onClick={handleBackClick} className="bg-gr3 h-screen pl-40 pt-40 flex flex-col pb-40">
+    <div ref={titleRef} className="bg-gr3 h-screen pl-40 pt-40 flex flex-col pb-40">
       <div className="flex flex-row ">
         <div>
           <div className="text-4xl pt-2 font-mono">About OpenBeats</div>

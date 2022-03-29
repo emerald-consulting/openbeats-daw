@@ -1,10 +1,12 @@
 package com.openbeats.openbeatsdaw.model;
 
+import com.openbeats.openbeatsdaw.Entity.File;
 import com.openbeats.openbeatsdaw.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Date;
 
 public class MyUserDetails implements UserDetails {
 
@@ -17,6 +19,13 @@ public class MyUserDetails implements UserDetails {
     private String emailId;
     private String subscriptionType;
     private boolean emailVerified;
+    private int totalFollowers;
+    private int totalFollowing;
+    private String bio;
+    private Date createdAt;
+    // private File profilePicRef;
+    // private File coverPicRef;
+
 
     public MyUserDetails(User u){
         this.userid = u.getUserid();
@@ -28,6 +37,14 @@ public class MyUserDetails implements UserDetails {
         this.emailId = u.getEmailId();
         this.subscriptionType = u.getSubscriptionType();
         this.emailVerified = u.isEmailVerified();
+        this.bio = u.getBio();
+        this.createdAt = u.getCreatedAt();
+        this.totalFollowers = u.getTotalFollowers();
+        this.totalFollowing = u.getTotalFollowing();
+        this.bio = u.getBio();
+        this.createdAt = u.getCreatedAt();
+        // this.profilePicRef = u.getProfilePicRef();
+        // this.coverPicRef = u.getCoverPicRef();
     }
 
     public MyUserDetails(){

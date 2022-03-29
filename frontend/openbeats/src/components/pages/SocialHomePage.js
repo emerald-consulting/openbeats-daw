@@ -17,10 +17,6 @@ const SocialHomePage = () => {
           [1,2,3,4,5].map(() =>(
             <div>
               <SocialPost/>
-            {/* <img
-            src="https://cdn.theatlantic.com/media/img/photo/2018/10/images-of-the-season-fall-is-in-the/f02_RTX6EJJJ-1/original.jpg"
-            style={{ height: "200px", width: "50%" }}
-          /> */}
           <hr style={{color:'gray'}}/>
           </div>
           ))

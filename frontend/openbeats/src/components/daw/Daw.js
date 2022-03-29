@@ -22,12 +22,12 @@ const Daw = () => {
 
     return (
       // <div><LogNavbar/>
-        <div className="h-screen" style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
+        <div style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
             
             <div className="flex flex-col" style={{overflowX:'hidden'}}>
-                <LogNavbar className="mb-0.5"/>
+                {/* <LogNavbar className="mb-0.5"/> */}
                 <div className="flex flex-row" style={{}}>
-                    <div className="flex flex-col" style={{width:'85%',height:'100%'}}>
+                    <div className="flex flex-col" style={{width:'85%'}}>
                         <div className="flex flex-row">
                             {/*           empty      buttons upload         */}
                         </div>
@@ -47,7 +47,7 @@ const Daw = () => {
                     </div>
                 </div>
                 <div style={{ borderTop: "4px solid green"}} ></div>
-                <div className="flex flex-row" style={{height:'30%'}}>
+                <div className="flex flex-row" style={{height:'20%'}}>
                     <div className=" pr-5 pl-10" style={{width:'30%',whiteSpace:"break-spaces"}}>
                         <Drum/>
                     </div>

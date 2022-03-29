@@ -21,7 +21,7 @@ public class File {
     @Column(name = "user_email")
     private String userEmail;
 
-
+    
     @Column(name="file_name")
     private String fileName;
 
@@ -33,5 +33,8 @@ public class File {
 
     @Column(name = "artist_name")
     private String artist_name;
+
+    @Column(name = "offset")
+    private Integer offset;
 
 }

@@ -2,17 +2,18 @@ package com.openbeats.openbeatsdaw.controller;
 
 import com.amazonaws.services.cloudfront.model.FieldLevelEncryption;
 import com.openbeats.openbeatsdaw.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.Entity.File;
 import com.openbeats.openbeatsdaw.Entity.Session;
 import com.openbeats.openbeatsdaw.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
+import com.openbeats.openbeatsdaw.Service.AudioFileService;
 import com.openbeats.openbeatsdaw.Service.CollaboratorMgmtService;
 import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
-import com.openbeats.openbeatsdaw.model.ConnectRequest;
-import com.openbeats.openbeatsdaw.model.CreateStudioRequest;
-import com.openbeats.openbeatsdaw.model.StudioSession;
-import com.openbeats.openbeatsdaw.model.StudioSessionResponse;
+import com.openbeats.openbeatsdaw.model.*;
+import com.openbeats.openbeatsdaw.model.SessionStorage;
+
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,6 +49,9 @@ public class StudioSessionController {
 
     @Autowired
     SessionRepository sessionRepository;
+
+    @Autowired
+    AudioFileService audioFileService;
 
 
     public boolean checkIfUserIsEligibleToCreateSession(String email){
@@ -177,6 +180,35 @@ public class StudioSessionController {
         studioSessionResponse.setBucketName(studioSession.getBucketName());
 
         return ResponseEntity.ok().headers(responseHeaders).body(studioSessionResponse);
+    }
+
+    @PutMapping("/updateFileOffset")
+    public boolean updateFileOffset(@RequestBody UpdateFileOffetRequest request) throws Exception {
+        audioFileService.updateAudioFileOffset(request.getFileId(), request.getOffset());
+
+        if(!SessionStorage.getInstance().getStudioSession().containsKey(request.getSessionId())){
+            throw new Exception("Session not found");
+        }
+
+        log.info("Getting studio session");
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(request.getSessionId());
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        audioTracks.forEach(audioTrack -> {
+            if(audioTrack.getAudioTrackId() == request.getFileId()){
+                audioTrack.setOffset(request.getOffset());
+            }
+        });
+
+
+        StudioSession studioSession2 = sessionMgmtService.getStudioSession(request.getSessionId());
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + request.getSessionId(), studioSession2);
+        return true;
+    }
+
+    @GetMapping("/getFileOffsets")
+    public List<File> getFileOffsets(@RequestParam("sessionId") Long sessionId) throws Exception {
+        List<File> files = audioFileService.findAllFilesInSession(sessionId);
+        return files;
     }
 
     /*@GetMapping(value = "/download/{filename}")

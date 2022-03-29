@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "user")
@@ -39,11 +42,26 @@ public class User {
     @Column(name="subscription_type")
     private String subscriptionType;
 
+    @Column(name="is_premium_user")
+    private Boolean isPremiumUser;
+
     @Column(name="is_email_verified")
     private boolean emailVerified;
 
     @Column(name = "verification_code", length = 64)
     private String verificationCode;
+
+    @Column(name = "total_followers")
+    private Integer totalFollowers;
+
+    @Column(name = "total_following")
+    private Integer totalFollowing;
+
+    @Column(name="bio", length = 500)
+    private String bio;
+
+    @Column(name="created_at")
+    private Date createdAt;
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
