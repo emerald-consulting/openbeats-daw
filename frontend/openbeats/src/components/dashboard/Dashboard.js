@@ -38,7 +38,6 @@ const Dashboard = () => {
   console.log(sessionList)
 
   useEffect(() => { 
-      document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
       if(search){
       getSpotifyUserDetails( new URLSearchParams(search).get('token'), new URLSearchParams(search).get('email'));
       }
@@ -227,7 +226,7 @@ const Dashboard = () => {
   };
 
   const getImage = (email = state.user.emailId) => {
-    document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
+    // document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
     axios.get(url+"/getImage?email="+email,{ responseType: 'blob' },{headers: {
       "Access-Control-Allow-Headers" : "Content-Type",
       "Access-Control-Allow-Origin": "*",
@@ -240,7 +239,7 @@ const Dashboard = () => {
         setProfilePic(true);
       }
       else{
-        document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
+        // document.getElementById('profilePic').src='https://cdn-icons-png.flaticon.com/256/149/149071.png';
       }
     });
   }
@@ -354,44 +353,12 @@ const Dashboard = () => {
         {/* <LogNavbar/> */}
         <div className='flex flex-row'>
         
-          <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'40%', height:'50vh'}}>
-            <div className="flex flex-col  p-2">
-              <div className="p-2 m-1 bg-gr4 rounded  " style={{borderRadius: '50%', margin:'auto'}}>
-                <label for={"pic-upload"} className=" cursor-pointer">
-                  <img className=" hover:bg-gr1" style={{borderRadius: '50%',margin:'auto',width:'250px',height:'250px',objectFit:'cover'}} id='profilePic'  />
-                </label> 
-                <div className="transition duration-500 ease-in-out hover:bg-gr4">
-
-                </div>
-              </div>
-              <div>
-                <input className="text-xs hidden" id='pic-upload' style={{maxWidth:'100%'}}  type="file" onChange={onFileChange}  />
-                {/* <button onClick={onFileUpload} className="rounded bg-gr4 p-1">
-                  <p className="text-xs">Upload!</p>
-                </button> */}
-              </div>
-              {/* <div><button onClick={getImage} className="rounded font-bold hover:bg-gr3 bg-gr4 p-2">Get Image</button></div> */}
-              <div id='firstName' className="p-2 mt-1 bg-gr4 font-bold rounded ">{state.user?.firstName}<EditIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>startEditName()}/></div>
-              <div id='editingFirstName' style={{display: "none"}} className="p-2 mt-1 bg-gr4 font-bold rounded ">
-                <form>
-                  <input type='text' id='newName' placeholder='Enter a new first name' />
-                  <DoneIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>completeEditName(e)}/>
-                  <CancelIcon className='float-right rounded-full cursor-pointer hover:bg-gr3' onClick={e=>cancelEditName()}/>
-                </form>
-              </div>
-              <div className="p-2 mt-1 bg-gr4  rounded ">{state.user?.emailId}</div>
-              <div id="upgradeUserDiv" className='flex justify-center p-5'>
-                {state.user?.subscriptionType=='paid'?'':<button onClick={upgradeUser} className="p-2 text-w bg-gr3 hover:bg-gr2 font-bold rounded">Upgrade to Premium</button>}
-              </div>
-            </div>
- 
-
+          <div className=" py-20 pr-10 pl-20 rounded-md" style={{width:'20%', height:'80vh'}}>
           </div>
           <div className="p-10 " style={{width:'60%', height:'50vh'}}>
-            {/* <h1 class="text-4xl text-gr4 pt-2 px-8" style={{textAlign:'end'}}>Sessions</h1> */}
             <div className="flex flex-row" style={{width:'100%'}}> 
               
-              <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16" >
+              <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16 mx-5" >
                 <h1 className="text-2xl mb-4" >Saved sessions</h1>
                 <LoadingOverlay
                   active={isLoading}

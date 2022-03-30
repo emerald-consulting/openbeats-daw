@@ -29,7 +29,7 @@ function App() {
         <Route path="/confirmation" component={Confirmation} />
         <Route path="/test" component={Test} />
         <Route path="/daw" component={Daw} />
-        <Route path="/social-home" component={SocialHomePage} />
+        <Route path="/home" component={SocialHomePage} />
       </Switch>
       </Layout>
     </>

@@ -1,0 +1,27 @@
+.new button {
+  font: inherit;
+  background-color: #049669;
+  color: white;
+  border: 1px solid #049669;
+  padding: 0.5rem 1.5rem;
+  border-radius: 5rem;
+  cursor: pointer;
+}
+.secondary{
+  background-color: #939b99 !important;
+  border: 1px solid #939b99 !important;
+}
+
+.secondary:hover{
+  background-color: #464e4c !important;
+  border: 1px solid #464e4c !important;
+}
+
+.new textarea {
+  resize: none;
+}
+.new{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}

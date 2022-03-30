@@ -381,7 +381,7 @@ function Tracks() {
       console.log(map1.get(e.which));
       if (map1.has(e.which)) {
         soundsPLayed.push(map1.get(e.which));
-        console.log(soundsPLayed.length());
+        console.log(soundsPLayed.length);
       }
     }
   };

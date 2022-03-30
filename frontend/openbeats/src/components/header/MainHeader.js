@@ -28,7 +28,7 @@ const MainHeader = (props) => {
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   console.log(state.user);
   const pages = isUserLoggedin
-    ? ["DASHBOARD"]
+    ? ["HOME", "INBOX", "DASHBOARD"]
     : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
 
   const handleOpenUserMenu = (event) => {
@@ -55,17 +55,17 @@ const MainHeader = (props) => {
     <AppBar
     className={addedClasses}
       position="static"
-      sx={{ backgroundColor: "#ffff", color: "#049669", paddingTop: 3}}
+      sx={{ backgroundColor: "#ffff", color: "#049669" }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
+        <Toolbar disableGutters style={{ maxHeight: '80px'}}>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
           >
-            <Link className=" flex flex-row " to={isUserLoggedin? '/social-home': '/'}>
+            <Link className=" flex flex-row " to={isUserLoggedin? '/home': '/'}>
               <img className="mt-1 h-10" src={logo} alt={"logo"} />
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>

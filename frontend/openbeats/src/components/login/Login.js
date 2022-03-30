@@ -87,7 +87,7 @@ const Login = () => {
                       });
                     console.log(response1.data.data)
                     setIsLoaded(false)
-                    history.push("/social-home");
+                    history.push("/home");
                 }
             })
                 

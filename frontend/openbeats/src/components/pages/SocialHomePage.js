@@ -1,3 +1,4 @@
+import NewPostForm from "../newPostForm/NewPostForm";
 import SocialPost from "../socialPost/SocialPost";
 import classes from "./SocialHomePage.module.css";
 
@@ -8,7 +9,9 @@ const SocialHomePage = () => {
 
       <div className={classes.leftpane}>
         <div className={classes.splitScreen}>
-          <div className={classes.topPane}>POST Form</div>
+          <div className={classes.topPane}>
+            <NewPostForm/>
+          </div>
           <div className={classes.bottomPane}>PLay List</div>
         </div>
       </div>
