@@ -1,7 +1,18 @@
+import axios from "axios";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import useInput from "../../hooks/use-input";
+import { url } from "../../utils/constants";
 import classes from "./newPostForm.module.css";
 
 const NewPostForm = (props) => {
+
+  const user = useSelector(_state => _state.user);
+  let jwtToken = `${user.jwtToken}`;
+  const [track, setTrack] = useState(null);
+  const [cover, setCover] = useState(null);
+
+
   const {
     value: enteredDescription,
     isTouched: isEnteredDescriptionTouched,
@@ -33,16 +44,63 @@ const NewPostForm = (props) => {
 
   if (!isEnteredTitleInValid) {
     isFormValid = true;
-  }else{
-
-
   }
 
-  const formSubmitHandler = (event) => {
+  const trackChangeHandler = (event)=>{
+    setTrack(event.target.files[0])
+  }
+
+  const coverChangeHandler = (event)=>{
+    setCover(event.target.files[0])
+  }
+
+  const formSubmitHandler = async (event) => {
     event.preventDefault();
     if (isEnteredDescriptionInValid) {
       return;
     }
+    const json = {
+      description: enteredDescription,
+      genre: enteredGenre,
+      isAnnouncement: false,
+      isMediaAdded: false,
+      trackFileName: null,
+      pictureFileName: null,
+      totalLikes: 0,
+      totalDislikes: 0,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      bucketName: null,
+    }
+
+    const formData = new FormData();
+    formData.append(
+      'json', JSON.stringify(json)
+    );
+    formData.append(
+      'picture', cover
+    );
+    let _file = null;
+    if (track.blob) {
+      _file = new File([track.blob], "audio.mp3");
+    } else if (typeof track == "string") {
+      _file = new File([new Blob(track.substring(5))], "audio.mp3");
+    } else {
+      _file = track;
+    }
+
+    formData.append(
+      'track', _file
+    );
+
+    const res =   await  axios.post(url+"/post", formData,{headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      "Access-Control-Allow-Headers" : "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      'Authorization': 'Bearer '+ jwtToken
+  }})
     console.log(enteredDescription);
     resetInput();
     resetTitle();
@@ -109,6 +167,7 @@ const NewPostForm = (props) => {
           type="file"
           id="file-upload"
           accept="audio/mp3,audio/*;capture=microphone"
+          onChange={trackChangeHandler}
         />
       </div>
       <div className="form-control">
@@ -117,6 +176,7 @@ const NewPostForm = (props) => {
           type="file"
           id="file-upload"
           accept="image/*"
+          onChange={coverChangeHandler}
         />
       </div>
       <div className="form-actions">

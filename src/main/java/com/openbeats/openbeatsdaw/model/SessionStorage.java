@@ -1,6 +1,6 @@
 package com.openbeats.openbeatsdaw.model;
 
-import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 
 import java.util.*;
 

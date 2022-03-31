@@ -1,4 +1,4 @@
-package com.openbeats.openbeatsdaw.Entity;
+package com.openbeats.openbeatsdaw.model.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Posts {
+public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +36,11 @@ public class Posts {
     @Column(name="is_media_added")
     private Boolean isMediaAdded;
 
-    @Column(name = "track_file_id", insertable = false, updatable = false)
-    private Long trackFileId;
+    @Column(name = "track_file_name")
+    private String trackFileName;
 
-    @Column(name = "picture_file_id", insertable = false, updatable = false)
-    private Long pictureFileId;
+    @Column(name = "picture_file_name")
+    private String pictureFileName;
 
     @Column(name = "total_likes")
     private Integer totalLikes;
@@ -54,15 +54,8 @@ public class Posts {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "track_file_id", referencedColumnName = "file_id", nullable = true)
-    @JsonIgnore
-    private File trackFileRef;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "picture_file_id", referencedColumnName = "file_id", nullable = true)
-    @JsonIgnore
-    private File pictureFileRef;
+    @Column(name = "bucket_name")
+    private String bucketName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

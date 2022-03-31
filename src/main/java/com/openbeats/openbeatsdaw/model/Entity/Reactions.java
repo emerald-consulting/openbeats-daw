@@ -1,4 +1,4 @@
-package com.openbeats.openbeatsdaw.Entity;
+package com.openbeats.openbeatsdaw.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -34,7 +34,7 @@ public class Reactions {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     @JsonIgnore
-    private Posts postRef;
+    private Post postRef;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)

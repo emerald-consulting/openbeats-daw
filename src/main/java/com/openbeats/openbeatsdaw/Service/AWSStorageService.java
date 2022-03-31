@@ -120,4 +120,8 @@ public class AWSStorageService {
         return outputStream;
     }
 
+    public void deleteFile(String bucket_name, String fileName){
+        s3Client.deleteObject(bucket_name, fileName);
+    }
+
 }

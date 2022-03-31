@@ -1,17 +1,13 @@
 package com.openbeats.openbeatsdaw.Service;
 
-import com.openbeats.openbeatsdaw.Entity.File;
-import com.openbeats.openbeatsdaw.Entity.Session;
+import com.openbeats.openbeatsdaw.model.Entity.File;
+import com.openbeats.openbeatsdaw.model.Entity.Session;
 import com.openbeats.openbeatsdaw.Repository.FileRepository;
 import com.openbeats.openbeatsdaw.model.AudioTrack;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.util.List;
 
 @Service

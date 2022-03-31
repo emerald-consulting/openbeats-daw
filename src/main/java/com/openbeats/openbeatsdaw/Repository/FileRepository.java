@@ -1,12 +1,9 @@
 package com.openbeats.openbeatsdaw.Repository;
 
-import com.openbeats.openbeatsdaw.Entity.Collaborators;
-import com.openbeats.openbeatsdaw.Entity.File;
-import com.openbeats.openbeatsdaw.Entity.Session;
+import com.openbeats.openbeatsdaw.model.Entity.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.openbeats.openbeatsdaw.Service;
 
-import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -99,4 +99,5 @@ public class UserPrincipal implements OAuth2User, UserDetails {
     public String getName() {
         return String.valueOf(id);
     }
+
 }

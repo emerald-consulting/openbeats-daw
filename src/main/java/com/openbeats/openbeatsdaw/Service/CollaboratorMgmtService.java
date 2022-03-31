@@ -2,12 +2,10 @@
 package com.openbeats.openbeatsdaw.Service;
 
 
-import com.openbeats.openbeatsdaw.Entity.Collaborators;
-import com.openbeats.openbeatsdaw.Entity.Session;
-import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.model.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.model.Entity.Session;
 import com.openbeats.openbeatsdaw.Repository.CollaboratorRepository;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

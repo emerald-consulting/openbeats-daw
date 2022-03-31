@@ -1,16 +1,20 @@
 package com.openbeats.openbeatsdaw.Utils;
 
 
+import com.openbeats.openbeatsdaw.Repository.UserRepository;
 import com.openbeats.openbeatsdaw.Service.UserPrincipal;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class TokenProvider {
@@ -19,6 +23,9 @@ public class TokenProvider {
 
     @Autowired
     private Environment env;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public String createToken(String email) {
 
@@ -90,6 +97,10 @@ public class TokenProvider {
             logger.error("JWT claims string is empty.");
         }
         return false;
+    }
+
+    public Optional<User> getLoggedinUser(String token) {
+        return userRepository.findByEmailId (getEmailId(token.split(" ")[1].trim()));
     }
 
 }

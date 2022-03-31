@@ -1,10 +1,8 @@
 package com.openbeats.openbeatsdaw.controller;
 
-import com.amazonaws.services.cloudfront.model.FieldLevelEncryption;
-import com.openbeats.openbeatsdaw.Entity.Collaborators;
-import com.openbeats.openbeatsdaw.Entity.File;
-import com.openbeats.openbeatsdaw.Entity.Session;
-import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.model.Entity.File;
+import com.openbeats.openbeatsdaw.model.Entity.Session;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.AudioFileService;
@@ -23,7 +21,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Optional;
 

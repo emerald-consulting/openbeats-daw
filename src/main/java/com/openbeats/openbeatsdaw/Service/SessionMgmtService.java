@@ -1,13 +1,10 @@
 package com.openbeats.openbeatsdaw.Service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.openbeats.openbeatsdaw.Entity.Collaborators;
-import com.openbeats.openbeatsdaw.Entity.File;
-import com.openbeats.openbeatsdaw.Entity.Session;
-import com.openbeats.openbeatsdaw.Entity.User;
-import com.openbeats.openbeatsdaw.Repository.FileRepository;
+import com.openbeats.openbeatsdaw.model.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.model.Entity.File;
+import com.openbeats.openbeatsdaw.model.Entity.Session;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.model.AudioTrack;
 import com.openbeats.openbeatsdaw.model.CreateStudioRequest;
@@ -19,8 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

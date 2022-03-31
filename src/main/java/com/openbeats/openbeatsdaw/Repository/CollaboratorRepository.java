@@ -1,14 +1,11 @@
 package com.openbeats.openbeatsdaw.Repository;
 
-import com.openbeats.openbeatsdaw.Entity.Collaborators;
+import com.openbeats.openbeatsdaw.model.Entity.Collaborators;
 
-import com.openbeats.openbeatsdaw.Entity.Session;
-import com.openbeats.openbeatsdaw.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface CollaboratorRepository extends JpaRepository<Collaborators,Long> {
 

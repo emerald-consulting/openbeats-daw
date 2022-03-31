@@ -1,4 +1,4 @@
-package com.openbeats.openbeatsdaw.Entity;
+package com.openbeats.openbeatsdaw.model.Entity;
 
 
 import lombok.AllArgsConstructor;

@@ -1,7 +1,6 @@
 package com.openbeats.openbeatsdaw.model;
 
-import com.openbeats.openbeatsdaw.Entity.File;
-import com.openbeats.openbeatsdaw.Entity.User;
+import com.openbeats.openbeatsdaw.model.Entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
