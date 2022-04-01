@@ -1,7 +1,6 @@
 package com.openbeats.openbeatsdaw.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openbeats.openbeatsdaw.Service.FollowersService;
 import com.openbeats.openbeatsdaw.Service.PostService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -46,6 +46,13 @@ public class PostController {
     @ResponseBody
     public boolean removePost(@PathVariable("postId") Long postId){
         return postService.removePost(postId);
+    }
+
+    @GetMapping("/getPosts/{pageNo}")
+    @ResponseBody
+    public List<Post> getPosts(@PathVariable("pageNo") int pageNo, @RequestHeader (name="Authorization") String token) {
+        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+        return postService.getPosts(currentUser.get().getUserid(), pageNo);
     }
 
 }

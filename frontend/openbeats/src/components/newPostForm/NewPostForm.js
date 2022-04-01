@@ -154,7 +154,7 @@ const NewPostForm = (props) => {
           value={enteredGenre}
           onBlur={enteredGenreBlurHandler}
         >
-           <option value="R&B" hidden>Select Genre</option>
+           <option value="null" hidden>Select Genre</option>
            <option value="R&B">R&B</option>
            <option value="Hip Hop">Hip Hop</option>
            <option value="Country">Country</option>

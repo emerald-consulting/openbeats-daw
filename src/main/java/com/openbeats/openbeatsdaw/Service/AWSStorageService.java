@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -120,8 +122,13 @@ public class AWSStorageService {
         return outputStream;
     }
 
-    public void deleteFile(String bucket_name, String fileName){
-        s3Client.deleteObject(bucket_name, fileName);
+    public void deleteFile(String bucketName, String fileName){
+        s3Client.deleteObject(bucketName, fileName);
+    }
+
+    public URL getUrl (String bucketName, String fileName){
+
+        return s3Client.generatePresignedUrl(bucketName, fileName, new Date(System.currentTimeMillis() + 3600000));
     }
 
 }

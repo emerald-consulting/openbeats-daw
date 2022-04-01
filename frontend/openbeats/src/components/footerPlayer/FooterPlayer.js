@@ -3,6 +3,7 @@ import "react-h5-audio-player/lib/styles.css";
 
 const FooterPlayer = (props) => {
   const addedClasses = props.className;
+  // const audio = new Audio()
 
   return (
     <div

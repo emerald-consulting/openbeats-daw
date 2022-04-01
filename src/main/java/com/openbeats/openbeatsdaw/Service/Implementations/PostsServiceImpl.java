@@ -9,10 +9,13 @@ import com.openbeats.openbeatsdaw.model.Entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class PostsServiceImpl implements PostService {
@@ -64,5 +67,22 @@ public class PostsServiceImpl implements PostService {
         // reactions to be deleted as well
         postRepository.deleteById(postId);
         return true;
+    }
+
+    @Override
+    public List<Post> getPosts(Long userid, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
+        List<Post> posts = postRepository.getPosts(userid, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+
+        return posts;
+
     }
 }
