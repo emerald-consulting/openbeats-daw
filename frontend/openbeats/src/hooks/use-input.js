@@ -9,7 +9,6 @@ const useInput = (validCheck)=>{
 
     const inputChangeHandler = (event)=>{
         setValue(event.target.value);
-        console.log(event.target.value);
     }
 
     const inputBlueHandler = (event)=>{

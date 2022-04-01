@@ -14,6 +14,7 @@ public class PostDTO {
     private Long userId;
     private String description;
     private String genre;
+    private String title;
     private Boolean isAnnouncement;
     private Boolean isMediaAdded;
     private String trackFileName;

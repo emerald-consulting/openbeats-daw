@@ -2,9 +2,12 @@ import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
 import IconButton from "@mui/material/IconButton";
 import Avatar from "@mui/material/Avatar";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { url } from "../../utils/constants";
+import playButton from '../playBtn2.png'
+import PlaylistContext from "../../model/playlist-store/playlist-context";
+import soundImg from '../sound.jpeg';
 
 
 const SocialPost = ({details}) => {
@@ -12,7 +15,7 @@ const SocialPost = ({details}) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
-  const audio = new Audio(details.trackFileName);
+  const playlistCntxt = useContext(PlaylistContext);
 
   useEffect(()=>{
     getAuthorDetails();
@@ -56,25 +59,25 @@ const SocialPost = ({details}) => {
   setIsLiked(res.data);
   }
 
+  const addToPlaylistHandler = () =>{
+    playlistCntxt.addItem({...details, ...author});
+  }
+
   return (
-    <Card style={{ width: "65%", padding: "5px" }}>
-      <Card.Body>
+    <Card className={classes.card} style={{ width: "65%", padding: "5px" }}>
         <IconButton sx={{ p: 0 }}>
           <Avatar alt="Harry" src="/static/images/avatar/2.jpg" />
           <strong className={classes.username}></strong> {`${author?.firstName} ${author?.lastName}`} <span className="ml-2">@{author?.username}</span>
         </IconButton>
         <br/>
-
-
-
         <Card.Text>
         {details.description}
         </Card.Text>
-      </Card.Body>
       <Card.Img
         variant="top"
-        src={details.pictureFileName}
+        src={details.pictureFileName? details.pictureFileName: details.trackFileName? soundImg: null}
       />
+        { details.trackFileName && <img className={classes.overlay} src={playButton} onClick={addToPlaylistHandler}/ >}
       <button onClick={likeHandler}>{isLiked? "Already Liked": "Like"}</button>
     </Card>
   );

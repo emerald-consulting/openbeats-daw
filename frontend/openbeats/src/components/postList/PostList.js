@@ -28,7 +28,7 @@ const PostList = ({uriParam}) =>{
 return(
     <>
     {
-        posts.map(p => <SocialPost details = {p}/>)
+        posts.map(p => <SocialPost key={posts.userId} details = {p}/>)
     }
     </>
 

@@ -30,6 +30,9 @@ public class Post {
     @Column(name="genre", length = 50)
     private String genre;
 
+    @Column(name="title", length = 100)
+    private String title;
+
     @Column(name="is_announcement")
     private Boolean isAnnouncement;
 

@@ -9,6 +9,7 @@ import { setUserEmail, setUserToken } from "../../../model/user/User";
 import { url } from "../../../utils/constants";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
+import PlaylistProvider from "../../../model/playlist-store/PlaylistProvider";
 
 const Layout = (props) => {
   const user = useSelector((_state) => _state.user);
@@ -60,8 +61,10 @@ const Layout = (props) => {
     <Fragment>
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <MainHeader />
+        <PlaylistProvider>
         <main className={classes.main}>{props.children}</main>
         {isUserLoggedin && <FooterPlayer />}
+        </PlaylistProvider>
       </LoadingOverlay>
     </Fragment>
   );

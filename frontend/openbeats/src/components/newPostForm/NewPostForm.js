@@ -71,6 +71,7 @@ const NewPostForm = (props) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       bucketName: null,
+      title: enteredTitle
     }
 
     const formData = new FormData();
@@ -81,7 +82,7 @@ const NewPostForm = (props) => {
       'picture', cover
     );
     let _file = null;
-    if (track.blob) {
+    if (track && track.blob) {
       _file = new File([track.blob], "audio.mp3");
     } else if (typeof track == "string") {
       _file = new File([new Blob(track.substring(5))], "audio.mp3");

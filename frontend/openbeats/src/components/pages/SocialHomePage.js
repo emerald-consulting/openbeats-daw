@@ -1,4 +1,5 @@
 import NewPostForm from "../newPostForm/NewPostForm";
+import Playlist from "../playlist/Playlist";
 import PostList from "../postList/PostList";
 import classes from "./SocialHomePage.module.css";
 
@@ -11,7 +12,7 @@ const SocialHomePage = () => {
             <div className={classes.topPane}>
               <NewPostForm />
             </div>
-            <div className={classes.bottomPane}>PLay List</div>
+            <div className={classes.bottomPane}><Playlist/></div>
           </div>
         </div>
         <div className={classes.middlepane}>

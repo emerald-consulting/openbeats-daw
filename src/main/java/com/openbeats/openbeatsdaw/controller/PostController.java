@@ -30,8 +30,8 @@ public class PostController {
     @PostMapping("/post")
     @ResponseBody
     public Post addPost(@RequestPart("json") String json,
-                        @RequestParam("track") MultipartFile track,
-                        @RequestParam("picture") MultipartFile picture,
+                        @RequestParam(value = "track", required = false) MultipartFile track,
+                        @RequestParam(value = "picture", required = false) MultipartFile picture,
                         @RequestHeader (name="Authorization") String token ) throws JsonProcessingException {
 
         Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
