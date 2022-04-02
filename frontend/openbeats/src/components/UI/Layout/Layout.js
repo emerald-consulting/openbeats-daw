@@ -10,11 +10,14 @@ import { url } from "../../../utils/constants";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import PlaylistProvider from "../../../model/playlist-store/PlaylistProvider";
+import { useLocation } from "react-router";
 
 const Layout = (props) => {
   const user = useSelector((_state) => _state.user);
   const [state, dispatch] = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(false);
+  const search = useLocation().search;
+  const sessionId = new URLSearchParams(search).get("sessionId");
 
   let isUserLoggedin = user.emailId.trim().length > 0;
   let jwtToken = `${user.jwtToken}`;
@@ -63,7 +66,7 @@ const Layout = (props) => {
         <MainHeader />
         <PlaylistProvider>
         <main className={classes.main}>{props.children}</main>
-        {isUserLoggedin && <FooterPlayer />}
+        {isUserLoggedin && !sessionId && <FooterPlayer />}
         </PlaylistProvider>
       </LoadingOverlay>
     </Fragment>

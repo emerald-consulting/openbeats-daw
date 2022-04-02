@@ -9,18 +9,24 @@
 .rightpane {
   width: 25%;
   height: 100%;
-  float: left;
   background-color: #049669 !important;
+}
+
+.leftpane{
+  float: left;
+}
+
+.rightpane{
+  float: left;
 }
 
 .middlepane {
   width: 45%;
   height: 80vh;
   float: left;
-  background-color: royalblue;
   border-collapse: collapse;
-  padding: 1rem;
-  margin: 1rem;
+  padding: 1rem; 
+  margin: 1rem 2rem 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   background-color: white;

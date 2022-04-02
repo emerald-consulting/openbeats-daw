@@ -167,7 +167,7 @@ const NewPostForm = (props) => {
         <input
           type="file"
           id="file-upload"
-          accept="audio/mp3,audio/*;capture=microphone"
+          accept="audio/*"
           onChange={trackChangeHandler}
         />
       </div>
