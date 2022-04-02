@@ -18,8 +18,8 @@ public class MyUserDetails implements UserDetails {
     private String emailId;
     private String subscriptionType;
     private boolean emailVerified;
-    private int totalFollowers;
-    private int totalFollowing;
+    private Integer totalFollowers;
+    private Integer totalFollowing;
     private String bio;
     private Date createdAt;
     // private File profilePicRef;
