@@ -8,16 +8,19 @@ import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
 import soundImg from "../sound.jpeg";
+import LikeButton from "../likeButton/LikeButton.js";
 
 const SocialPost = ({ details }) => {
+  // console.log("bhavya ",details)
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
+
   let token = localStorage.getItem("auth-token");
   const playlistCntxt = useContext(PlaylistContext);
 
   useEffect(() => {
     getAuthorDetails();
-    getIsPostLikedByUser();
+    // getIsPostLikedByUser();
   }, []);
 
   const getAuthorDetails = async () => {
@@ -78,17 +81,20 @@ const SocialPost = ({ details }) => {
   return (
     <Card className={classes.card}>
       <Card.Header className="mb-2">
-        <div style={{display: "flex", alignItems: "center"}}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <img
             alt="Harry"
             src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
             className={classes.profileIcon}
           />
-        <span className={classes.author}>
-        <strong className={classes.username}>{`${author?.firstName} ${author?.lastName}`}</strong>
-          <a className="ml-2">@{author?.username}</a><br/>
-          <small className="text-muted">{createdAt}</small>
-        </span>
+          <span className={classes.author}>
+            <strong
+              className={classes.username}
+            >{`${author?.firstName} ${author?.lastName}`}</strong>
+            <a className="ml-2">@{author?.username}</a>
+            <br />
+            <small className="text-muted">{createdAt}</small>
+          </span>
         </div>
       </Card.Header>
 
@@ -111,11 +117,12 @@ const SocialPost = ({ details }) => {
           onClick={addToPlaylistHandler}
         />
       )}
-      <Card.Footer>
-        <button style={{marginLeft: "95%"}} onClick={likeHandler}>
+      {/* <Card.Footer> */}
+      {/* <button style={{marginLeft: "95%"}} onClick={likeHandler}>
           {isLiked ? "Already Liked" : "Like"}
-        </button>
-      </Card.Footer>
+        </button> */}
+      <LikeButton details={details} token={token} />
+      {/* </Card.Footer> */}
     </Card>
   );
 };
