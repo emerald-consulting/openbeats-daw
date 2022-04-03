@@ -1,3 +1,19 @@
 .rhap_main-controls-button{
     color: #049669;
 }
+
+.songDetails {
+    line-height: 20px;
+    margin-left: 10px;
+  }
+  .songDetails a {
+    color: #049669;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .songDetails strong {
+    color: #1b1b1b;
+    font-size: 18px;
+  }
+  

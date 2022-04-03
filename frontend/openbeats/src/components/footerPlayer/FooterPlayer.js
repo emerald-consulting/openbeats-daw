@@ -3,6 +3,7 @@ import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
 import soundImg from '../sound.jpeg';
+import classes from './FooterPlayer.module.css'
 
 const FooterPlayer = (props) => {
   const addedClasses = props.className;
@@ -44,15 +45,17 @@ const FooterPlayer = (props) => {
         customAdditionalControls={[]}
         layout="horizontal-reverse"
         customControlsSection={ [
-          currentlyPlayingSong && <div className="flex flex-row">
-            <img
-              src={currentlyPlayingSong.pictureFileName || soundImg}
-              style={{ height: "100%", width: "60px" }}
-            />
-              <strong className="mt-2 ml-2 font-weight-bold"><h2>{currentlyPlayingSong.title}</h2>
-              {currentlyPlayingSong.username}</strong>
-
-          </div>,
+          currentlyPlayingSong && <div style={{display: "flex", alignItems: "center"}}>
+          <img
+            src={currentlyPlayingSong.pictureFileName || soundImg}
+            className={classes.image}
+            style={{ height: "60px", width: "60px", borderRadius: "10px" }}
+          ></img>
+        <span className={classes.songDetails}>
+        <strong>{currentlyPlayingSong.title}</strong><br/>
+          <a>{`${currentlyPlayingSong.firstName} ${currentlyPlayingSong.lastName}`}</a><br/>
+        </span>
+        </div>,
           RHAP_UI.ADDITIONAL_CONTROLS,
           RHAP_UI.MAIN_CONTROLS,
           RHAP_UI.VOLUME_CONTROLS,
