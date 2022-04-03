@@ -9,6 +9,7 @@ import com.openbeats.openbeatsdaw.model.Entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -70,9 +71,9 @@ public class PostsServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getPosts(Long userid, int pageNo) {
+    public Page<Post> getPosts(Long userid, int pageNo) {
         Pageable pageable = PageRequest.of(pageNo, 10);
-        List<Post> posts = postRepository.getPosts(userid, pageable);
+        Page<Post> posts = postRepository.getPosts(userid, pageable);
         posts.forEach(post->{
             if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
                 post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
