@@ -21,6 +21,7 @@
   position: relative;
   border-bottom: 1px solid grey;
   margin-top: 10px;
+  padding: 5px;
 }
 
 .cargImg {

@@ -32,7 +32,6 @@ const SocialPost = ({ details }) => {
       },
     });
     setAuthor(res.data);
-    console.log(res.data);
   };
 
   const getIsPostLikedByUser = async () => {
@@ -76,7 +75,8 @@ const SocialPost = ({ details }) => {
   const createdAt = convertISOStringToViewableDay();
 
   return (
-    <Card className={classes.card}>
+    <>
+    {author && <Card className={classes.card}>
       <Card.Header className="mb-2">
         <div style={{display: "flex", alignItems: "center"}}>
           <img
@@ -116,7 +116,8 @@ const SocialPost = ({ details }) => {
           {isLiked ? "Already Liked" : "Like"}
         </button>
       </Card.Footer>
-    </Card>
+    </Card>}
+    </>
   );
 };
 
