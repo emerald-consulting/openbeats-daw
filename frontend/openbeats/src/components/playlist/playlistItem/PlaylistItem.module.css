@@ -7,13 +7,3 @@
   cursor: pointer;
   font-size: 14px;
 }
-
-.songDetails small {
-  color: #606161;
-}
-
-.image{
-  height: "40px";
-  width: "40px";
-  border-radius: "10px";
-}
