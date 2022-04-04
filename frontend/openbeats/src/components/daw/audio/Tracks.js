@@ -39,7 +39,7 @@ import {
   setSessionName,
   setParticipants,
   setBucketName,
-  setNoRefresh
+  setNoRefresh,
 } from "../../../model/session/Session";
 import { url } from "../../../utils/constants";
 
@@ -109,14 +109,11 @@ function Tracks() {
   const [files, setFiles] = useState([]);
   const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [stopPlaying, setStopPlaying] = useState(0);
   const [selected, setSelected] = useState([]);
   const [allSelected, setAllSelected] = useState(false);
   const [error, setError] = useState(null);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [fileIterator, setFileIterator] = useState(0);
   const [seekValue, setSeekValue] = useState(0);
   const [zoom, setZoom] = React.useState(90);
   const session = useSelector((_state) => _state.session);
@@ -127,8 +124,8 @@ function Tracks() {
   const search = useLocation().search;
   const rulerRef = useRef();
 
-  const [barOffset, setBarOffset] = useState(250);
-  const [playHeadPos, setplayHeadPos] = useState(250);
+  const [barOffset, setBarOffset] = useState(0);
+  const [playHeadPos, setplayHeadPos] = useState(0);
   const [playRegion, setPlayRegion] = useState([]);
   const [cropRegion, setCropRegion] = useState([]);
   const [cutRegion, setCutRegion] = useState([]);
@@ -138,7 +135,7 @@ function Tracks() {
     setIsPlaying(true);
     interval = setInterval(() => {
       steps++;
-
+      setplayHeadPos((prev) => prev + 6);
       if (steps > 100) {
         rulerRef.current.scrollLeft += 6;
         return;
@@ -146,7 +143,6 @@ function Tracks() {
       setBarOffset((prevBarOffset) => {
         return prevBarOffset + 6;
       });
-      setplayHeadPos((prev) => prev + 6);
     }, 200);
   };
 
@@ -158,7 +154,7 @@ function Tracks() {
   const changeBarStartHandler = (event) => {
     setBarOffset(event.clientX);
     setplayHeadPos(event.clientX);
-    steps = 6*event.clientX/30
+    steps = (6 * event.clientX) / 30;
   };
 
   const [state, dispatch] = useContext(UserContext);
@@ -242,41 +238,30 @@ function Tracks() {
       temp = playTracks;
       temp.splice(index, 1);
       setSelected(temp);
-    }
-  };
+      const formData = new FormData();
+      formData.append("fileId", session.audioTracks[index]?.audioTrackId);
+      formData.append("sessionId", session.sessionId);
+      formData.append("fileName", session.audioTracks[index]?.file);
+  
+      axios.put(url + "/removeFile", formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + jwtToken,
+        },
+      });
 
-  const startPlayTracks = (newBarPos) => {
-    var temp = [];
-    for (var i = 0; i < playTracks.length; i++) {
-      if (selected[i]) {
-        if (isPlaying[i]) {
-          console.log("continue");
-          continue;
-        }
-        temp.push(true);
-      } else {
-        temp.push(false);
-      }
     }
-    console.log(temp);
-    setPlayTracks(temp);
-    setIsPlaying(true);
-  };
-
-  const pauseTracks = () => {
-    var temp = [];
-    playTracks.forEach((t) => {
-      temp.push(false);
-    });
-    setPlayTracks(temp);
-    setIsPlaying(false);
   };
 
   const stopPlayTracks = () => {
     rulerRef.current.scrollLeft = 0;
     stopHanlder();
-    setBarOffset(250);
-    setplayHeadPos(250);
+    setBarOffset(0);
+    setplayHeadPos(0);
     steps = 0;
   };
 
@@ -473,7 +458,7 @@ function Tracks() {
     setCropRegion(regionArray);
     setPlayRegion(regionArray);
     setCutRegion(regionArray);
-    const temp = regionArray.map(r=>1);
+    const temp = regionArray.map((r) => 1);
     setVolumes([...temp]);
     console.log([...temp]);
     setIsLoading(false);
@@ -595,7 +580,7 @@ function Tracks() {
           if (data.participants) {
             dispatch2(setParticipants(data.participants));
           }
-          dispatch2(setNoRefresh(data.noRefresh))
+          dispatch2(setNoRefresh(data.noRefresh));
           getFileNames(session.sessionId || data.sessionId);
           // getFileOffsets();
           // displayResponse(data);
@@ -642,10 +627,10 @@ function Tracks() {
     // dispatch2(setAudioTrackOffsets([audioTr]));
   };
 
-  const handleVolumeChange = (event, v)=>{
+  const handleVolumeChange = (event, v) => {
     console.log(event.value);
     console.log(v);
-  }
+  };
 
   return (
     <>
@@ -700,9 +685,16 @@ function Tracks() {
 
           <div className={classes.container}>
             <div className={classes.leftpane}>
-              <div style={{ height: "25px", backgroundColor: "green", position: "sticky", top:0 }}></div>
+              <div
+                style={{
+                  height: "25px",
+                  backgroundColor: "green",
+                  position: "sticky",
+                  top: 0,
+                }}
+              ></div>
               {files.map((file, index) => (
-                <div style={{height: "100px"}}>
+                <div style={{ height: "100px" }}>
                   <Checkbox
                     style={{ color: "#00e676" }}
                     checked={selected[index] || false}
@@ -710,7 +702,9 @@ function Tracks() {
                   />
                   <div className="px-3">
                     <span>{session.audioTracks[index]?.file.slice(13)}</span>
-                    <span className="float-right">{session.audioTracks[index]?.owner}</span>
+                    <span className="float-right">
+                      {session.audioTracks[index]?.owner}
+                    </span>
                   </div>
                   <div style={{ height: "30px" }}>
                     <span className="float-left px-2 mt-1">
@@ -737,7 +731,9 @@ function Tracks() {
                       step={0.01}
                       style={{ width: "20%", margin: "5px" }}
                       value={volumes[index]}
-                      onChangeCommitted={(event)=>handleVolumeChange(event, index)}
+                      onChangeCommitted={(event) =>
+                        handleVolumeChange(event, index)
+                      }
                     />
                     <button
                       onClick={() => remove(index)}
@@ -745,7 +741,6 @@ function Tracks() {
                     >
                       <CancelIcon />
                     </button>
-
                   </div>
                   <hr />
                 </div>
@@ -753,15 +748,6 @@ function Tracks() {
             </div>
 
             <div>
-              <h1
-                style={{
-                  left: `${barOffset}px`,
-                  height: "40vh",
-                  borderRight: "2px solid red",
-                  position: "absolute",
-                  zIndex: 10,
-                }}
-              ></h1>
               <Box
                 component="div"
                 sx={{
@@ -773,7 +759,17 @@ function Tracks() {
                 }}
                 ref={rulerRef}
               >
+
                 <div className={classes.timerBar}>
+                  <h1
+                    style={{
+                      left: `${ steps<100? barOffset: barOffset+250}px`,
+                      height: "500px",
+                      borderRight: "2px solid red",
+                      position: `${steps<100?"absolute": "fixed"}` ,
+                      zIndex: 20,
+                    }}
+                  ></h1>
                   {arr.map((item, index) => (
                     <Box
                       component="div"
@@ -800,9 +796,7 @@ function Tracks() {
                         isSelected={selected[index]}
                         isMusicPlaying={isPlaying}
                         file={file}
-                        playHeadPos={playHeadPos - 250}
-                        playTrack={playTracks[index]}
-                        stopPlaying={stopPlaying}
+                        playHeadPos={playHeadPos}
                         playRegion={playRegion[index]}
                         cutRegion={cutRegion[index]}
                         cropRegion={cropRegion[index]}

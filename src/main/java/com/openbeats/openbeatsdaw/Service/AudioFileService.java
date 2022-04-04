@@ -60,5 +60,8 @@ public class AudioFileService {
         return fileRepository.findAllBySessionId(sessionId);
     }
 
-
+    public boolean deleteByFileId(Long fileId) {
+        fileRepository.deleteById(fileId);
+        return true;
+    }
 }
