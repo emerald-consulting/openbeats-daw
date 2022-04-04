@@ -58,7 +58,6 @@ const Login = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response)
             if(response.data.status==207){

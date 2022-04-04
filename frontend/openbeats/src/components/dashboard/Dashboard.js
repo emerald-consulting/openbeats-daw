@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 import axios from "axios";
 import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import { useSelector, useDispatch } from 'react-redux'
-import { setSession, setSessionId, setSessionName, setParticipants, setBucketName } from "../../model/session/Session";
+import { setSession, setSessionId, setSessionName, setParticipants, setBucketName, setNoRefresh } from "../../model/session/Session";
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -135,6 +135,7 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
+            dispatch2(setNoRefresh(response.data.noRefresh));
            history.push('/daw?sessionId='+response.data.sessionId);
             }
 
@@ -173,6 +174,7 @@ const Dashboard = () => {
                 dispatch2(setSessionName(response.data.sessionName));
                 dispatch2(setParticipants(response.data.participants));
                 dispatch2(setBucketName(response.data.bucketName));
+                dispatch2(setNoRefresh(response.data.noRefresh));
                 history.push('/daw?sessionId='+response.data.sessionId);
             }
          })
@@ -209,7 +211,7 @@ const Dashboard = () => {
             dispatch2(setSessionName(response.data.sessionName));
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
-
+            dispatch2(setNoRefresh(response.data.noRefresh));
              history.push('/daw?sessionId='+response.data.sessionId);
             }
 

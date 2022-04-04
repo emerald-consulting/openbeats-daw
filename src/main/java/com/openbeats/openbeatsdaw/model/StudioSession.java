@@ -13,4 +13,5 @@ public class StudioSession implements Serializable {
     private List<User> participants;
     private List<AudioTrack> audioTracks;
     private String bucketName;
+    private Boolean noRefresh;
 }
