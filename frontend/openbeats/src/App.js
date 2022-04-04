@@ -14,6 +14,8 @@ import { faCheckSquare, fas , faUserEdit, faUser } from '@fortawesome/free-solid
 import Confirmation from "./components/signup/Confirmation";
 import SocialHomePage from "./components/pages/SocialHomePage";
 import Layout from "./components/UI/Layout/Layout";
+import ProfilePage from "./components/pages/ProfilePage";
+
 library.add(fab, faCheckSquare, fas ,faUserEdit, faUser)
 
 function App() {
@@ -30,6 +32,7 @@ function App() {
         <Route path="/test" component={Test} />
         <Route path="/daw" component={Daw} />
         <Route path="/home" component={SocialHomePage} />
+        <Route path="/profile" component={ProfilePage} />
       </Switch>
       </Layout>
     </>
