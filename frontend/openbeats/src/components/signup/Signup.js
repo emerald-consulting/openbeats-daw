@@ -166,7 +166,7 @@ const Signup = () => {
                         <CloseIcon />
                     </IconButton>
                     }
-                    onClose={handleOnclose} message="Success! Email verification link sent!! Open email to verify" open={message}/>
+                    onClose={handleOnclose} message="User account has been created Sucessfully" open={message}/>
                 <Snackbar TransitionComponent="Fade" autoHideDuration={6000} onClose={handleOnclose} 
                     action={ 
                         <IconButton

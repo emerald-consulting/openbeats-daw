@@ -55,7 +55,7 @@ public class UserManagementService implements UserDetailsService {
         user.setVerificationCode(randomCode);
 
         User savedUser= userRepository.save(user);
-        sendVerificationEmail(user,siteURL);
+        //sendVerificationEmail(user,siteURL);
         return savedUser;
 
     }
