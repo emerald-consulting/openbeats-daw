@@ -116,7 +116,7 @@ function AudioPlayer({
           regions: [
             {
               id: 1,
-              start: 2,
+              start: 0,
               end: 6,
               color: colors[Math.floor(Math.random() * 2) % 2],
               minLength: 4
@@ -558,7 +558,7 @@ function AudioPlayer({
         position={{ x: deltaPosition, y: 0 }}
       >
         {/* <Card className={classes.card } container > */}
-        <div style={{ width: `${waveWidth}px` }} container>
+        <div style={{ width: `${waveWidth}px`, borderLeft: "5px solid grey"}} container>
           {/* <Grid item  style={{width:'25%'}} className="border-right border-primary">
             <div className="p-3">
             <span>Mic</span>

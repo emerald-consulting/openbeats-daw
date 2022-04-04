@@ -232,6 +232,30 @@ public class StudioSessionController {
         return res;
     }
 
+    @PutMapping("/removeFile")
+    public boolean updateFile(@RequestParam(value = "fileName") String fileName,
+                              @RequestParam(value = "fileId") Long fileId,
+                              @RequestParam(value = "sessionId") String sessionId) throws Exception {
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        //awsStorageService.deleteFile(studioSession.getBucketName(), fileName);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        int i = 0;
+        int j = -1;
+        for (AudioTrack audioTrack: audioTracks){
+            if(audioTrack.getAudioTrackId() == fileId){
+                j = i;
+                break;
+            }
+            i++;
+        }
+        if(j != -1){
+            audioTracks.remove(j);
+            audioFileService.deleteByFileId(fileId);
+        }
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
+        return true;
+    }
+
     /*@GetMapping(value = "/download/{filename}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) {
         ByteArrayOutputStream downloadInputStream = sessionMgmtService.downloadFile(filename);
