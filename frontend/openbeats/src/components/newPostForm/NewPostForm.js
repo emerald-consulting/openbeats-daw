@@ -10,6 +10,7 @@ const NewPostForm = ({ refreshPosts }) => {
   let jwtToken = `${user.jwtToken}`;
   const [track, setTrack] = useState(null);
   const [cover, setCover] = useState(null);
+  const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -49,6 +50,10 @@ const NewPostForm = ({ refreshPosts }) => {
     setCover(event.target.files[0]);
   };
 
+  const announcementChangeHandler = (event)=>{
+    setIsAnnouncement(event.target.checked);
+  }
+
   const formSubmitHandler = async (event) => {
     event.preventDefault();
     if (isEnteredDescriptionInValid) {
@@ -67,6 +72,7 @@ const NewPostForm = ({ refreshPosts }) => {
       updatedAt: new Date(),
       bucketName: null,
       title: enteredTitle,
+      isAnnouncement: isAnnouncement
     };
 
     const formData = new FormData();
@@ -103,6 +109,7 @@ const NewPostForm = ({ refreshPosts }) => {
     resetTitle();
     resetGenre();
     resetDescription();
+    setIsAnnouncement(false);
     setTrack(null);
     setCover(null);
   };
@@ -132,7 +139,7 @@ const NewPostForm = ({ refreshPosts }) => {
       <div className={enteredDescriptionClasses}>
         <textarea
           type="text"
-          id="name"
+          id="desc"
           onChange={inputChangeHandler}
           value={enteredDescription}
           onBlur={inputBlurHandler}
@@ -143,7 +150,7 @@ const NewPostForm = ({ refreshPosts }) => {
       <div className={enteredTitleClasses} style={{ width: "45%" }}>
         <input
           type="text"
-          id="name"
+          id="title"
           onChange={enteredTitleChangeHandler}
           value={enteredTitle}
           onBlur={enteredTitleBlurHandler}
@@ -153,10 +160,11 @@ const NewPostForm = ({ refreshPosts }) => {
           <p className="error-text">required</p>
         )} */}
       </div>
+
       <div className={enteredGenreClasses} style={{ width: "45%" }}>
         <select
           type="text"
-          id="name"
+          id="genre"
           onChange={enteredGenreChangeHandler}
           value={enteredGenre}
           onBlur={enteredGenreBlurHandler}
@@ -170,23 +178,35 @@ const NewPostForm = ({ refreshPosts }) => {
           <option value="House">House</option>
         </select>
       </div>
-      <div className="form-control">
-        <label htmlFor="name">Upload Track</label>
+      <div className="form-control" className={classes.fileUpload}>
+        <label htmlFor="track-upload">{ track ? track.name:  "Upload track"}</label>
         <input
           type="file"
-          id="file-upload"
+          id="track-upload"
           accept="audio/*"
           onChange={trackChangeHandler}
         />
       </div>
-      <div className="form-control">
-        <label htmlFor="name">Upload Cover</label>
+
+      <div className="form-control" className={classes.fileUpload}>
+        <label htmlFor="cover-upload">{ cover ? cover.name:  "Upload Cover"}</label>
         <input
           type="file"
-          id="file-upload"
+          id="cover-upload"
           accept="image/*"
           onChange={coverChangeHandler}
         />
+      </div>
+      <div className="form-control" className={classes.checkbox}>
+      <label>Announcement?
+        <input
+          type="checkbox"
+          id="announcement"
+          onChange={announcementChangeHandler}
+          checked={isAnnouncement}
+        />
+        <span className={classes.checkmark}></span>
+        </label>
       </div>
       <div className="form-actions">
         <button
