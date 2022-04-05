@@ -10,6 +10,7 @@ const Playlist = (props) =>{
 
 return(
     <div style={{overflow: "auto"}}>
+    <h2 className="mb-1" style={{color: "#000"}}>Queue</h2>
     {
         items.map(item=> <PlaylistItem key={item.postId} details={item}/>)
     }

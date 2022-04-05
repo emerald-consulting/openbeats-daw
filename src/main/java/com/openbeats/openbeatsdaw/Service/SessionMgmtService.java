@@ -224,13 +224,14 @@ public class SessionMgmtService {
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
 
         String newFileName = awsStorageService.uploadFile(file,bucketName);
-        audioFileService.saveAudioFileDetails(newFileName,email,"mp3",sessionId,owner);
+        File fileDetails = audioFileService.saveAudioFileDetails(newFileName,email,"mp3",sessionId,owner);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);
         audioTrack.setFile(newFileName);
         audioTrack.setOwner(owner);
         audioTracks.add(audioTrack);
+        audioTrack.setAudioTrackId(fileDetails.getFileId());
         log.info("Storing audio tracks in session");
         SessionStorage.getInstance().setStudioSession(studioSession);
 

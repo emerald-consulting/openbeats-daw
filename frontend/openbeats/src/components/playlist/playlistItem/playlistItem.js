@@ -1,7 +1,7 @@
 import soundImg from "../../sound.jpeg";
-import CancelIcon from "@material-ui/icons/Cancel";
 import { useContext } from "react";
 import PlaylistContext from "../../../model/playlist-store/playlist-context";
+import classes from './PlaylistItem.module.css';
 
 const PlaylistItem = ({ details }) => {
   const playlistCntxt = useContext(PlaylistContext);
@@ -11,28 +11,32 @@ const PlaylistItem = ({ details }) => {
   };
   return (
     <>
-      <div style={{ borderBottom: "1px grey solid" }}>
-        <div style={{ display: "inline-flex" }}>
+      <div style={{paddingBottom: "5px" }}>
+      <div style={{display: "flex", alignItems: "center"}}>
           <img
             src={details.pictureFileName || soundImg}
-            style={{ maxHeight: "120px", width: "30%" }}
+            className={classes.image}
+            style={{ height: "40px", width: "40px", borderRadius: "10px" }}
           ></img>
-          <strong className="mt-2 ml-2 font-weight-bold">
-            <h2>{details.title}</h2>
-          </strong>
-        </div>
+        <span className={classes.songDetails}>
+        <strong>{details.title}</strong><br/>
+          <a>{`${details.firstName} ${details.lastName}`}</a><br/>
+        </span>
         <button
           style={{
-            border: "1px solid grey",
             borderRadius: "1em",
             background: "grey",
             color: "#ffff",
+            marginLeft: "auto",
+            height: "25px",
+            width: "30px",
           }}
-          className="float-right px-2 mt-3"
+          className="px-2"
           onClick={removeFromPlaylist}
         >
           &#x2715;
         </button>
+        </div>
       </div>
     </>
   );

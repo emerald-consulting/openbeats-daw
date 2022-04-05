@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useContext } from "react";
+import React, { useEffect, useRef, useState, useContext, useLayoutEffect } from "react";
 import * as WaveSurfer from "wavesurfer.js";
 import * as Region from "wavesurfer.js/dist/plugin/wavesurfer.regions";
 import { uuid } from "uuidv4";
@@ -17,6 +17,10 @@ import Grid from "@material-ui/core/Grid";
 
 import { UserContext } from "../../../../../model/user-context/UserContext";
 import Draggable from "react-draggable";
+import { useLocation } from "react-router";
+import axios from "axios";
+import { url } from "../../../../../utils/constants";
+
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -68,11 +72,11 @@ function AudioPlayer({
   cropRegion,
   updateFileOffsets,
   fileId,
-  initOffset
+  initOffset,
+  volume
 }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
-  const [volume, setVolume] = useState(1);
   const [loopStyle, setLoopStyle] = useState(false);
   const [waveWidth, setWaveWidth] = useState(1000);
   const [deltaPosition, setDeltaPosition] = useState(0);
@@ -81,11 +85,9 @@ function AudioPlayer({
   const maxDuration = _audio ? _audio.maxDuration : -1;
   const dispatch2 = useDispatch();
   var isLoop = false;
-
-  const handleVolumeChange = (e, v) => {
-    setVolume(v);
-    wavesurfer.current.setVolume(v);
-  };
+  const search = useLocation().search;
+  const sessionId = new URLSearchParams(search).get("sessionId");
+  let token = localStorage.getItem("auth-token");
 
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -103,15 +105,16 @@ function AudioPlayer({
       width: 50,
       fillParent: true,
       scrollParent: false,
-      minPxPerSec: 100,
+      minPxPerSec: 30,
       plugins: [
         Region.create({
           regions: [
             {
               id: 1,
-              start: 2,
-              end: 4,
-              color: colors[Math.floor(Math.random() * 2) % 2],
+              start: 0,
+              end: 6,
+              // color: colors[Math.floor(Math.random() * 2) % 2],
+              minLength: 4
             },
           ],
         }),
@@ -137,7 +140,6 @@ function AudioPlayer({
     }, 150);
 
     wavesurfer.current.on("play", () => setIsPlaying(true));
-    // wavesurfer.current.on("pause", () => setIsPlaying(false));
     window.addEventListener("resize", handleResize, false);
   }, []);
 
@@ -183,13 +185,17 @@ function AudioPlayer({
   }, [zoom]);
 
   useEffect(() => {
-    console.log("stopPlaying", stopPlaying);
     wavesurfer.current.stop();
   }, [stopPlaying]);
 
   useEffect(() => {
-    console.log("playRegion", playRegion);
-    if (playRegion) wavesurfer.current.regions.list[1].play();
+    if (playRegion) {
+      var region = wavesurfer.current.regions.list[1];
+      if(region.end - region.start > 1){
+        wavesurfer.current.regions.list[1].play()
+      }else
+      wavesurfer.current.play();
+    }
   }, [playRegion]);
 
   useEffect(() => {
@@ -201,6 +207,11 @@ function AudioPlayer({
     console.log("cutRegion", cutRegion);
     if (cutRegion) cut();
   }, [cutRegion]);
+
+  useEffect(() => {
+    if(volume)
+    wavesurfer.current.setVolume(volume);
+  }, [volume]);
 
   const togglePlayback = () => {
     if (!isPlaying) {
@@ -253,7 +264,6 @@ function AudioPlayer({
     wavesurfer.current.on("finish", function () {
       if (isLoop) {
         wavesurfer.current.play();
-        //            isPlaying=true;
       }
     });
   }
@@ -341,93 +351,84 @@ function AudioPlayer({
   }
 
   function cut() {
-    /*
-    ---------------------------------------------
-    The function will take the buffer used to create the waveform and will
-    create
-    a new blob with the selected area from the original blob using the
-    offlineAudioContext
-    */
+    try {
+      var selection = wavesurfer.current.regions.list[1];
+      let instance = wavesurfer.current;
 
-    // var self = this;
+      var start = selection.start;
+      var end = selection.end;
 
-    var selection = wavesurfer.current.regions.list[1];
-    let instance = wavesurfer.current;
+      var originalAudioBuffer = instance.backend.buffer;
 
-    var start = selection.start;
-    var end = selection.end;
-
-    var originalAudioBuffer = instance.backend.buffer;
-
-    var lengthInSamples = Math.floor(
-      (end - start) * originalAudioBuffer.sampleRate
-    );
-    if (!window.OfflineAudioContext) {
-      if (!window.webkitOfflineAudioContext) {
-        // $('#output').append('failed : no audiocontext found, change browser');
-        alert("webkit context not found");
+      var lengthInSamples = Math.floor(
+        (end - start) * originalAudioBuffer.sampleRate
+      );
+      if (!window.OfflineAudioContext) {
+        if (!window.webkitOfflineAudioContext) {
+          alert("webkit context not found");
+        }
+        window.OfflineAudioContext = window.webkitOfflineAudioContext;
       }
-      window.OfflineAudioContext = window.webkitOfflineAudioContext;
-    }
-    // var offlineAudioContext = new OfflineAudioContext(1, 2,originalAudioBuffer.sampleRate );
-    var offlineAudioContext = instance.backend.ac;
+      var offlineAudioContext = instance.backend.ac;
 
-    var emptySegment = offlineAudioContext.createBuffer(
-      originalAudioBuffer.numberOfChannels,
-      lengthInSamples,
-      originalAudioBuffer.sampleRate
-    );
-
-    var newAudioBuffer = offlineAudioContext.createBuffer(
-      originalAudioBuffer.numberOfChannels,
-      start === 0
-        ? originalAudioBuffer.length - emptySegment.length
-        : originalAudioBuffer.length,
-      originalAudioBuffer.sampleRate
-    );
-
-    for (
-      var channel = 0;
-      channel < originalAudioBuffer.numberOfChannels;
-      channel++
-    ) {
-      var new_channel_data = newAudioBuffer.getChannelData(channel);
-      var empty_segment_data = emptySegment.getChannelData(channel);
-      var original_channel_data = originalAudioBuffer.getChannelData(channel);
-
-      var before_data = original_channel_data.subarray(
-        0,
-        start * originalAudioBuffer.sampleRate
-      );
-      var mid_data = original_channel_data.subarray(
-        start * originalAudioBuffer.sampleRate,
-        end * originalAudioBuffer.sampleRate
-      );
-      var after_data = original_channel_data.subarray(
-        Math.floor(end * originalAudioBuffer.sampleRate),
-        originalAudioBuffer.length * originalAudioBuffer.sampleRate
+      var emptySegment = offlineAudioContext.createBuffer(
+        originalAudioBuffer.numberOfChannels,
+        lengthInSamples,
+        originalAudioBuffer.sampleRate
       );
 
-      empty_segment_data.set(mid_data.slice());
-      if (start > 0) {
-        new_channel_data.set(before_data.slice());
-        new_channel_data.set(
-          after_data.slice(),
-          start * newAudioBuffer.sampleRate
+      var newAudioBuffer = offlineAudioContext.createBuffer(
+        originalAudioBuffer.numberOfChannels,
+        start === 0
+          ? originalAudioBuffer.length - emptySegment.length
+          : originalAudioBuffer.length,
+        originalAudioBuffer.sampleRate
+      );
+
+      for (
+        var channel = 0;
+        channel < originalAudioBuffer.numberOfChannels;
+        channel++
+      ) {
+        var new_channel_data = newAudioBuffer.getChannelData(channel);
+        var empty_segment_data = emptySegment.getChannelData(channel);
+        var original_channel_data = originalAudioBuffer.getChannelData(channel);
+
+        var before_data = original_channel_data.subarray(
+          0,
+          start * originalAudioBuffer.sampleRate
         );
-      } else {
-        new_channel_data.set(after_data.slice());
-      }
-    }
-    // return {
-    //     newAudioBuffer,
-    //     cutSelection:emptySegment
-    // }
+        var mid_data = original_channel_data.subarray(
+          start * originalAudioBuffer.sampleRate,
+          end * originalAudioBuffer.sampleRate
+        );
+        var after_data = original_channel_data.subarray(
+          Math.floor(end * originalAudioBuffer.sampleRate),
+          originalAudioBuffer.length * originalAudioBuffer.sampleRate
+        );
 
-    instance.loadDecodedBuffer(newAudioBuffer);
+        empty_segment_data.set(mid_data.slice());
+        if (start > 0) {
+          new_channel_data.set(before_data.slice());
+          new_channel_data.set(
+            after_data.slice(),
+            start * newAudioBuffer.sampleRate
+          );
+        } else {
+          new_channel_data.set(after_data.slice());
+        }
+      }
+      // instance.loadDecodedBuffer(newAudioBuffer);
+      const newMpeg = bufferToWave(newAudioBuffer, 0, newAudioBuffer.length);
+      const _file = new File([newMpeg], "cropped.mp3");
+      updateFile(_file);
+    } catch (e) {
+      console.log(e);
+      window.location.reload(true);
+    }
   }
 
-  function copy() {
+  const copy =async ()=> {
     try {
       var region = wavesurfer.current.regions.list[1];
       let instance = wavesurfer.current;
@@ -447,7 +448,10 @@ function AudioPlayer({
         );
         emptySegmentData.set(mid_data, 0);
       }
-      instance.loadDecodedBuffer(emptySegment);
+      // instance.loadDecodedBuffer(emptySegment);
+      const newMpeg = bufferToWave(emptySegment, 0, emptySegment.length);
+      const _file = new File([newMpeg], "audio.mp3");
+      updateFile(_file);
     } catch (e) {
       console.log(e);
       window.location.reload(true);
@@ -513,42 +517,49 @@ function AudioPlayer({
   const dragStopHandler = () => {
     const data = {
       fileId: fileId,
-      offset: deltaPosition
-    }
+      offset: deltaPosition,
+    };
     updateFileOffsets(data);
-  }
+  };
 
   useEffect(() => {
-    console.log("initOffset effect", initOffset)
+    console.log("initOffset effect", initOffset);
     setDeltaPosition(initOffset);
   }, [initOffset]);
-  
+
+  const updateFile = (file) => {
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    formData.append("fileId", fileId);
+
+    formData.append("sessionId", sessionId);
+
+    axios.put(url + "/updateFile", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+  };
 
   return (
     <>
-      <Draggable axis="x" bounds={{left: 0}} onDrag={handleDrag} onStop ={dragStopHandler} position={{x: deltaPosition, y: 0}}>
-        {/* <Card className={classes.card } container > */}
-        <div style={{ width: `${waveWidth}px` }} container>
-          {/* <Grid item  style={{width:'25%'}} className="border-right border-primary">
-            <div className="p-3">
-            <span>Mic</span>
-            <span className="float-right">{owner?owner:state.user.firstName}</span>
-            </div>
-            <Grid container item className={classes.buttons}>
-              <VolumeDown className="mt-2"/>
-                <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01} className={classes.slider}/>
-                <div>{transportPlayButton}</div>
-                <IconButton onClick={stopPlayback}>
-                  <StopIcon className={classes.icon} />
-                </IconButton>
-                <IconButton  onClick={setLoop} >
-                    {loopStyle? <LoopIcon style={{color:'blue'}} />: <LoopIcon/> }
-                </IconButton>
-            </Grid>
-          </Grid> */}
+      <Draggable
+        axis="x"
+        bounds={{ left: 0 }}
+        onDrag={handleDrag}
+        onStop={dragStopHandler}
+        position={{ x: deltaPosition, y: 0 }}
+      >
+        <div style={{ width: `${waveWidth}px`, borderLeft: "5px solid grey"}} container>
           <Grid item id={wavesurferId} className={classes.scroll + " mt-5"} />
         </div>
-        {/* </Card> */}
       </Draggable>
     </>
   );

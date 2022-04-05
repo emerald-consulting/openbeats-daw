@@ -48,8 +48,9 @@ const MainHeader = (props) => {
   };
 
   const logout = () => {
-    localStorage.setItem("auth-token", "");
-    localStorage.setItem("emailId", "");
+    localStorage.removeItem("auth-token");
+    localStorage.removeItem("emailId");
+    localStorage.removeItem("playlist");
     window.location.href = "/login";
   };
 

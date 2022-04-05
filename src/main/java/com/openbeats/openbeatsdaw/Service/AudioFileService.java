@@ -20,7 +20,7 @@ public class AudioFileService {
     @Autowired
     SessionMgmtService sessionMgmtService;
 
-    public boolean saveAudioFileDetails(String fileName,String userEmail,String fileType,String joinCode,String owner){
+    public File saveAudioFileDetails(String fileName, String userEmail, String fileType, String joinCode, String owner){
         Session session=sessionMgmtService.findSessionByjoinCode(joinCode);
         File file=new File();
         file.setFileName(fileName);
@@ -28,9 +28,17 @@ public class AudioFileService {
         file.setFileType(fileType);
         file.setUserEmail(userEmail);
         file.setArtist_name(owner);
-        fileRepository.save(file);
+        File res = fileRepository.save(file);
 
-    return true;
+    return res;
+    }
+
+    public boolean updateAudioFileDetails(Long fileId, String fileName){
+
+        File fileDetails = fileRepository.getById(fileId);
+        fileDetails.setFileName(fileName);
+        fileRepository.save(fileDetails);
+        return true;
     }
 
     public boolean updateAudioFileOffset(Long fileId, Integer offset){
@@ -52,5 +60,8 @@ public class AudioFileService {
         return fileRepository.findAllBySessionId(sessionId);
     }
 
-
+    public boolean deleteByFileId(Long fileId) {
+        fileRepository.deleteById(fileId);
+        return true;
+    }
 }

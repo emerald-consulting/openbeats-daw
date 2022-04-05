@@ -198,7 +198,14 @@ public class StudioSessionController {
 
 
         StudioSession studioSession2 = sessionMgmtService.getStudioSession(request.getSessionId());
-        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + request.getSessionId(), studioSession2);
+        StudioSessionResponse studioSessionResponse = new StudioSessionResponse();
+        studioSessionResponse.setSessionId(studioSession.getSessionId());
+        studioSessionResponse.setSessionName(studioSession.getSessionName());
+        studioSessionResponse.setParticipants(studioSession.getParticipants());
+        studioSessionResponse.setAudioTracks(studioSession.getAudioTracks());
+        studioSessionResponse.setBucketName(studioSession.getBucketName());
+        studioSessionResponse.setNoRefresh(true);
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + request.getSessionId(), studioSessionResponse);
         return true;
     }
 
@@ -206,6 +213,47 @@ public class StudioSessionController {
     public List<File> getFileOffsets(@RequestParam("sessionId") Long sessionId) throws Exception {
         List<File> files = audioFileService.findAllFilesInSession(sessionId);
         return files;
+    }
+
+    @PutMapping("/updateFile")
+    public boolean updateFile(@RequestParam(value = "file") MultipartFile file,
+                                 @RequestParam(value = "fileId") Long fileId,
+                                 @RequestParam(value = "sessionId") String sessionId) throws Exception {
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        String fileName = awsStorageService.uploadFile(file, studioSession.getBucketName());
+        boolean res = audioFileService.updateAudioFileDetails(fileId, fileName);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        audioTracks.forEach(audioTrack -> {
+            if(audioTrack.getAudioTrackId() == fileId){
+                audioTrack.setFile(fileName);
+            }
+        });
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
+        return res;
+    }
+
+    @PutMapping("/removeFile")
+    public boolean updateFile(@RequestParam(value = "fileName") String fileName,
+                              @RequestParam(value = "fileId") Long fileId,
+                              @RequestParam(value = "sessionId") String sessionId) throws Exception {
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        //awsStorageService.deleteFile(studioSession.getBucketName(), fileName);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        int i = 0;
+        int j = -1;
+        for (AudioTrack audioTrack: audioTracks){
+            if(audioTrack.getAudioTrackId() == fileId){
+                j = i;
+                break;
+            }
+            i++;
+        }
+        if(j != -1){
+            audioTracks.remove(j);
+            audioFileService.deleteByFileId(fileId);
+        }
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
+        return true;
     }
 
     /*@GetMapping(value = "/download/{filename}")

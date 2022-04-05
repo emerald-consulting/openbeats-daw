@@ -8,6 +8,7 @@ import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.PostDTO;
 import com.openbeats.openbeatsdaw.model.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,9 +51,15 @@ public class PostController {
 
     @GetMapping("/getPosts/{pageNo}")
     @ResponseBody
-    public List<Post> getPosts(@PathVariable("pageNo") int pageNo, @RequestHeader (name="Authorization") String token) {
+    public Page<Post> getPosts(@PathVariable("pageNo") int pageNo, @RequestHeader (name="Authorization") String token) {
         Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
         return postService.getPosts(currentUser.get().getUserid(), pageNo);
+    }
+
+    @GetMapping("/getTrending")
+    @ResponseBody
+    public List<Post> getTrending() {
+        return postService.getTrending();
     }
 
 }
