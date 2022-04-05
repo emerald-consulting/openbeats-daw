@@ -152,9 +152,10 @@ function Tracks() {
   };
 
   const changeBarStartHandler = (event) => {
-    setBarOffset(event.clientX);
-    setplayHeadPos(event.clientX);
-    steps = (6 * event.clientX) / 30;
+    const offset = event.clientX - 250;
+    setBarOffset(offset);
+    setplayHeadPos(offset);
+    steps = (6 * offset)/ 30;
   };
 
   const [state, dispatch] = useContext(UserContext);
