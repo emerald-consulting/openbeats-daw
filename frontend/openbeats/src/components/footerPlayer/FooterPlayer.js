@@ -1,23 +1,31 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
-import soundImg from '../sound.jpeg';
-import classes from './FooterPlayer.module.css'
+import soundImg from "../sound.jpeg";
+import classes from "./FooterPlayer.module.css";
 
 const FooterPlayer = (props) => {
   const addedClasses = props.className;
   const playlistCntxt = useContext(PlaylistContext);
   const [currentPlayingIndex, setCurrentPlayingIndex] = useState(0);
-  const {items} = playlistCntxt;
-  const currentlyPlayingSong = items.length>0 ? items[currentPlayingIndex]: null;
+  const { items } = playlistCntxt;
+  const currentlyPlayingSong =
+    items.length > 0 ? items[currentPlayingIndex] : null;
 
-  const songEndHandler = ()=>{
-    console.log("end Handler")
-    if(items.length > currentPlayingIndex + 1){
-      setCurrentPlayingIndex(()=>currentPlayingIndex + 1);
+  useEffect(() => {
+    let playlist = JSON.parse(localStorage.getItem("playlist") || "[]");
+    if (!items.length && playlist.length) {
+      playlistCntxt.addMultipleItem(playlist);
     }
-  }
+  }, []);
+
+  const songEndHandler = () => {
+    console.log("end Handler");
+    if (items.length > currentPlayingIndex + 1) {
+      setCurrentPlayingIndex(() => currentPlayingIndex + 1);
+    }
+  };
 
   return (
     <div
@@ -31,7 +39,7 @@ const FooterPlayer = (props) => {
       }}
     >
       <AudioPlayer
-        src={currentlyPlayingSong? currentlyPlayingSong.trackFileName : ''}
+        src={currentlyPlayingSong ? currentlyPlayingSong.trackFileName : ""}
         onPlay={(e) => console.log("onPlay")}
         onEnded={songEndHandler}
         autoPlayAfterSrcChange
@@ -44,28 +52,27 @@ const FooterPlayer = (props) => {
         }}
         customAdditionalControls={[]}
         layout="horizontal-reverse"
-        customControlsSection={ [
-          currentlyPlayingSong && <div style={{display: "flex", alignItems: "center"}}>
-          <img
-            src={currentlyPlayingSong.pictureFileName || soundImg}
-            className={classes.image}
-            style={{ height: "60px", width: "60px", borderRadius: "10px" }}
-          ></img>
-        <span className={classes.songDetails}>
-        <strong>{currentlyPlayingSong.title}</strong><br/>
-          <a>{`${currentlyPlayingSong.firstName} ${currentlyPlayingSong.lastName}`}</a><br/>
-        </span>
-        </div>,
+        customControlsSection={[
+          currentlyPlayingSong && (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <img
+                src={currentlyPlayingSong.pictureFileName || soundImg}
+                className={classes.image}
+                style={{ height: "60px", width: "60px", borderRadius: "10px" }}
+              ></img>
+              <span className={classes.songDetails}>
+                <strong>{currentlyPlayingSong.title}</strong>
+                <br />
+                <a>{`${currentlyPlayingSong.firstName} ${currentlyPlayingSong.lastName}`}</a>
+                <br />
+              </span>
+            </div>
+          ),
           RHAP_UI.ADDITIONAL_CONTROLS,
           RHAP_UI.MAIN_CONTROLS,
           RHAP_UI.VOLUME_CONTROLS,
         ]}
-        customProgressBarSection={
-          [
-            RHAP_UI.PROGRESS_BAR,
-            RHAP_UI.CURRENT_TIME,
-          ]
-        }
+        customProgressBarSection={[RHAP_UI.PROGRESS_BAR, RHAP_UI.CURRENT_TIME]}
         // other props here
       />
     </div>

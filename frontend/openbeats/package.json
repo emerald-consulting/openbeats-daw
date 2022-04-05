@@ -37,6 +37,7 @@
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.4",
     "react-h5-audio-player": "^3.8.3",
+    "react-hashtag": "^2.1.2",
     "react-howler": "^5.2.0",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loading-overlay": "^1.0.1",
