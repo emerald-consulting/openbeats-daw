@@ -5,6 +5,7 @@ const PlaylistContext = React.createContext({
   addItem: (item) => {},
   removeItem: (id) => {},
   addItemAtFirst: (item) => {},
+  addMultipleItem: (items) => {}
 });
 
 export default PlaylistContext;

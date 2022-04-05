@@ -51,7 +51,6 @@ const PostList = ({ uriParam }) => {
 
   return (
     <LoadingOverlay active={isLoading} spinner>
-      {!isLoading &&
       <div div = "scrollableDiv">
       <InfiniteScroll
         dataLength={posts.length}
@@ -66,7 +65,7 @@ const PostList = ({ uriParam }) => {
         }
         refreshFunction={refreshHandler}
         pullDownToRefresh
-        pullDownToRefreshThreshold={50}
+        pullDownToRefreshThreshold={30}
         pullDownToRefreshContent={
           <h3 style={{ textAlign: "center" }}>&#8595; Pull down to refresh</h3>
         }
@@ -79,7 +78,7 @@ const PostList = ({ uriParam }) => {
           <SocialPost key={posts.userId} details={p} />
         ))}
       </InfiniteScroll>
-      </div>}
+      </div>
       </LoadingOverlay>
   );
 };

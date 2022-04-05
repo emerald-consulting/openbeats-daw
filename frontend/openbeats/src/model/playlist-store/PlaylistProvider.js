@@ -6,14 +6,22 @@ const defaultState = { items: [] };
 const playlistReducer = (state, action) => {
   if (action.type === "ADD") {
     const updatedItems = state.items.concat(action.value);
+    localStorage.setItem("playlist", JSON.stringify(updatedItems))
     return { items: updatedItems };
   }
   if (action.type === "ADD_FIRST") {
     const updatedItems = [action.value].concat(state.items);
+    localStorage.setItem("playlist",JSON.stringify(updatedItems))
+    return { items: updatedItems };
+  }
+  if (action.type === "ADD_MULTIPLE") {
+    const updatedItems = state.items.concat(...action.value);
+    localStorage.setItem("playlist",JSON.stringify(updatedItems));
     return { items: updatedItems };
   }
   if (action.type === "REMOVE") {
     const updatedItems = state.items.filter(item => item !== action.value);
+    localStorage.setItem("playlist",JSON.stringify(updatedItems))
     return { items: updatedItems};
   }
   return defaultState;
@@ -24,6 +32,10 @@ const PlaylistProvider = (props) => {
 
   const addItemToPlaylistHandler = (item) => {
     playlistDispatch({ type: "ADD", value: item });
+  };
+
+  const addItemsToPlaylistHandler = (item) => {
+    playlistDispatch({ type: "ADD_MULTIPLE", value: item });
   };
 
   const addItemAtFirstPlaylistHandler = (item) => {
@@ -39,6 +51,7 @@ const PlaylistProvider = (props) => {
     addItem: addItemToPlaylistHandler,
     removeItem: removeTtemfromPlaylistHandler,
     addItemAtFirst: addItemAtFirstPlaylistHandler,
+    addMultipleItem: addItemsToPlaylistHandler,
   };
 
   return (
