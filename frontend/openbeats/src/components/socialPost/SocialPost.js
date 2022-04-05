@@ -100,7 +100,7 @@ const SocialPost = ({ details }) => {
             </div>
           </Card.Header>
 
-          <Card.Text><ReactHashtag>{details.description}</ReactHashtag></Card.Text>
+          <Card.Text className={classes.description}><ReactHashtag>{details.description}</ReactHashtag></Card.Text>
           {details.trackFileName && (
             <Tooltip title="Add to Queue">
               <button

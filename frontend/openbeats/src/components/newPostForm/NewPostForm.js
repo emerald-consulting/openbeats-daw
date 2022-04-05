@@ -5,13 +5,12 @@ import useInput from "../../hooks/use-input";
 import { url } from "../../utils/constants";
 import classes from "./newPostForm.module.css";
 
-const NewPostForm = (props) => {
-
-  const user = useSelector(_state => _state.user);
+const NewPostForm = ({ refreshPosts }) => {
+  const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
   const [track, setTrack] = useState(null);
   const [cover, setCover] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     value: enteredDescription,
@@ -19,7 +18,7 @@ const NewPostForm = (props) => {
     hasError: isEnteredDescriptionInValid,
     inputChangeHandler: inputChangeHandler,
     inputBlueHandler: inputBlurHandler,
-    reset: resetInput,
+    reset: resetDescription,
   } = useInput((value) => true);
 
   const {
@@ -42,17 +41,13 @@ const NewPostForm = (props) => {
 
   let isFormValid = false;
 
-  if (!isEnteredTitleInValid) {
-    isFormValid = true;
-  }
+  const trackChangeHandler = (event) => {
+    setTrack(event.target.files[0]);
+  };
 
-  const trackChangeHandler = (event)=>{
-    setTrack(event.target.files[0])
-  }
-
-  const coverChangeHandler = (event)=>{
-    setCover(event.target.files[0])
-  }
+  const coverChangeHandler = (event) => {
+    setCover(event.target.files[0]);
+  };
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
@@ -71,16 +66,12 @@ const NewPostForm = (props) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       bucketName: null,
-      title: enteredTitle
-    }
+      title: enteredTitle,
+    };
 
     const formData = new FormData();
-    formData.append(
-      'json', JSON.stringify(json)
-    );
-    formData.append(
-      'picture', cover
-    );
+    formData.append("json", JSON.stringify(json));
+    formData.append("picture", cover);
     let _file = null;
     if (track && track.blob) {
       _file = new File([track.blob], "audio.mp3");
@@ -89,23 +80,35 @@ const NewPostForm = (props) => {
     } else {
       _file = track;
     }
+    setIsLoading(true);
 
-    formData.append(
-      'track', _file
-    );
+    formData.append("track", _file);
 
-    const res =   await  axios.post(url+"/post", formData,{headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      "Access-Control-Allow-Headers" : "Content-Type",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-      'Authorization': 'Bearer '+ jwtToken
-  }})
-    console.log(enteredDescription);
-    resetInput();
+    const res = await axios.post(url + "/post", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+    clearForm();
+    setIsLoading(false);
+    refreshPosts();
+  };
+
+  const clearForm = () => {
     resetTitle();
     resetGenre();
+    resetDescription();
+    setTrack(null);
+    setCover(null);
+  };
+
+  const cancelHandler = () => {
+    clearForm();
   };
 
   const enteredDescriptionClasses = isEnteredDescriptionInValid
@@ -116,10 +119,13 @@ const NewPostForm = (props) => {
     ? "form-control invalid"
     : "form-control";
 
-    const enteredGenreClasses = isenteredGenreInValid
+  const enteredGenreClasses = isenteredGenreInValid
     ? "form-control invalid"
     : "form-control";
-    
+
+  if (!isEnteredTitleInValid && isEnteredTitleTouched) {
+    isFormValid = true;
+  }
 
   return (
     <form onSubmit={formSubmitHandler} className={classes.new}>
@@ -134,7 +140,7 @@ const NewPostForm = (props) => {
           rows="4"
         />
       </div>
-      <div className={enteredTitleClasses} style={{width: '45%'}}>
+      <div className={enteredTitleClasses} style={{ width: "45%" }}>
         <input
           type="text"
           id="name"
@@ -147,7 +153,7 @@ const NewPostForm = (props) => {
           <p className="error-text">required</p>
         )} */}
       </div>
-      <div className={enteredGenreClasses} style={{width:"45%"}}>
+      <div className={enteredGenreClasses} style={{ width: "45%" }}>
         <select
           type="text"
           id="name"
@@ -155,15 +161,17 @@ const NewPostForm = (props) => {
           value={enteredGenre}
           onBlur={enteredGenreBlurHandler}
         >
-           <option value="null" hidden>Select Genre</option>
-           <option value="R&B">R&B</option>
-           <option value="Hip Hop">Hip Hop</option>
-           <option value="Country">Country</option>
-           <option value="House">House</option>
-          </select>
+          <option value="null" hidden>
+            Select Genre
+          </option>
+          <option value="R&B">R&B</option>
+          <option value="Hip Hop">Hip Hop</option>
+          <option value="Country">Country</option>
+          <option value="House">House</option>
+        </select>
       </div>
       <div className="form-control">
-      <label htmlFor="name">Upload Track</label>
+        <label htmlFor="name">Upload Track</label>
         <input
           type="file"
           id="file-upload"
@@ -172,7 +180,7 @@ const NewPostForm = (props) => {
         />
       </div>
       <div className="form-control">
-      <label htmlFor="name">Upload Cover</label>
+        <label htmlFor="name">Upload Cover</label>
         <input
           type="file"
           id="file-upload"
@@ -181,11 +189,19 @@ const NewPostForm = (props) => {
         />
       </div>
       <div className="form-actions">
-      <button type="button" disabled={!isFormValid} className={classes.secondary}>
-          Back
+        <button
+          type="button"
+          className={classes.secondary}
+          onClick={cancelHandler}
+        >
+          Cancel
         </button>
-        <button type="submit">
-          Post
+        <button
+          type="submit"
+          className={classes.submitButton}
+          disabled={!isFormValid || isLoading}
+        >
+          Post{isLoading ? "..." : null}
         </button>
       </div>
     </form>
