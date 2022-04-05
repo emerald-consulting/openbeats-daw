@@ -8,6 +8,10 @@ const playlistReducer = (state, action) => {
     const updatedItems = state.items.concat(action.value);
     return { items: updatedItems };
   }
+  if (action.type === "ADD_FIRST") {
+    const updatedItems = [action.value].concat(state.items);
+    return { items: updatedItems };
+  }
   if (action.type === "REMOVE") {
     const updatedItems = state.items.filter(item => item !== action.value);
     return { items: updatedItems};
@@ -19,8 +23,11 @@ const PlaylistProvider = (props) => {
   const [playlistState, playlistDispatch] = useReducer(playlistReducer, defaultState);
 
   const addItemToPlaylistHandler = (item) => {
-    console.log("HEREEEEEE DSPATCH");
     playlistDispatch({ type: "ADD", value: item });
+  };
+
+  const addItemAtFirstPlaylistHandler = (item) => {
+    playlistDispatch({ type: "ADD_FIRST", value: item });
   };
 
   const removeTtemfromPlaylistHandler = (id) => {
@@ -31,6 +38,7 @@ const PlaylistProvider = (props) => {
     items: playlistState.items,
     addItem: addItemToPlaylistHandler,
     removeItem: removeTtemfromPlaylistHandler,
+    addItemAtFirst: addItemAtFirstPlaylistHandler,
   };
 
   return (
