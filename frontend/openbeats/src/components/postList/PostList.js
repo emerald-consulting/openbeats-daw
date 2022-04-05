@@ -58,7 +58,7 @@ const PostList = ({ uriParam, refresh }) => {
 
   return (
     <LoadingOverlay active={isLoading} spinner>
-      <div div="scrollableDiv">
+      <div div="scrollablePosts">
         <InfiniteScroll
           dataLength={posts.length}
           next={nextHandler}

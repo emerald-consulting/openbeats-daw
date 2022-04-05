@@ -27,7 +27,9 @@ const PlaylistItem = ({ details }) => {
             borderRadius: "1em",
             background: "grey",
             color: "#ffff",
-            marginLeft: "auto"
+            marginLeft: "auto",
+            height: "25px",
+            width: "30px",
           }}
           className="px-2"
           onClick={removeFromPlaylist}
