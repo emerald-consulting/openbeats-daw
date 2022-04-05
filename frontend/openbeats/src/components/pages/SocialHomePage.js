@@ -2,6 +2,7 @@ import { useState } from "react";
 import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
 import PostList from "../postList/PostList";
+import TrendingList from "../trendingList/TrendingList";
 import classes from "./SocialHomePage.module.css";
 
 const SocialHomePage = () => {
@@ -29,7 +30,9 @@ const SocialHomePage = () => {
         </div>
         <div className={classes.rightpane}>
           <div className={classes.splitScreen}>
-            <div className={classes.topPane}>Suggestions/ Trending</div>
+            <div className={classes.topPane}>
+              <TrendingList/>
+            </div>
             <div className={classes.bottomPane}>
               Newly Released/ Announcements
             </div>

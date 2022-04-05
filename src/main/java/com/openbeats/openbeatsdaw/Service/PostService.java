@@ -6,11 +6,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PostService {
     public Post addPost(Post post, MultipartFile track, MultipartFile picture );
 
-    boolean removePost(Long postId);
+    public boolean removePost(Long postId);
 
-    Page<Post> getPosts(Long userid, int pageNo);
+    public Page<Post> getPosts(Long userid, int pageNo);
+
+    public List<Post> getTrending();
 }
