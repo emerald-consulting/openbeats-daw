@@ -628,9 +628,10 @@ function Tracks() {
     // dispatch2(setAudioTrackOffsets([audioTr]));
   };
 
-  const handleVolumeChange = (event, v) => {
-    console.log(event.value);
-    console.log(v);
+  const handleVolumeChange = (index, value) => {
+    const temp = [...volumes];
+    temp[index] = value;
+    setVolumes(temp);
   };
 
   return (
@@ -731,10 +732,8 @@ function Tracks() {
                       max={1}
                       step={0.01}
                       style={{ width: "20%", margin: "5px" }}
-                      value={volumes[index]}
-                      onChangeCommitted={(event) =>
-                        handleVolumeChange(event, index)
-                      }
+                      value={volumes[index] != undefined ? volumes[index] : 1} 
+                      onChangeCommitted={(event, value)=>handleVolumeChange(index, value)}
                     />
                     <button
                       onClick={() => remove(index)}
@@ -804,6 +803,7 @@ function Tracks() {
                         updateFileOffsets={updadeFileOffsets}
                         fileId={session.audioTracks[index]?.audioTrackId}
                         initOffset={session.audioTracks[index]?.offset}
+                        volume = {volumes[index]}
                         seek={seekValue}
                         zoom={zoom}
                         owner={
