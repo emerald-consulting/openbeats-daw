@@ -73,10 +73,10 @@ function AudioPlayer({
   updateFileOffsets,
   fileId,
   initOffset,
+  volume
 }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
-  const [volume, setVolume] = useState(1);
   const [loopStyle, setLoopStyle] = useState(false);
   const [waveWidth, setWaveWidth] = useState(1000);
   const [deltaPosition, setDeltaPosition] = useState(0);
@@ -88,11 +88,6 @@ function AudioPlayer({
   const search = useLocation().search;
   const sessionId = new URLSearchParams(search).get("sessionId");
   let token = localStorage.getItem("auth-token");
-
-  const handleVolumeChange = (e, v) => {
-    setVolume(v);
-    wavesurfer.current.setVolume(v);
-  };
 
   const [playerReady, setPlayerReady] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -118,7 +113,7 @@ function AudioPlayer({
               id: 1,
               start: 0,
               end: 6,
-              color: colors[Math.floor(Math.random() * 2) % 2],
+              // color: colors[Math.floor(Math.random() * 2) % 2],
               minLength: 4
             },
           ],
@@ -212,6 +207,11 @@ function AudioPlayer({
     console.log("cutRegion", cutRegion);
     if (cutRegion) cut();
   }, [cutRegion]);
+
+  useEffect(() => {
+    if(volume)
+    wavesurfer.current.setVolume(volume);
+  }, [volume]);
 
   const togglePlayback = () => {
     if (!isPlaying) {
@@ -420,7 +420,7 @@ function AudioPlayer({
       }
       // instance.loadDecodedBuffer(newAudioBuffer);
       const newMpeg = bufferToWave(newAudioBuffer, 0, newAudioBuffer.length);
-      const _file = new File([newMpeg], "audio.mp3");
+      const _file = new File([newMpeg], "cropped.mp3");
       updateFile(_file);
     } catch (e) {
       console.log(e);
@@ -557,28 +557,9 @@ function AudioPlayer({
         onStop={dragStopHandler}
         position={{ x: deltaPosition, y: 0 }}
       >
-        {/* <Card className={classes.card } container > */}
         <div style={{ width: `${waveWidth}px`, borderLeft: "5px solid grey"}} container>
-          {/* <Grid item  style={{width:'25%'}} className="border-right border-primary">
-            <div className="p-3">
-            <span>Mic</span>
-            <span className="float-right">{owner?owner:state.user.firstName}</span>
-            </div>
-            <Grid container item className={classes.buttons}>
-              <VolumeDown className="mt-2"/>
-                <Slider value={volume} onChange={handleVolumeChange} min={0} max={1} step={0.01} className={classes.slider}/>
-                <div>{transportPlayButton}</div>
-                <IconButton onClick={stopPlayback}>
-                  <StopIcon className={classes.icon} />
-                </IconButton>
-                <IconButton  onClick={setLoop} >
-                    {loopStyle? <LoopIcon style={{color:'blue'}} />: <LoopIcon/> }
-                </IconButton>
-            </Grid>
-          </Grid> */}
           <Grid item id={wavesurferId} className={classes.scroll + " mt-5"} />
         </div>
-        {/* </Card> */}
       </Draggable>
     </>
   );
