@@ -6,7 +6,7 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useRef } from "react";
 import { UserContext } from "../../model/user-context/UserContext";
 import axios from "axios";
 import "./Profile.css";
@@ -18,7 +18,9 @@ const Profile = () => {
   const [state, dispatch] = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [profileUrl, setProfileUrl] = useState(null);
-  const [cover, setCover] = useState(null);
+  const [profileFile, setProfileFile] = useState(null);
+  const [coverUrl, setCoverUrl] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null);
 
@@ -41,8 +43,8 @@ const Profile = () => {
       });
   };
 
-  const getProfilePicture = async () => {
-    const res = await axios.get(url + "/getProfilePicture", {
+  const getPicture = async () => {
+    const res = await axios.get(url + "/getPicture", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -53,14 +55,14 @@ const Profile = () => {
       },
     });
     setProfileUrl(res.data.profilePictureFileName);
+    setCoverUrl(res.data.coverPictureFileName);
   };
 
-  const addProfilePicture = async (event) => {
+  const addProfilePicture = async () => {
     const formData = new FormData();
-    event.preventDefault();
-    formData.append("profilePicture", cover);
-    console.log("bhavya ", formData, cover);
-    const res = await axios.post(url + "/profilePicture", formData, {
+    formData.append("profilePicture", profileFile);
+    formData.append("coverPicture", coverFile);
+    const res = await axios.post(url + "/picture", formData, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -71,6 +73,7 @@ const Profile = () => {
       },
     });
     setProfileUrl(res.data.profilePictureFileName);
+    setCoverUrl(res.data.coverPictureFileName);
     handleClose();
   };
 
@@ -94,22 +97,48 @@ const Profile = () => {
 
   const onCrop = (preview) => {
     setPreview(preview);
-    const file = dataURLtoFile(preview, "bhavya.jpg");
-    setCover(file);
+    const profileFile = dataURLtoFile(preview, "bhavya.jpg");
+    setProfileFile(profileFile);
   };
 
   useEffect(() => {
     getPosts();
-    getProfilePicture();
+    getPicture();
   }, []);
 
   useEffect(() => {
-    getProfilePicture();
+    getPicture();
   }, [profileUrl]);
+
+  useEffect(() => {
+    addProfilePicture();
+  }, [coverFile]);
+
+  const fileRef = useRef();
+
+  const handleChange = (e) => {
+    const [file] = e.target.files;
+    const testFile = e.target.files[0];
+    setCoverFile(testFile);
+  };
 
   return (
     <div>
       <div>
+        <div>
+          <button onClick={() => fileRef.current.click()}>
+            <img src={coverUrl} style={{width:"1000px",height:"300px"}}></img>
+          </button>
+          <input
+            ref={fileRef}
+            onChange={(e) => {
+              handleChange(e);
+            }}
+            multiple={false}
+            type="file"
+            hidden
+          />
+        </div>
         <button onClick={handleClickOpen}>
           <Avatar src={profileUrl} sx={{ width: 202, height: 202 }}></Avatar>
         </button>

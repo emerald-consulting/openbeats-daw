@@ -51,9 +51,6 @@ BootstrapDialogTitle.propTypes = {
 export default function ProfilePicture(props) {
   return (
     <div>
-      <Button variant="outlined" onClick={props.handleClickOpen}>
-        Open dialog
-      </Button>
       <BootstrapDialog
         onClose={props.handleClose}
         aria-labelledby="customized-dialog-title"
@@ -63,7 +60,7 @@ export default function ProfilePicture(props) {
           id="customized-dialog-title"
           onClose={props.handleClose}
         >
-          Modal title
+          Select Profile Image
         </BootstrapDialogTitle>
         <DialogContent>
           <ProfileImage
@@ -75,7 +72,7 @@ export default function ProfilePicture(props) {
         </DialogContent>
         <DialogActions>
           <Button autoFocus onClick={props.addProfilePicture}>
-            Save changes
+            Save
           </Button>
         </DialogActions>
       </BootstrapDialog>

@@ -15,9 +15,9 @@ const ProfilePage = () => {
             <div className={classes.bottomPane}><Playlist/></div>
           </div>
         </div>
+        
         <div className={classes.middlepane}>
-          {/* <PostList uriParam="getPosts" /> */}
-          <Profile></Profile>
+          <Profile/>
         </div>
         <div className={classes.rightpane}>
           <div className={classes.splitScreen}>

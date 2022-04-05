@@ -9,11 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
 
-    public UserFetchDTO getUserDetails (Long userid);
+    public UserFetchDTO getUserDetails(Long userid);
 
-    public User uploadOrEditProfilePicture(String emailId, MultipartFile profilePictureName);
+    public User uploadOrEditPicture(String emailId, MultipartFile profilePictureName, MultipartFile coverPictureName);
 
-    public User getProfilePicture(String emailId);
-
+    public User getPicture(String emailId);
 
 }

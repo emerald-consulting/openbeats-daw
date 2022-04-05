@@ -53,6 +53,9 @@
   footer p a:hover {
     color: rgb(99, 204, 131);
   }
+  .MuiAvatar-root{
+    transform: translate(30px,-100px);
+  }
   
   @media (min-width: 1200px) {
     .container {

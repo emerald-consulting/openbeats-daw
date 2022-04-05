@@ -1,5 +1,6 @@
 import React from "react";
 import Avatar from "react-avatar-edit";
+import './Profile.css';
 
 const ProfileImage = (props) => {
   return (

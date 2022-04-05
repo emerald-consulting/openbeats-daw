@@ -24,28 +24,29 @@ public class UserController {
 
     @Autowired
     private TokenProvider tokenProvider;
-    
-    
+
     @GetMapping("/getAuthorDetails/{userId}")
     @ResponseBody
     public UserFetchDTO getPosts(@PathVariable("userId") Long userId) {
         return userService.getUserDetails(userId);
     }
 
-
-    @PostMapping("/profilePicture")
+    @PostMapping("/picture")
     @ResponseBody
-    public User addProfilePicture(@RequestParam(value = "profilePicture") MultipartFile profilePicture, @RequestHeader(name = "Authorization") String token) {
+    public User addProfilePicture(
+            @RequestParam(value = "profilePicture", required = false) MultipartFile profilePicture,
+            @RequestParam(value = "coverPicture", required = false) MultipartFile coverPicture,
+            @RequestHeader(name = "Authorization") String token) {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
-        User user = userService.uploadOrEditProfilePicture(currentUser.getEmailId(),profilePicture);
+        User user = userService.uploadOrEditPicture(currentUser.getEmailId(), profilePicture, coverPicture);
         return user;
     }
 
-    @GetMapping("/getProfilePicture")
+    @GetMapping("/getPicture")
     @ResponseBody
     public User getProfilePicture(@RequestHeader(name = "Authorization") String token) {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
-        User user = userService.getProfilePicture(currentUser.getEmailId());
+        User user = userService.getPicture(currentUser.getEmailId());
         return user;
     }
 
