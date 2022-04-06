@@ -100,6 +100,18 @@ const NewPostForm = ({ refreshPosts }) => {
         Authorization: "Bearer " + jwtToken,
       },
     });
+
+    const newReaction = await axios.post(url + "/reactions/"+res.data.postId,null, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+    // console.log("pizza ",res,newReaction)
     clearForm();
     setIsLoading(false);
     refreshPosts();

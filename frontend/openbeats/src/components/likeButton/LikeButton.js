@@ -7,25 +7,22 @@ import axios from "axios";
 import { url } from "../../utils/constants";
 
 const LikeButton = ({ details, token }) => {
+  console.log("result ",details)
   const [totalLikes, setTotalLikes] = useState(details.totalLikes);
   const [checked, setChecked] = useState(false);
   const updateReaction = (isChecked) => {
     setChecked(isChecked);
     axios
-      .put(
-        "http://localhost:5000/posts/" + details.postId + "/likes/" + isChecked,
-        null,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            Authorization: "Bearer " + token,
-          },
-        }
-      )
+      .put(url + "/posts/" + details.postId + "/likes/" + isChecked, null, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      })
       .then((response) => {
         setTotalLikes(response.data.postRef.totalLikes);
       });
@@ -43,7 +40,6 @@ const LikeButton = ({ details, token }) => {
       },
     });
     setChecked(res.data.isLike);
-    console.log("pizza ", checked);
   };
 
   useEffect(() => {

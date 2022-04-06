@@ -11,4 +11,6 @@ public interface ReactionsService {
     Reactions updateReaction(Long postId, Long userId, Boolean isLike);
 
     Reactions getReactionByPostIdAndUserId(Long postId, Long userId);
+
+    Reactions createReaction(Long postId, Long userId);
 }
