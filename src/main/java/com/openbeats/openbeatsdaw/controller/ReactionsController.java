@@ -47,4 +47,11 @@ public class ReactionsController {
         return reactionsService.updateReaction(postId, currentUser.get().getUserid(), isLike);
     }
 
+    @PostMapping("/reactions/{postId}")
+    public Reactions createReaction(@PathVariable("postId") Long postId,
+            @RequestHeader(name = "Authorization") String token) {
+        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+        return reactionsService.createReaction(postId, currentUser.get().getUserid());
+    }
+
 }

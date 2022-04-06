@@ -18,7 +18,7 @@ const SocialPost = ({ details }) => {
 
   useEffect(() => {
     getAuthorDetails();
-    getIsPostLikedByUser();
+    // getIsPostLikedByUser();
   }, []);
 
   const getAuthorDetails = async () => {
