@@ -74,7 +74,7 @@ const MainHeader = (props) => {
               className=" flex flex-row "
               to={isUserLoggedin ? "/home" : "/"}
             >
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>
@@ -86,7 +86,7 @@ const MainHeader = (props) => {
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             <Link className=" flex flex-row " to="/dashboard">
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <strong className="mt-2 ml-2">Open Beats</strong>
             </Link>
           </Typography>
