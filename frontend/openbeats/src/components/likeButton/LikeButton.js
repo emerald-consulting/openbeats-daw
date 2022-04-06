@@ -13,7 +13,7 @@ const LikeButton = ({ details, token }) => {
     setChecked(isChecked);
     axios
       .put(
-        "http://localhost:5000/posts/" + details.postId + "/likes/" + isChecked,
+        url+"/posts/" + details.postId + "/likes/" + isChecked,
         null,
         {
           headers: {
