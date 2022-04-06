@@ -13,6 +13,7 @@ import "./Profile.css";
 import { url } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
+import UserProfileForm from "./UserProfileForm";
 
 const Profile = () => {
   const [state, dispatch] = useContext(UserContext);
@@ -23,7 +24,7 @@ const Profile = () => {
   const [coverFile, setCoverFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null);
-
+  const [openUserModal, setOpenUserModal] = useState(false);
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
@@ -31,16 +32,17 @@ const Profile = () => {
   const handleClickOpen = () => {
     setOpen(true);
   };
+
   const handleClose = () => {
     setOpen(false);
   };
 
-  const getPosts = () => {
-    axios
-      .get("http://localhost:5000/posts/users/" + state.user.userid)
-      .then((response) => {
-        setPosts(response.data);
-      });
+  const handleProfileModalOpen = () => {
+    setOpenUserModal(true);
+  };
+
+  const handleProfileModalClose = () => {
+    setOpenUserModal(false);
   };
 
   const getPicture = async () => {
@@ -102,7 +104,6 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    getPosts();
     getPicture();
   }, []);
 
@@ -127,7 +128,10 @@ const Profile = () => {
       <div>
         <div>
           <button onClick={() => fileRef.current.click()}>
-            <img src={coverUrl} style={{width:"1000px",height:"300px"}}></img>
+            <img
+              src={coverUrl}
+              style={{ width: "1000px", height: "300px" }}
+            ></img>
           </button>
           <input
             ref={fileRef}
@@ -138,6 +142,14 @@ const Profile = () => {
             type="file"
             hidden
           />
+          <Button
+            onClick={handleProfileModalOpen}
+            style={{ float: "right", marginTop: "20px" }}
+          >
+            Edit Profile
+          </Button>
+          {handleProfileModalOpen?(<UserProfileForm handleClickOpen={handleProfileModalOpen}
+            handleClose={handleProfileModalClose} open={openUserModal}></UserProfileForm>):null}
         </div>
         <button onClick={handleClickOpen}>
           <Avatar src={profileUrl} sx={{ width: 202, height: 202 }}></Avatar>
