@@ -9,7 +9,7 @@ import soundImg from "../sound.jpeg";
 import Tooltip from "@mui/material/Tooltip";
 import ReactHashtag from "react-hashtag";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
-
+import LikeButton from '../likeButton/LikeButton'
 const SocialPost = ({ details }) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
@@ -132,11 +132,12 @@ const SocialPost = ({ details }) => {
               onClick={addToPlaylistAtTopHandler}
             />
           )}
-          <Card.Footer>
+          {/* <Card.Footer>
             <button style={{ marginLeft: "90%" }} onClick={likeHandler}>
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
-          </Card.Footer>
+          </Card.Footer> */}
+          <LikeButton details={details} token={token} />
         </Card>
       )}
     </>

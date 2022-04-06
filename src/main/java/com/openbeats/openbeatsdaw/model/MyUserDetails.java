@@ -20,6 +20,8 @@ public class MyUserDetails implements UserDetails {
     private boolean emailVerified;
     private Integer totalFollowers;
     private Integer totalFollowing;
+    private String profilePictureFileName;
+    private String coverPictureFileName;
     private String bio;
     private Date createdAt;
     // private File profilePicRef;
@@ -44,6 +46,22 @@ public class MyUserDetails implements UserDetails {
         this.createdAt = u.getCreatedAt();
         // this.profilePicRef = u.getProfilePicRef();
         // this.coverPicRef = u.getCoverPicRef();
+    }
+
+    public String getProfilePictureFileName() {
+        return profilePictureFileName;
+    }
+
+    public void setProfilePictureFileName(String profilePictureFileName) {
+        this.profilePictureFileName = profilePictureFileName;
+    }
+
+    public String getCoverPictureFileName() {
+        return coverPictureFileName;
+    }
+
+    public void setCoverPictureFileName(String coverPictureFileName) {
+        this.coverPictureFileName = coverPictureFileName;
     }
 
     public MyUserDetails(){
