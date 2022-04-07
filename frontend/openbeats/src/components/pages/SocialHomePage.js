@@ -33,7 +33,7 @@ const SocialHomePage = () => {
               <TrendingList/>
             </div>
             <div className={classes.bottomPane}>
-              Newly Released/ Announcements
+              Newly Released
             </div>
           </div>
         </div>

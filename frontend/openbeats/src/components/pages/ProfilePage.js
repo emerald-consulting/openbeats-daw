@@ -4,6 +4,7 @@ import PostList from "../postList/PostList";
 import classes from "./SocialHomePage.module.css";
 import Profile from "../profile/Profile"
 import { useState } from "react";
+import Announcements from "../announcements/Announcements";
 
 const ProfilePage = () => {
   const [refresh, setRefresh] = useState(0);
@@ -28,9 +29,9 @@ const ProfilePage = () => {
         </div>
         <div className={classes.rightpane}>
           <div className={classes.splitScreen}>
-            <div className={classes.topPane}>Suggestions/ Trending</div>
+            <div className={classes.topPane}>Suggestions</div>
             <div className={classes.bottomPane}>
-              Newly Released/ Announcements
+              <Announcements refresh={refresh}/>
             </div>
           </div>
         </div>
