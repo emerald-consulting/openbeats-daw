@@ -111,7 +111,6 @@ const NewPostForm = ({ refreshPosts }) => {
         Authorization: "Bearer " + jwtToken,
       },
     });
-    // console.log("pizza ",res,newReaction)
     clearForm();
     setIsLoading(false);
     refreshPosts();

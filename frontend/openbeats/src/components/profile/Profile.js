@@ -1,13 +1,5 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Typography } from "@mui/material";
 import React, { useEffect, useContext, useState, useRef } from "react";
-import { UserContext } from "../../model/user-context/UserContext";
 import axios from "axios";
 import "./Profile.css";
 import { url } from "../../utils/constants";
@@ -16,8 +8,6 @@ import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
 
 const Profile = () => {
-  const [state, dispatch] = useContext(UserContext);
-  const [posts, setPosts] = useState([]);
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -25,10 +15,10 @@ const Profile = () => {
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null);
   const [openUserModal, setOpenUserModal] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
-
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -45,6 +35,29 @@ const Profile = () => {
     setOpenUserModal(false);
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentUser({
+      ...currentUser,
+      [name]: value,
+    });
+  };
+  const updateUser = async () => {
+    console.log("pizza ", currentUser);
+    const res = await axios.put(url + "/updateUserProfile", currentUser, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    setCurrentUser(res.data);
+    handleProfileModalClose();
+  };
+
   const getPicture = async () => {
     const res = await axios.get(url + "/getPicture", {
       headers: {
@@ -56,6 +69,7 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
+    setCurrentUser(res.data);
     setProfileUrl(res.data.profilePictureFileName);
     setCoverUrl(res.data.coverPictureFileName);
   };
@@ -99,7 +113,7 @@ const Profile = () => {
 
   const onCrop = (preview) => {
     setPreview(preview);
-    const profileFile = dataURLtoFile(preview, "bhavya.jpg");
+    const profileFile = dataURLtoFile(preview, "test.jpg");
     setProfileFile(profileFile);
   };
 
@@ -123,6 +137,36 @@ const Profile = () => {
     setCoverFile(testFile);
   };
 
+  const upgradeUser = () => {
+    const formData = new FormData();
+    formData.append("email", currentUser.emailId);
+
+    axios
+      .post(url + "/upgradeUser", formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + jwtToken,
+        },
+      })
+      .then((response) => {
+        if (response) {
+          setCurrentUser({
+            ...currentUser,
+            subscriptionType: "paid",
+          });
+        }
+      });
+  };
+
+  // const saveCurrentUser = () => {
+  //   console.log("pizza ", currentUser);
+  //   handleProfileModalClose();
+  // };
+
   return (
     <div>
       <div>
@@ -143,13 +187,24 @@ const Profile = () => {
             hidden
           />
           <Button
+            variant="contained"
             onClick={handleProfileModalOpen}
             style={{ float: "right", marginTop: "20px" }}
           >
             Edit Profile
           </Button>
-          {handleProfileModalOpen?(<UserProfileForm handleClickOpen={handleProfileModalOpen}
-            handleClose={handleProfileModalClose} open={openUserModal}></UserProfileForm>):null}
+
+          {openUserModal ? (
+            <UserProfileForm
+              user={currentUser}
+              handleClickOpen={handleProfileModalOpen}
+              handleClose={handleProfileModalClose}
+              open={openUserModal}
+              handleInputChange={handleInputChange}
+              updateUser={updateUser}
+              upgradeUser={upgradeUser}
+            ></UserProfileForm>
+          ) : null}
         </div>
         <button onClick={handleClickOpen}>
           <Avatar src={profileUrl} sx={{ width: 202, height: 202 }}></Avatar>
@@ -166,8 +221,19 @@ const Profile = () => {
             addProfilePicture={addProfilePicture}
           />
         ) : null}
+        <div style={{ transform: `translate(20px, -80px)` }}>
+          <Typography sx={{ fontSize: 25, fontWeight: "bold" }}>
+            {currentUser.firstName} {currentUser.lastName}
+          </Typography>
+          <Typography sx={{ fontSize: 18, color: "#66CDAA" }}>
+            @{currentUser.username}
+          </Typography>
+          <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
+            {currentUser.bio}
+          </Typography>
+        </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         <div className="col-md-4 animated fadeIn">
           <div className="card">
             <div className="card-body">
@@ -175,47 +241,22 @@ const Profile = () => {
                 <img className="card-img-top" alt="" />
               </div>
               <h5 className="card-title">
-                {state.user.firstName} {state.user.lastName}
+                {currentUser.firstName} {currentUser.lastName}
               </h5>
               <p className="card-text">
-                @{state.user.username}
+                @{currentUser.username}
+                <br />
+              </p>
+
+              <p className="card-text">
+                {currentUser.bio}
                 <br />
               </p>
             </div>
           </div>
         </div>
       </div>
-      <hr style={{ color: "gray" }} />
-      <Button>Posts</Button>
-      <Button>Media</Button>
-      <Button>Likes</Button>
-      {posts.map((post) => (
-        <>
-          <Card sx={{ maxWidth: 345 }}>
-            <CardMedia
-              component="img"
-              height="140"
-              image="https://www.cnet.com/a/img/resize/3dc8b7091b334390110e01ac8abe2d43be9a1eb7/2017/05/07/35276ddf-5d7a-448c-9c7c-d675e3c61aa7/grootpushingbutton.jpg?auto=webp&width=940"
-              alt="green iguana"
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h7" component="div">
-                {state.user.firstName} {state.user.lastName}
-              </Typography>
-              <Typography variant="h7" color="text.secondary">
-                @{state.user.username}
-              </Typography>
-              <Typography>{post.description}</Typography>
-
-              {/* <Typography variant="h7" color="text.secondary">
-              @{state.user.username}
-            </Typography>
-            <Typography>{post.description}</Typography> */}
-            </CardContent>
-          </Card>
-          <hr style={{ marginTop: "15px", color: "gray" }} />
-        </>
-      ))}
+      <hr style={{ color: "gray" }} /> */}
     </div>
   );
 };

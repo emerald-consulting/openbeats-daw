@@ -10,7 +10,7 @@ const ProfilePage = () => {
         <div className={classes.leftpane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>
-              <NewPostForm />
+              {/* <NewPostForm /> */}
             </div>
             <div className={classes.bottomPane}><Playlist/></div>
           </div>
