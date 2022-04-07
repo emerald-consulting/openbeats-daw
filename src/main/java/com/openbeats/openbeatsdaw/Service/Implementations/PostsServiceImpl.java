@@ -52,11 +52,64 @@ public class PostsServiceImpl implements PostService {
         return postRepository.saveAndFlush(post);
     }
 
+
+    @Override
+    public Post updatePost(Post post, MultipartFile track, MultipartFile picture ) {
+        Post existingpost = postRepository.getById(post.getPostId());
+        Post newPost=new Post();
+        if(existingpost == null){
+            return null;
+        }
+        else {
+            String bucketName = existingpost.getBucketName();
+
+            if(track != null && existingpost.getTrackFileName() != null && existingpost.getTrackFileName().length() > 0){
+                awsStorageService.deleteFile(bucketName, existingpost.getTrackFileName());
+            }
+            if(picture != null && existingpost.getPictureFileName() != null && existingpost.getPictureFileName().length() > 0){
+                awsStorageService.deleteFile(bucketName, existingpost.getPictureFileName());
+            }
+            if (track != null) {
+                String trackName = awsStorageService.uploadFile(track, Constants.SM_BUCKET_NAME);
+                existingpost.setTrackFileName(trackName);
+                existingpost.setIsMediaAdded(true);
+            }
+            if (picture != null) {
+                String pictureName = awsStorageService.uploadFile(picture, Constants.SM_BUCKET_NAME);
+                existingpost.setPictureFileName(pictureName);
+                existingpost.setIsMediaAdded(true);
+            }
+            if (existingpost.getIsMediaAdded()) {
+                existingpost.setBucketName(Constants.SM_BUCKET_NAME);
+            }
+            existingpost.setDescription(post.getDescription());
+            existingpost.setTitle(post.getTitle());
+            existingpost.setGenre(post.getGenre());
+            existingpost.setUpdatedAt(new Date());
+            postRepository.saveAndFlush(existingpost);
+            newPost.setPostId(existingpost.getPostId());
+            newPost.setDescription(existingpost.getDescription());
+            newPost.setGenre(existingpost.getGenre());
+            newPost.setTitle(existingpost.getTitle());
+            if(existingpost.getPictureFileName() != null && existingpost.getPictureFileName().length() > 0) {
+                newPost.setPictureFileName(awsStorageService.getUrl(existingpost.getBucketName(),
+                        existingpost.getPictureFileName()).toString());
+            }
+            if(existingpost.getTrackFileName() != null && existingpost.getTrackFileName().length() > 0) {
+                newPost.setTrackFileName(awsStorageService.getUrl(existingpost.getBucketName(),
+                        existingpost.getTrackFileName()).toString());
+            }
+            return newPost;
+        }
+    }
+
+
+
     @Override
     public boolean removePost(Long postId) {
         Post postDetails = postRepository.getById(postId);
 
-        if(postDetails.getIsMediaAdded()){
+        //if(postDetails.getIsMediaAdded()){
             String bucketName = postDetails.getBucketName();
             if(postDetails.getTrackFileName() != null && postDetails.getTrackFileName().length() > 0){
                 awsStorageService.deleteFile(bucketName, postDetails.getTrackFileName());

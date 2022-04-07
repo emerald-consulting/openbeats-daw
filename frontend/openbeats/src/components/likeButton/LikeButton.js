@@ -7,6 +7,7 @@ import axios from "axios";
 import { url } from "../../utils/constants";
 
 const LikeButton = ({ details, token }) => {
+
   const [totalLikes, setTotalLikes] = useState(details.totalLikes);
   const [checked, setChecked] = useState(false);
 
