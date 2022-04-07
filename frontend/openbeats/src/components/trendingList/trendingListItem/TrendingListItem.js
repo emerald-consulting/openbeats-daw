@@ -4,6 +4,7 @@ import { url } from "../../../utils/constants";
 import classes from "./TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
+import LikeButton from "../../likeButton/LikeButton";
 
 const TrendingListItem = ({ details }) => {
   const [author, setAuthor] = useState();
@@ -73,7 +74,7 @@ const TrendingListItem = ({ details }) => {
             color: "gray"
           }}
         >
-        <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
+         <LikeButton details={details} token={token} />
         </button>
       </div>
     </div>
