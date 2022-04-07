@@ -111,8 +111,8 @@ function AudioPlayer({
           regions: [
             {
               id: 1,
-              start: 0,
-              end: 6,
+              start: 2,
+              end: 4,
               // color: colors[Math.floor(Math.random() * 2) % 2],
               minLength: 4
             },
@@ -557,7 +557,7 @@ function AudioPlayer({
         onStop={dragStopHandler}
         position={{ x: deltaPosition, y: 0 }}
       >
-        <div style={{ width: `${waveWidth}px`, borderLeft: "5px solid grey"}} container>
+        <div style={{ width: `${waveWidth}px`, borderLeft: "5px solid grey", cursor: "grabbing"}} container>
           <Grid item id={wavesurferId} className={classes.scroll + " mt-5"} />
         </div>
       </Draggable>
