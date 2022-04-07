@@ -77,7 +77,7 @@ function EditPostDialog({ open, onClose, post, updatePost }) {
             'picture', postDetails.cover
         );
         let _file = null;
-        if (postDetails.track && track.blob) {
+        if (postDetails.track && postDetails.track .blob) {
             _file = new File([postDetails.track.blob], "audio.mp3");
         } else if (typeof track == "string") {
             _file = new File([new Blob(postDetails.track.substring(5))], "audio.mp3");

@@ -1,11 +1,13 @@
 package com.openbeats.openbeatsdaw.Service.Implementations;
 
 import com.openbeats.openbeatsdaw.Repository.PostRepository;
+import com.openbeats.openbeatsdaw.Repository.ReactionsRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.PostService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.common.Constants;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
+import com.openbeats.openbeatsdaw.model.Entity.Reactions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,9 @@ public class PostsServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private ReactionsRepository reactionsRepository;
 
     @Autowired
     private TokenProvider tokenProvider;
@@ -108,16 +113,18 @@ public class PostsServiceImpl implements PostService {
     @Override
     public boolean removePost(Long postId) {
         Post postDetails = postRepository.getById(postId);
-
+        Long userId = postDetails.getUserId();
+        Reactions reaction = reactionsRepository.findByPostIdAndUserId(postId, userId).get();
+        reactionsRepository.delete(reaction);
         //if(postDetails.getIsMediaAdded()){
-            String bucketName = postDetails.getBucketName();
-            if(postDetails.getTrackFileName() != null && postDetails.getTrackFileName().length() > 0){
-                awsStorageService.deleteFile(bucketName, postDetails.getTrackFileName());
-            }
-            if(postDetails.getPictureFileName() != null && postDetails.getPictureFileName().length() > 0){
-                awsStorageService.deleteFile(bucketName, postDetails.getPictureFileName());
-            }
+        String bucketName = postDetails.getBucketName();
+        if(postDetails.getTrackFileName() != null && postDetails.getTrackFileName().length() > 0){
+            awsStorageService.deleteFile(bucketName, postDetails.getTrackFileName());
         }
+        if(postDetails.getPictureFileName() != null && postDetails.getPictureFileName().length() > 0){
+            awsStorageService.deleteFile(bucketName, postDetails.getPictureFileName());
+        }
+        //}
         // reactions to be deleted as well
         postRepository.deleteById(postId);
         return true;
