@@ -40,7 +40,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    window.location.href = "/profile";
+    history.push("profile");
   };
 
   const navigationHandler = (event) => {
@@ -51,7 +51,7 @@ const MainHeader = (props) => {
     localStorage.removeItem("auth-token");
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
-    window.location.href = "/login";
+    history.push("login");
   };
 
   const addedClasses = props.className + "custom-header";

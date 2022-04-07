@@ -14,7 +14,6 @@ const SocialHomePage = () => {
 
   return (
     <div className={classes.container}>
-      <div className="p-5">
         <div className={classes.leftpane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>
@@ -38,7 +37,6 @@ const SocialHomePage = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
   );
 };
