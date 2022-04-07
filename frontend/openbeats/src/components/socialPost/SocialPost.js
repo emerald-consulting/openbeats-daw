@@ -1,3 +1,4 @@
+import React from 'react';
 import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
 import { useContext, useEffect, useState } from "react";
@@ -10,11 +11,27 @@ import Tooltip from "@mui/material/Tooltip";
 import ReactHashtag from "react-hashtag";
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import LikeButton from '../likeButton/LikeButton'
-const SocialPost = ({ details }) => {
+import { IconButton, Menu, MenuItem } from "@mui/material";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditPostDialog from './EditPostDialog'
+
+const SocialPost = ({ details,removePost, updatePost  }) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
   const playlistCntxt = useContext(PlaylistContext);
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const [editDialogState, setEditDialogState] = React.useState(false)
+
+  const openMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const closeMenu = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     getAuthorDetails();
@@ -63,6 +80,24 @@ const SocialPost = ({ details }) => {
     setIsLiked(res.data);
   };
 
+  const deletePost = async () => {
+    closeMenu()
+    const postId = details.postId;
+    const res = await axios.put(url + "/removePost/" + postId, null, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    if (res) {
+      removePost(postId)
+    }
+  };
+
   const addToPlaylistHandler = () => {
     playlistCntxt.addItem({ ...details, ...author });
   };
@@ -79,25 +114,49 @@ const SocialPost = ({ details }) => {
   };
   const createdAt = convertISOStringToViewableDay();
 
+  const toggleEditPostDialog = () => {
+    closeMenu();
+    setEditDialogState(!editDialogState)
+  }
+
   return (
     <>
       {author && (
         <Card className={classes.card}>
-          <Card.Header className="mb-2">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                alt="Harry"
-                src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
-                className={classes.profileIcon}
-              />
-              <span className={classes.author}>
-                <strong
-                  className={classes.username}
-                >{`${author?.firstName} ${author?.lastName}`}</strong>
-                <a className="ml-2">@{author?.username}</a>
-                <br />
-                <small className="text-muted">{createdAt}</small>
-              </span>
+           <Card.Header >
+            <div style={{ display: "flex", alignItems: "center" , justifyContent:'space-between'}} >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <img
+                  alt="Harry"
+                  src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
+                  className={classes.profileIcon}
+                />
+                <span className={classes.author}>
+                  <strong
+                    className={classes.username}
+                  >{`${author?.firstName} ${author?.lastName}`}</strong>
+                  <a className="ml-2">@{author?.username}</a>
+                  <br />
+                  <small className="text-muted">{createdAt}</small>
+                </span>
+              </div>
+              <>
+                <IconButton onClick={openMenu} size='small'>
+                  <MoreVertIcon fontSize="small" />
+                </IconButton>
+                <Menu
+                  id="basic-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={closeMenu}
+                  MenuListProps={{
+                    'aria-labelledby': 'basic-button',
+                  }}
+                >
+                  <MenuItem style={{display:'block',marginLeft:'20px',minWidth:'70px',marginBottom:'5px'}} onClick={toggleEditPostDialog}>Edit</MenuItem>
+                  <MenuItem style={{display:'block',marginLeft:'20px',minWidth:'70px',marginBottom:'5px'}} onClick={deletePost}>Delete</MenuItem>
+                </Menu>
+              </>
             </div>
           </Card.Header>
 
@@ -137,9 +196,16 @@ const SocialPost = ({ details }) => {
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
           </Card.Footer> */}
+          <div style={{display:'flex',justifyContent:'flex-end',marginTop:'-30px',marginRight:'-22px'}}>
           <LikeButton details={details} token={token} />
+          </div>
         </Card>
       )}
+      {
+        editDialogState && (
+          <EditPostDialog onClose={toggleEditPostDialog} open={editDialogState} updatePost={updatePost} post={details} />
+        )
+      }
     </>
   );
 };

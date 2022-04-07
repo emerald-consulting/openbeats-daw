@@ -56,6 +56,21 @@ const PostList = ({ uriParam, refresh }) => {
     setRefreshNumber(0);
   };
 
+  const removePost = (postId) => {
+    setPosts(posts.filter(i => i.postId !== postId));
+  }
+
+  const updatePost = (post) => {
+    const allPosts = [...posts];
+    const updatedPost = allPosts.find(i => i.postId === post.postId);
+    updatedPost.description = post.description;
+    updatedPost.title = post.title;
+    updatedPost.genre = post.genre;
+    updatedPost.pictureFileName = post.pictureFileName;
+    updatedPost.trackFileName = post.trackFileName;
+    setPosts(allPosts);
+  }
+
   return (
     <LoadingOverlay active={isLoading} spinner>
       <div div="scrollablePosts">
@@ -91,7 +106,7 @@ const PostList = ({ uriParam, refresh }) => {
             }}
           ></div>
           {posts.map((p) => (
-            <SocialPost key={p.postId} details={p} />
+            <SocialPost key={p.postId} details={p} removePost={removePost} updatePost={updatePost} />
           ))}
         </InfiniteScroll>
       </div>

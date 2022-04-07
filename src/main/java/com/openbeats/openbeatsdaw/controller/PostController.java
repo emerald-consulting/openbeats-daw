@@ -43,6 +43,23 @@ public class PostController {
         return postService.addPost(post, track, picture);
     }
 
+
+
+    @PutMapping("/post")
+    @ResponseBody
+    public Post updatePost(@RequestPart("json") String json,
+                           @RequestParam(value = "track", required = false) MultipartFile track,
+                           @RequestParam(value = "picture", required = false) MultipartFile picture,
+                           @RequestHeader (name="Authorization") String token ) throws JsonProcessingException {
+
+        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+        ObjectMapper mapper = new ObjectMapper();
+        PostDTO postDTO = mapper.readValue(json, PostDTO.class);
+        postDTO.setUserId(currentUser.get().getUserid());
+        Post post = postMapper.postDTOToMetadata(postDTO);
+        return postService.updatePost(post, track, picture);
+    }
+
     @PutMapping("/removePost/{postId}")
     @ResponseBody
     public boolean removePost(@PathVariable("postId") Long postId){

@@ -10,7 +10,7 @@ const Navbar = () => {
     <div id='navbar' >  
     <nav className=" flex flex-row ">
       <Link className=" flex flex-row  " to="/">
-         <img className="pl-10 h-20" src={logo} alt={"logo"} ></img>
+         {/* <img className="pl-10 h-20" src={logo} alt={"logo"} ></img> */}
          <h1 class="text-6xl pt-2 font-mono">openbeats</h1>
       </Link>
         

@@ -19,7 +19,7 @@ const ProfilePage = () => {
         <div className={classes.middlepane}>
           <Profile/>
         </div>
-        <div className={classes.rightpane}>
+        <div className={classes.rightPane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>Suggestions/ Trending</div>
             <div className={classes.bottomPane}>

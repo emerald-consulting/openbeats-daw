@@ -12,6 +12,7 @@ public interface PostService {
     public Post addPost(Post post, MultipartFile track, MultipartFile picture );
 
     public boolean removePost(Long postId);
+    public Post updatePost(Post post, MultipartFile track, MultipartFile picture );
 
     public Page<Post> getPosts(Long userid, int pageNo);
 
