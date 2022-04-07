@@ -17,4 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     Page<Post> getPosts(@Param("userId")Long userId, Pageable pageable);
 
     List<Post> findFirst10ByOrderByTotalLikesDescCreatedAtDesc(Pageable pageable);
+
+    List<Post> findFirst10ByIsAnnouncementOrderByCreatedAtDesc(@Param("isAnnouncement") boolean isAnnouncement, Pageable pageable);
 }
