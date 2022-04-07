@@ -73,13 +73,17 @@ function AudioPlayer({
   updateFileOffsets,
   fileId,
   initOffset,
-  volume
+  volume,
+  fileName,
+  index,
+  fileVersionHandler
 }) {
   const wavesurfer = useRef(null);
   const [state, dispatch] = useContext(UserContext);
   const [loopStyle, setLoopStyle] = useState(false);
   const [waveWidth, setWaveWidth] = useState(1000);
   const [deltaPosition, setDeltaPosition] = useState(0);
+  const [fileVersions, setfileVersions] = useState([]);
 
   const _audio = useSelector((_state) => _state.audio);
   const maxDuration = _audio ? _audio.maxDuration : -1;
@@ -159,8 +163,7 @@ function AudioPlayer({
   }, [file]);
 
   useEffect(() => {
-    if (!isSelected) return;
-    if (!isMusicPlaying) {
+    if (!isMusicPlaying || !isSelected) {
       wavesurfer.current.pause();
       setIsPlaying(false);
       return;
@@ -434,6 +437,9 @@ function AudioPlayer({
       let instance = wavesurfer.current;
       var segmentDuration = region.end - region.start;
       var originalBuffer = instance.backend.buffer;
+      if(!originalBuffer){
+        return;
+      }
       var emptySegment = instance.backend.ac.createBuffer(
         originalBuffer.numberOfChannels,
         segmentDuration * originalBuffer.sampleRate,
@@ -528,7 +534,7 @@ function AudioPlayer({
   }, [initOffset]);
 
   const updateFile = (file) => {
-
+    fileVersionHandler(index, fileName);
     const formData = new FormData();
     formData.append("file", file);
 
