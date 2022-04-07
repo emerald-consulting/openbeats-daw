@@ -9,14 +9,14 @@
     max-width: 65%;
   }
   .author a {
-      color: #049669;
+      color: #10b981;
       cursor: pointer;
       font-size: 18px;
   }
   
   .addButton{
     border-radius: 2em;
-    background: #049669;
+    background: #10b981;
     color: rgb(255, 255, 255);
     float: right;
     font-size: 20px;
@@ -24,7 +24,7 @@
     height: 30px;
   }
   .description span {
-    color: #049669;
+    color: #10b981;
     cursor: pointer;
   }
   .description{
