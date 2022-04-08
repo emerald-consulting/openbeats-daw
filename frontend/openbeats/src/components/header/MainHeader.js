@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import logo from "../openbeats_notype-45.png";
+import logo from "../newLogo.png";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -40,7 +40,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    window.location.href = "/profile";
+    history.push("profile");
   };
 
   const navigationHandler = (event) => {
@@ -51,7 +51,7 @@ const MainHeader = (props) => {
     localStorage.removeItem("auth-token");
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
-    window.location.href = "/login";
+    window.location.href = '/login';
   };
 
   const addedClasses = props.className + "custom-header";
@@ -60,7 +60,7 @@ const MainHeader = (props) => {
     <AppBar
       className={addedClasses}
       position="static"
-      sx={{ backgroundColor: "#ffff", color: "#049669" }}
+      sx={{ backgroundColor: "#ffff", color: "#10b981" }}
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters style={{ maxHeight: "80px" }}>

@@ -62,4 +62,10 @@ public class PostController {
         return postService.getTrending();
     }
 
+    @GetMapping("/getAnnouncements")
+    @ResponseBody
+    public List<Post> getAnnouncements() {
+        return postService.getAnnouncements();
+    }
+
 }

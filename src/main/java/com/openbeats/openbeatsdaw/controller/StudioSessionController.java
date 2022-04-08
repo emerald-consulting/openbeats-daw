@@ -243,6 +243,22 @@ public class StudioSessionController {
         return res;
     }
 
+    @PutMapping("/undoFileChange")
+    public boolean updateFile(@RequestParam(value = "fileId") Long fileId,
+                              @RequestParam(value = "prevFileName") String prevFileName,
+                              @RequestParam(value = "sessionId") String sessionId) throws Exception {
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        boolean res = audioFileService.updateAudioFileDetails(fileId, prevFileName);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        audioTracks.forEach(audioTrack -> {
+            if(audioTrack.getAudioTrackId() == fileId){
+                audioTrack.setFile(prevFileName);
+            }
+        });
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
+        return res;
+    }
+
     @PutMapping("/removeFile")
     public boolean updateFile(@RequestParam(value = "fileName") String fileName,
                               @RequestParam(value = "fileId") Long fileId,

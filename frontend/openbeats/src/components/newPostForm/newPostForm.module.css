@@ -1,8 +1,8 @@
 .new button {
   font: inherit;
-  background-color: #049669;
+  background-color: #10b981;
   color: white;
-  border: 1px solid #049669;
+  border: 1px solid #10b981;
   padding: 0.5rem 1.5rem;
   border-radius: 5rem;
   cursor: pointer;
@@ -95,7 +95,7 @@
 
 /* When the checkbox is checked, add a blue background */
 .checkbox input:checked ~ .checkmark {
-  background-color: #049669;
+  background-color: #10b981;
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
