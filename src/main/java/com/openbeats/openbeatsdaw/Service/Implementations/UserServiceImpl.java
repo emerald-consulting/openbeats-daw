@@ -31,12 +31,14 @@ public class UserServiceImpl implements UserService {
 
         if (profilePictureName != null) {
             String pictureName = awsStorageService.uploadFile(profilePictureName, Constants.SM_BUCKET_NAME);
-            user.setProfilePictureFileName(pictureName);
+            String profileUrl = awsStorageService.getUrl(Constants.SM_BUCKET_NAME, pictureName).toString();
+            user.setProfilePictureFileName(profileUrl);
             user.setBucketName(Constants.SM_BUCKET_NAME);
         }
         if (coverPictureName != null) {
             String pictureName = awsStorageService.uploadFile(coverPictureName, Constants.SM_BUCKET_NAME);
-            user.setCoverPictureFileName(pictureName);
+            String coverUrl = awsStorageService.getUrl(Constants.SM_BUCKET_NAME, pictureName).toString();
+            user.setCoverPictureFileName(coverUrl);
             user.setBucketName(Constants.SM_BUCKET_NAME);
         }
 
@@ -47,13 +49,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getPicture(String emailId) {
         User user = userRepository.findByEmailId(emailId).get();
-        if (user.getProfilePictureFileName() != null && user.getProfilePictureFileName().length() > 0) {
-            user.setProfilePictureFileName(awsStorageService.getUrl(user.getBucketName(), user.getProfilePictureFileName()).toString());
-        }
-
-        if (user.getCoverPictureFileName() != null && user.getCoverPictureFileName().length() > 0) {
-            user.setCoverPictureFileName(awsStorageService.getUrl(user.getBucketName(), user.getCoverPictureFileName()).toString());
-        }
         return user;
     }
 

@@ -85,7 +85,7 @@ const Profile = () => {
         "Access-Control-Allow-Headers": "Content-Type",
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + jwtToken,
+        Authorization: "Bearer " + token,
       },
     });
     setProfileUrl(res.data.profilePictureFileName);
