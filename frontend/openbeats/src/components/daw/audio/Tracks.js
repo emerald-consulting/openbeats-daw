@@ -2,10 +2,10 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import { useLocation } from "react-router-dom";
-
+import { MIDI } from "./midi";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-
+import MidiWriter from 'midi-writer-js';
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
@@ -42,7 +42,7 @@ import {
   setNoRefresh,
 } from "../../../model/session/Session";
 import { url } from "../../../utils/constants";
-
+import {toastr} from 'react-redux-toastr'
 import audioFile_N from "./components/AudioPlayer/Brk_Snr.mp3";
 import audioFile_Z from "./components/AudioPlayer/Dsc_Oh.mp3";
 import audioFile_X from "./components/AudioPlayer/Cev_H2.mp3";
@@ -69,7 +69,7 @@ import audio_B from "./components/AudioPlayer/B.mp3";
 import Crunker from "crunker";
 var recording = false;
 const map1 = new Map();
-
+var context = new AudioContext();
 var soundsPLayed = new Array();
 
 map1.set(90, audioFile_Z);
@@ -123,14 +123,152 @@ function Tracks() {
   const maxDuration = _audio ? _audio.maxDuration : 1;
   const search = useLocation().search;
   const rulerRef = useRef();
+  //const [track, setTrack] = useState(null);
+  const [record, setRecord] = useState(false);
+  let jwtToken = `${user.jwtToken}`;
 
+  const [device, setDevice] = useState({});
+  const [open, setOpen] = useState(false);
   const [barOffset, setBarOffset] = useState(0);
   const [playHeadPos, setplayHeadPos] = useState(0);
   const [playRegion, setPlayRegion] = useState([]);
   const [cropRegion, setCropRegion] = useState([]);
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
+  const KNOB = 9;
+  const PAD = 48;
+  const DEVICE = "MPD218 Port A";
+  let ratio = 1;
+  let on = false;
+  const track = new MidiWriter.Track();
+  let midi = null;
+  useEffect(() => {
+      if(record){
+        handlemidi()
+      }
+      else{
+        midi_handle()
+      }
 
+  }, [record])
+  const handlemidi = () => {
+
+    //track.addEvent(new MidiWriter.ProgramChangeEvent({instrument: 1}));
+    midi = new MIDI(handle_event);
+    midi.initialize().then(() => {
+      console.log("initialized!");
+
+      notify();
+      // This is the fun pad pattern. Replace with an array of your own pad numbers!
+      // notifyAnimation([48, 49, 50, 51, 47, 43, 39, 38, 37, 36, 40, 44]);
+    });
+
+  };
+
+  const handle_event = async(event) => {
+    // Uncomment this to see every event from every controller
+    console.log(event);
+
+    const { device, type, a, b } = event;
+    setDevice(device)
+    toastr.success('Device Connected!!', `${device.name}`);
+    if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel_control')) {
+      track.addEvent(new MidiWriter.NoteEvent({ pitch: [a.value], velocity: b.value, duration: '8', channel: 1 }));
+      console.log(a.value);
+    }
+    console.log(record)
+//    if (type === "device_disconnected" || !record) {
+//      const write = new MidiWriter.Writer(track);
+//      //    console.log(write)
+//      const mid_uri = write.dataUri();
+//      console.log(mid_uri);
+//      //   var link = document.createElement("a");
+//      //    link.download = "download.mid";
+//      //    link.href = mid_uri;
+//      //    document.body.appendChild(link);
+//      //    link.click();
+//      //    document.body.removeChild(link);
+//      var binaryVal;
+//      var inputMIME = mid_uri.split(',')[0].split(':')[1].split(';')[0];
+//      if (mid_uri.split(',')[0].indexOf('base64') >= 0)
+//        binaryVal = atob(mid_uri.split(',')[1]);
+//      else
+//        binaryVal = unescape(mid_uri.split(',')[1]);
+//      var blobArray = [];
+//      for (var index = 0; index < binaryVal.length; index++) {
+//        blobArray.push(binaryVal.charCodeAt(index));
+//      }
+//      var blobObject = new Blob([blobArray], { type: inputMIME });
+//      console.log(blobObject);
+//      const formData = new FormData();
+//      let _file = null;
+//      _file = new File([blobObject], "audio.mid");
+//      formData.append(
+//        'track', _file
+//      );
+//      await axios.post(url + "/midiUpload", formData);
+//      // Create Blob file from URL
+//
+//    }
+
+    if (device.name !== DEVICE) return;
+    if (type === "mode_change" && a.value === KNOB) {
+      ratio = b.ratio;
+    } else if (type === "note_on" && a.value === PAD) {
+      on = true;
+    } else if (type === "note_off" && a.value === PAD) {
+      on = false;
+    } else if (type === "aftertouch" && on) {
+      ratio = a.ratio;
+    }
+  };
+  const midi_handle = async() => {
+    if (!record) {
+      const write = new MidiWriter.Writer(track);
+      //    console.log(write)
+      const mid_uri = write.dataUri();
+      console.log(mid_uri);
+      //   var link = document.createElement("a");
+      //    link.download = "download.mid";
+      //    link.href = mid_uri;
+      //    document.body.appendChild(link);
+      //    link.click();
+      //    document.body.removeChild(link);
+      var binaryVal;
+      var inputMIME = mid_uri.split(',')[0].split(':')[1].split(';')[0];
+      if (mid_uri.split(',')[0].indexOf('base64') >= 0)
+        binaryVal = atob(mid_uri.split(',')[1]);
+      else
+        binaryVal = unescape(mid_uri.split(',')[1]);
+      var blobArray = [];
+      for (var index = 0; index < binaryVal.length; index++) {
+        blobArray.push(binaryVal.charCodeAt(index));
+      }
+      var blobObject = new Blob([blobArray], { type: inputMIME });
+      console.log(blobObject);
+      const formData = new FormData();
+      let _file = null;
+      _file = new File([blobObject], "audio.mid");
+      formData.append(
+        'track', _file
+      );
+      await axios.post(url + "/midiUpload", formData);
+      // Create Blob file from URL
+
+    }
+  };
+
+  const notify = () => {
+    const loop = () => {
+      const noteOff = 128;
+      const noteOn = 144;
+      if (!on) midi.notify([noteOn, PAD, 127], DEVICE);
+      setTimeout(() => {
+        if (!on) midi.notify([noteOff, PAD, 0], DEVICE);
+      }, 100);
+    };
+    setInterval(loop, 100);
+  };
   const playHandler = () => {
     setIsPlaying(true);
     interval = setInterval(() => {
@@ -155,12 +293,11 @@ function Tracks() {
     const offset = event.clientX - 250;
     setBarOffset(offset);
     setplayHeadPos(offset);
-    steps = (6 * offset)/ 30;
+    steps = (6 * offset) / 30;
   };
 
   const [state, dispatch] = useContext(UserContext);
 
-  let jwtToken = `${user.jwtToken}`;
 
   const uploadFIle = (file) => {
     const formData = new FormData();
@@ -243,7 +380,7 @@ function Tracks() {
       formData.append("fileId", session.audioTracks[index]?.audioTrackId);
       formData.append("sessionId", session.sessionId);
       formData.append("fileName", session.audioTracks[index]?.file);
-  
+
       axios.put(url + "/removeFile", formData, {
         headers: {
           Accept: "application/json",
@@ -634,8 +771,40 @@ function Tracks() {
     setVolumes(temp);
   };
 
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const vertical = 'top';
+  const horizontal = 'right'
+
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={handleClose}
+        action={action}
+        message={`Device connected: ${device.name}, \nPlease start recording`}
+        key={vertical + horizontal}
+    />
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
           <div className="flex flex-row pl-20">
@@ -663,6 +832,16 @@ function Tracks() {
               />
               <p className="pt-3 pr-1">Select All</p>
             </div>
+             {/* midi file */}
+            {/* <div className="form-control">
+            <label htmlFor="name">Get Midi</label>
+              <input
+                              type="file"
+                              id="file-upload"
+                              accept="audio/*"
+                              onChange={trackChangeHandler}
+              />
+            </div> */}
             <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
               {transportPlayButton}
             </div>
@@ -673,11 +852,15 @@ function Tracks() {
             </div>
             <div>
               <button
-                onClick={handleRecord}
+                onClick={() => {
+                  setRecord(!record)
+                  setOpen(true)
+                }}
                 style={{ height: "100%" }}
                 className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3"
-              >
-                {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
+              >{!record ? 'record midi' : 'stop'}
+
+                {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
               </button>
             </div>
             <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
@@ -732,8 +915,8 @@ function Tracks() {
                       max={1}
                       step={0.01}
                       style={{ width: "20%", margin: "5px" }}
-                      value={volumes[index] != undefined ? volumes[index] : 1} 
-                      onChangeCommitted={(event, value)=>handleVolumeChange(index, value)}
+                      value={volumes[index] != undefined ? volumes[index] : 1}
+                      onChangeCommitted={(event, value) => handleVolumeChange(index, value)}
                     />
                     <button
                       onClick={() => remove(index)}
@@ -763,10 +946,10 @@ function Tracks() {
                 <div className={classes.timerBar}>
                   <h1
                     style={{
-                      left: `${ steps<100? barOffset: barOffset+250}px`,
+                      left: `${steps < 100 ? barOffset : barOffset + 250}px`,
                       height: "500px",
                       borderRight: "2px solid red",
-                      position: `${steps<100?"absolute": "fixed"}` ,
+                      position: `${steps < 100 ? "absolute" : "fixed"}`,
                       zIndex: 20,
                     }}
                   ></h1>
@@ -803,7 +986,7 @@ function Tracks() {
                         updateFileOffsets={updadeFileOffsets}
                         fileId={session.audioTracks[index]?.audioTrackId}
                         initOffset={session.audioTracks[index]?.offset}
-                        volume = {volumes[index]}
+                        volume={volumes[index]}
                         seek={seekValue}
                         zoom={zoom}
                         owner={

@@ -1,17 +1,15 @@
 package com.openbeats.openbeatsdaw.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.openbeats.openbeatsdaw.Repository.SessionRepository;
+import com.openbeats.openbeatsdaw.Service.*;
+import com.openbeats.openbeatsdaw.Utils.TokenProvider;
+import com.openbeats.openbeatsdaw.model.*;
 import com.openbeats.openbeatsdaw.model.Entity.File;
+import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.Session;
 import com.openbeats.openbeatsdaw.model.Entity.User;
-import com.openbeats.openbeatsdaw.Repository.SessionRepository;
-import com.openbeats.openbeatsdaw.Service.AWSStorageService;
-import com.openbeats.openbeatsdaw.Service.AudioFileService;
-import com.openbeats.openbeatsdaw.Service.CollaboratorMgmtService;
-import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
-import com.openbeats.openbeatsdaw.Service.UserManagementService;
-import com.openbeats.openbeatsdaw.model.*;
-import com.openbeats.openbeatsdaw.model.SessionStorage;
-
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +19,18 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
+//import java.io.File as file;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 @RestController
 @RequestMapping("/")
@@ -37,6 +45,9 @@ public class StudioSessionController {
 
     @Autowired
     AWSStorageService awsStorageService;
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Autowired
     CollaboratorMgmtService collaboratorMgmtService;
@@ -272,4 +283,38 @@ public class StudioSessionController {
         log.info("Adding new track to the session: {}", sessionId);
         return ResponseEntity.ok(sessionMgmtService.addTrackToSession(sessionId));
     }*/
+
+//    @PostMapping("/midiUpload")
+//    @ResponseBody
+//    public Post addPost(@RequestPart("url") String url,
+//                        @RequestHeader (name="Authorization") String token ) throws IOException {
+//
+////        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+//        AudioInputStream stream = AudioSystem.getAudioInputStream(inFile);
+//        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new File("sound.wav"));
+//        stream.close();
+//    }
+
+    @PostMapping("/midiUpload")
+    @ResponseBody
+    public void addmidi(@RequestParam(value = "track", required = true) MultipartFile track) throws IOException, UnsupportedAudioFileException {
+
+//        java.io.File tempFile;
+        System.out.println(track.getClass().getSimpleName());
+        java.io.File file = java.io.File.createTempFile("temp", ".mid");
+        track.transferTo(file);
+//        Path file = Files.createTempFile("temp", ".mid");
+//        track.transferTo(file);
+//        java.io.File tempFile = tempFile.mid;
+//        System.out.println(file);
+        System.out.println(file.getClass().getSimpleName());
+        AudioInputStream stream = AudioSystem.getAudioInputStream(file);
+        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new java.io.File("sound.wav"));
+        stream.close();
+
+//        PostDTO postDTO = mapper.readValue(json, PostDTO.class);
+//        postDTO.setUserId(currentUser.get().getUserid());
+//        Post post = postMapper.postDTOToMetadata(postDTO);
+//        return postService.addPost(post, track, picture);
+    }
 }
