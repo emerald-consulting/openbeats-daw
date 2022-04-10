@@ -115,7 +115,8 @@ export default function UserProfileForm(props) {
                 onChange={props.handleInputChange}
               />
               <TextField
-                id="outlined-disabled"
+                multiline
+                id="outlined-multiline-flexible"
                 label="Bio"
                 name="bio"
                 defaultValue={props.user.bio}

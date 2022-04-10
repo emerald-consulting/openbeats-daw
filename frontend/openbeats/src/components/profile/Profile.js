@@ -1,7 +1,7 @@
 import { Avatar, Button, Typography } from "@mui/material";
 import React, { useEffect, useContext, useState, useRef } from "react";
 import axios from "axios";
-import "./Profile.css";
+import "./Profile.module.css";
 import { url } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
@@ -70,8 +70,8 @@ const Profile = () => {
       },
     });
     setCurrentUser(res.data);
-    setProfileUrl(res.data.profilePictureFileName);
-    setCoverUrl(res.data.coverPictureFileName);
+    setProfileUrl(res.data.profilePictureFileUrl);
+    setCoverUrl(res.data.coverPictureFileUrl);
   };
 
   const addProfilePicture = async () => {
@@ -88,8 +88,8 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setProfileUrl(res.data.profilePictureFileName);
-    setCoverUrl(res.data.coverPictureFileName);
+    setProfileUrl(res.data.profilePictureFileUrl);
+    setCoverUrl(res.data.coverPictureFileUrl);
     handleClose();
   };
 
@@ -207,7 +207,7 @@ const Profile = () => {
           ) : null}
         </div>
         <button onClick={handleClickOpen}>
-          <Avatar src={profileUrl} sx={{ width: 202, height: 202 }}></Avatar>
+          <Avatar src={profileUrl} sx={{ width: 202, height: 202,transform: `translate(30px, -100px)` }}></Avatar>
         </button>
         {open ? (
           <ProfilePicture
