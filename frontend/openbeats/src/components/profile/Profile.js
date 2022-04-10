@@ -189,7 +189,7 @@ const Profile = () => {
           <Button
             variant="contained"
             onClick={handleProfileModalOpen}
-            style={{ float: "right", marginTop: "20px" }}
+            style={{ float: "right", marginTop: "20px",backgroundColor:"#1E90FF" }}
           >
             Edit Profile
           </Button>

@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import './Profile.module.css'
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -34,8 +35,8 @@ const BootstrapDialogTitle = (props) => {
           onClick={onClose}
           sx={{
             position: "absolute",
-            right: 8,
-            top: 8,
+            left: 430,
+            top: 2,
             color: (theme) => theme.palette.grey[500],
           }}
         >
@@ -56,6 +57,8 @@ const useStyles = makeStyles((theme) =>
     disabledButton: {
       backgroundColor: "green",
       color: "black",
+      width:"180px",
+      height:"30px"
     },
   })
 );
