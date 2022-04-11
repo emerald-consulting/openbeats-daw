@@ -6,9 +6,9 @@ import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
 import soundImg from "../sound.jpeg";
+import profileImg from "../profileIcon.png";
 import Tooltip from "@mui/material/Tooltip";
 import ReactHashtag from "react-hashtag";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import LikeButton from "../likeButton/LikeButton";
 const SocialPost = ({ details }) => {
   const [author, setAuthor] = useState();
@@ -87,7 +87,7 @@ const SocialPost = ({ details }) => {
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 alt="Harry"
-                src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
+                src={author?.profilePictureFileName || profileImg}
                 className={classes.profileIcon}
               />
               <span className={classes.author}>
