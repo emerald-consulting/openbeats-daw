@@ -3,20 +3,20 @@ import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
-import TrendingListItem from "./trendingListItem/TrendingListItem";
+import NewlyReleasedItem from "./NewlyReleasedItem";
 
-const TrendingList = ({refresh}) => {
+const NewlyReleasedList = ({refresh}) => {
   let token = localStorage.getItem("auth-token");
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    getTrending();
+    getNewlyReleased();
   }, [refresh]);
 
-  const getTrending = async () => {
+  const getNewlyReleased = async () => {
     setIsLoading(true);
-    const res = await axios.get(url + "/getTrending", {
+    const res = await axios.get(url + "/getNewlyReleased", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -32,13 +32,13 @@ const TrendingList = ({refresh}) => {
   return (
     <LoadingOverlay active={isLoading} spinner>
       <h2 className="mb-1" style={{ color: "#000" }}>
-        Trending
+        Newly Released
       </h2>
       {list.map((item) => (
-        <TrendingListItem details={item} key={item.postId}/>
+        <NewlyReleasedItem details={item} key={item.postId}/>
       ))}
     </LoadingOverlay>
   );
 };
 
-export default TrendingList;
+export default NewlyReleasedList;

@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.openbeats.openbeatsdaw.model.PostDTO;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +20,9 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     List<Post> findFirst10ByOrderByTotalLikesDescCreatedAtDesc(Pageable pageable);
 
     List<Post> findFirst10ByIsAnnouncementOrderByCreatedAtDesc(@Param("isAnnouncement") boolean isAnnouncement, Pageable pageable);
+
+    List<Post> findFirst5ByOrderByCreatedAtDesc();
+
+    @Query("SELECT p FROM Post p where p.description like %:searchText% or p.title like %:searchText% or p.genre like %:searchText% ")
+    Page<Post> searchPosts(@Param("searchText")String searchText, Pageable pageable);
 }

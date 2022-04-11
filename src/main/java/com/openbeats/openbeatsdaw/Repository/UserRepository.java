@@ -2,9 +2,12 @@ package com.openbeats.openbeatsdaw.Repository;
 
 
 
+import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.MyUserDetails;
 import com.openbeats.openbeatsdaw.model.UserFetchDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -35,5 +38,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName)" +
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
+
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName) FROM User u where u.username like %:searchText% ")
+    Page<User> searchUsers(@Param("searchText")String searchText, Pageable pageable);
 
 }

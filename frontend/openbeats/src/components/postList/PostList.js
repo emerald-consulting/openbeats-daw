@@ -4,28 +4,60 @@ import { url } from "../../utils/constants";
 import SocialPost from "../socialPost/SocialPost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
+import { useSelector } from "react-redux";
 
-const PostList = ({ uriParam, refresh }) => {
+const PostList = ({ uriParam, refresh, refreshPosts }) => {
   const [posts, setPosts] = useState([]);
   const [refreshNumber, setRefreshNumber] = useState(0);
   const [morePostsExist, setMorePostsExist] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   let token = localStorage.getItem("auth-token");
+  const searchText = useSelector(state => state.search.searchText)
+  const searchDetails = useSelector(state => state.search)
+  const selectedPost = searchDetails.selectedPost;
+  const showAllSearchCount=searchDetails.showAllSearchCount;
 
   useEffect(() => {
-    getPosts();
-  }, [refreshNumber]);
-
-  useEffect(() => {
-    if (refreshNumber == 0) {
-      getPosts();
-    } else {
-      setRefreshNumber(0);
+    if (selectedPost && !selectedPost.username) {
+      setPosts([selectedPost])
     }
-  }, [refresh]);
+    else {
+      getPosts();
+    }
+  }, [refreshNumber, selectedPost,showAllSearchCount]);
+
+  useEffect(() => {
+    if (selectedPost && !selectedPost.username) {
+      setPosts([selectedPost])
+    }
+    else {
+      if (refreshNumber == 0) {
+        getPosts();
+      } else {
+        setRefreshNumber(0);
+      }
+    }
+  }, [refresh, selectedPost,showAllSearchCount]);
 
   const getPosts = async () => {
-    const res = await axios.get(url + "/" + uriParam + "/" + refreshNumber, {
+    let postsUrl=url + "/" + uriParam + "/" + refreshNumber;
+    if(showAllSearchCount !== 0){
+      postsUrl=url + "/allSearchPosts/"+searchText;
+      let searchRes = await axios.get(postsUrl, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      });
+      setPosts(searchRes.data)
+      setIsLoading(false);
+    }
+    else{
+    const res = await axios.get(postsUrl, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -46,6 +78,7 @@ const PostList = ({ uriParam, refresh }) => {
       setIsLoading(false);
       console.log("making it false");
     }
+  }
   };
 
   const nextHandler = () => {
@@ -58,6 +91,7 @@ const PostList = ({ uriParam, refresh }) => {
 
   const removePost = (postId) => {
     setPosts(posts.filter(i => i.postId !== postId));
+    refreshPosts();
   }
 
   const updatePost = (post) => {
@@ -69,6 +103,7 @@ const PostList = ({ uriParam, refresh }) => {
     updatedPost.pictureFileName = post.pictureFileName;
     updatedPost.trackFileName = post.trackFileName;
     setPosts(allPosts);
+    refreshPosts();
   }
 
   return (

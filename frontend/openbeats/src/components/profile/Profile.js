@@ -27,6 +27,7 @@ const Profile = () => {
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+  const selectedUserId = window.location.pathname.split('/')[1];
 
   const handleClickOpen = () => {
     setOpen(true);
