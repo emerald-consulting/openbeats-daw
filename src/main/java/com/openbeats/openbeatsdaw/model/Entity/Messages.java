@@ -1,9 +1,7 @@
 package com.openbeats.openbeatsdaw.model.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -13,7 +11,16 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Messages {
+
+    private String senderName;
+    private String receiverName;
+    private String message;
+    private String date;
+    private Status status;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

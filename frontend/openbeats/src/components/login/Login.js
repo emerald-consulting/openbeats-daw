@@ -49,7 +49,7 @@ const Login = () => {
           });
         dispatch2(setUserPassword(password));
         dispatch2(setUserEmail(email));
-        
+
 
 
       axios.get(url+"/userlogin?emailId="+email,{headers: {
@@ -58,6 +58,7 @@ const Login = () => {
             "Access-Control-Allow-Headers" : "Content-Type",
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            'Authorization': 'Basic '+ encodedString
         }}).then((response) => {
             console.log(response)
             if(response.data.status==207){
@@ -86,12 +87,12 @@ const Login = () => {
                       });
                     console.log(response1.data.data)
                     setIsLoaded(false)
-                    history.push("/home");
+                    history.push("/dashboard");
                 }
             })
-                
+
             }
-            
+
             setIsLoaded(false)
          })
         .catch((error)=>{

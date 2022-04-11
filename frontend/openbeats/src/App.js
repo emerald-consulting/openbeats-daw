@@ -7,6 +7,7 @@ import About from "./components/about/About";
 import Dashboard from "./components/dashboard/Dashboard";
 import Test from "./components/test/Test";
 import Daw from "./components/daw/Daw";
+import ChatRoom from "./components/chatRoom/ChatRoom";
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -30,6 +31,7 @@ function App() {
         <Route path="/test" component={Test} />
         <Route path="/daw" component={Daw} />
         <Route path="/home" component={SocialHomePage} />
+        <Route path="/inbox" component={ChatRoom} />
       </Switch>
       </Layout>
     </>

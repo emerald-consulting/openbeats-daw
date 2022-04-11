@@ -40,6 +40,7 @@ const MainHeader = (props) => {
   };
 
   const navigationHandler = (event) => {
+    debugger;
     history.push(event.target.value.toString().toLowerCase());
   };
 

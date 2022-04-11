@@ -1,0 +1,186 @@
+.topPane,
+.bottomPane {
+  background-color: #ffff;
+  margin: 10px;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  background-color: white;
+  overflow-y: scroll;
+}
+  /* Left chat members Tab */
+
+  .member{
+    display: flex;
+    flex-direction: row;
+    margin: 10px;
+  }
+  .membersTab{
+    margin-top: 10px;
+  }
+  .memberPic{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+  .memberProfileName{
+    padding-left: 13%;
+    font-weight: bold;
+    top: 10px;
+  }
+  .memberProfileId{
+    padding-left: 13%;
+    color: gray;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .memberList{
+    width: 30%;
+    background-color: #fff;
+    border-radius: 10px;
+  }
+  
+
+  input {
+    padding: 10px;
+    font-size: 1.2em;
+  }
+  button{
+    border: none;
+    padding: 10px;
+    background: green;
+    color:#fff;
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  .container{
+    position: relative;
+    width: auto;
+  }
+  /* Right Chat contents */
+  .chatContent{
+    width:80%;
+    margin-left: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+
+  }
+  .chatBox{
+    /* margin:40px 50px; */
+    height: 600px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    background-color: #049669;
+  }
+  
+  .chatMessages{
+    height: 70%;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+  }
+  
+  .sendMessage{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .inputMessage{
+    border-radius: 50px;
+    border: 2px solid #a0a0a0;
+    width:90%;
+    outline: none;
+    margin: 0px 20px 0px 20px;
+  }
+  
+  ul {
+    padding: 0;
+    list-style-type: none;
+  }
+  .sendButton{
+    width:10%;
+    border-radius: 50px;
+    background-color: #049669;
+    margin: 10px;
+
+  }
+/* Sender receiver Messages styles */
+  .sender{
+    margin-left: auto;
+    margin-right: 1%;
+    padding: 3px 5px;
+  }
+  
+  .receiverAvatar{
+    background-color: cornflowerblue;
+    padding: 3px 5px;
+    border-radius: 5px;
+    color:gray;
+  }
+  .senderAvatar{
+    
+    padding: 3px 5px;
+    border-radius: 5px;
+    color:#000;
+  }
+  .message{
+    padding:5px;
+    width: auto;
+    display: flex;
+    flex-direction: row;
+    /* box-shadow: 0 3px 10px rgb(0 0 0 / 0.2); */
+    margin: 5px 10px;
+  }
+
+  .messageData{
+    padding:5px;
+    background-color: #90ee90;
+    border-radius: 5px;
+    color:#000;
+  }
+  .message.self{
+    justify-content: end;
+  }
+
+  .date{
+    text-align: right;
+    font-size: 8px;
+    color: gray;
+  }
+
+  .receiverPic{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+  }
+  .receiverProfileName{
+    padding-left: 13%;
+    font-weight: bold;
+    margin-top: 13%;
+  }
+  .receiverProfileId{
+    padding-left: 13%;
+    color: gray;
+    font-size: 11px;
+    cursor: pointer;
+
+  }
+  .createDawSession{
+    background-color: #049669;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px;
+    border-radius: 50px;
+
+  }
+  .chatProfile{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1%;
+    padding: 1%;
+
+  }
