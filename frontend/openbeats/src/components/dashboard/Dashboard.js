@@ -56,7 +56,7 @@ const Dashboard = () => {
           window.location.href = '/login';
         }
       }
-
+    localStorage.removeItem("versions");
    }, []);
 
 
@@ -360,7 +360,7 @@ const Dashboard = () => {
           <div className="p-10 " style={{width:'60%', height:'50vh'}}>
             <div className="flex flex-row" style={{width:'100%'}}> 
               
-              <div style={{width:'50%'}} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16 mx-5" >
+              <div style={{width:'50%' }} className="rounded-lg bg-gr4 flex flex-col rounded shadow-default py-10 px-16 mx-5" >
                 <h1 className="text-2xl mb-4" >Saved sessions</h1>
                 <LoadingOverlay
                   active={isLoading}
@@ -370,7 +370,7 @@ const Dashboard = () => {
                   <div className="overflow-y-auto overflow-x-hidden " style={{height:'38.5vh'}}>
                     {
                       sessionList.map((session)=>(
-                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 hover:bg-gr2 m-1 font-bold rounded" style={{fontSize:15}} >
+                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 createHover m-1 font-bold rounded" style={{fontSize:15}} >
                           {session.sessionId} : {session.sessionName}
                         </button>
                       ))
@@ -393,7 +393,7 @@ const Dashboard = () => {
                       </div>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`  bg-gr3 font-bold hover:bg-gr2 py-2 px-4 rounded`}>
+                          <button className={`bg-gr3 font-bold py-2 px-4 rounded createHover`}>
                               Create new Session
                           </button>
                           
@@ -426,7 +426,7 @@ const Dashboard = () => {
                                               message={error} open={error}/>
 
                       <div className='flex justify-center items-center '>
-                          <button className={`bg-gr3 font-bold hover:bg-gr2 py-2 px-4 rounded`}>
+                          <button className={`bg-gr3 font-bold createHover py-2 px-4 rounded`}>
                               Join Session
                           </button>
                           

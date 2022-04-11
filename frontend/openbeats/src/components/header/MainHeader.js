@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import logo from "../openbeats_notype-45.png";
+import logo from "../newLogo.png";
 import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 
@@ -18,7 +18,7 @@ import MenuItem from "@mui/material/MenuItem";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
 import { UserContext } from "../../model/user-context/UserContext";
-import classes from "./MainHeader.module.css";
+import { ListItem } from "@mui/material";
 
 const settings = ["Profile", "Account", "Logout"];
 
@@ -27,6 +27,7 @@ const MainHeader = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const history = useHistory();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
+  console.log(state.user);
   const pages = isUserLoggedin
     ? ["HOME", "INBOX", "DASHBOARD"]
     : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
@@ -38,6 +39,9 @@ const MainHeader = (props) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const profile = () => {
+    history.push("profile");
+  };
 
   const navigationHandler = (event) => {
     debugger;
@@ -48,7 +52,8 @@ const MainHeader = (props) => {
     localStorage.removeItem("auth-token");
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
-    window.location.href = "/login";
+    localStorage.removeItem("versions");
+    window.location.href = '/login';
   };
 
   const addedClasses = props.className + "custom-header";
@@ -57,10 +62,10 @@ const MainHeader = (props) => {
     <AppBar
       className={addedClasses}
       position="static"
-      sx={{ backgroundColor: "#ffff", color: "#049669" }}
+      sx={{ backgroundColor: "#ffff", color: "#10b981" }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters style={{ maxHeight: "100px" }}>
+        <Toolbar disableGutters style={{ maxHeight: "80px" }}>
           <Typography
             variant="h6"
             noWrap
@@ -75,9 +80,6 @@ const MainHeader = (props) => {
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>
-          {/* <div className={`form-control ${classes.search}`}>
-            <Search />
-          </div> */}
           <Box sx={{ flexGrow: 1 }} />
           <Typography
             variant="h6"
@@ -85,10 +87,7 @@ const MainHeader = (props) => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <Link
-              className=" flex flex-row "
-              to={isUserLoggedin ? "/home" : "/"}
-            >
+            <Link className=" flex flex-row " to="/dashboard">
               <img className="mt-1 h-10" src={logo} alt={"logo"} />
               <strong className="mt-2 ml-2">Open Beats</strong>
             </Link>
@@ -123,7 +122,7 @@ const MainHeader = (props) => {
               </Tooltip>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={state.user?.firstName || "Harry"} src="/static/images/avatar/2.jpg" />
+                  <Avatar alt={state.user.username} src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
               <Menu
@@ -142,13 +141,25 @@ const MainHeader = (props) => {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center" onClick={logout}>
+                {/* <MenuItem onClick={handleClose}>My account</MenuItem> */}
+                <MenuItem onClick={profile}>
+                  <ListItem>Profile</ListItem>
+                </MenuItem>
+                <MenuItem onClick={logout}>
+                  <ListItem>Logout</ListItem>
+                </MenuItem>
+
+                {/* {settings.map((setting) => (
+                  <MenuItem key={setting} onClick={handleCloseUserMenu} divider>
+                    <ListItem onClick={getOnClickHandler(setting)}>
+                    <Typography
+                      textAlign="center"
+                      // onClick={getOnClickHandler(setting)}
+                    >
                       {setting}
-                    </Typography>
+                    </Typography></ListItem>
                   </MenuItem>
-                ))}
+                ))} */}
               </Menu>
             </Box>
           )}

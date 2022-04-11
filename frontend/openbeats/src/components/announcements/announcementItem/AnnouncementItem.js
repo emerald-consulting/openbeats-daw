@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { url } from "../../../utils/constants";
-import classes from "./TrendingListItem.module.css";
+import classes from "./AnnouncementItem.module.css";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../../likeButton/LikeButton";
 import profileImg from "../../profileIcon.png";
 
-const TrendingListItem = ({ details }) => {
+const AnnouncementItem = ({ details }) => {
   const [author, setAuthor] = useState();
   let token = localStorage.getItem("auth-token");
 
@@ -32,6 +32,7 @@ const TrendingListItem = ({ details }) => {
     });
     setAuthor(res.data);
   };
+
   return (
     <div className="mb-5">
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -64,4 +65,4 @@ const TrendingListItem = ({ details }) => {
   );
 };
 
-export default TrendingListItem;
+export default AnnouncementItem;

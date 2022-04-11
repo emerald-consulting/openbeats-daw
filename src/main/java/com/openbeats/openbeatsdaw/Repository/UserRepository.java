@@ -15,6 +15,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
+    // @Modifying
+    // @Transactional
+    // @Query("SELECT u FROM User u WHERE u.userid = ?1")
+    // Optional<User> findByUserId(@Param("userid") Long userid);
+
     Optional<User> findByEmailId(String email);
 
     Optional<MyUserDetails> findMyUserDetailsByEmailId(String email);
@@ -27,7 +32,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("update User u set u.subscriptionType='paid' where u.emailId = ?1")
     int upgradeUserSubscription(String email);
 
-    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName)" +
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName, u.bucketName)" +
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 

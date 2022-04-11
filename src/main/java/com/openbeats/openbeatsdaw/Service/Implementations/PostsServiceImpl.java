@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostsServiceImpl implements PostService {
@@ -92,5 +91,16 @@ public class PostsServiceImpl implements PostService {
     public List<Post> getTrending() {
         Pageable pageable = PageRequest.of(0, 10);
         return postRepository.findFirst10ByOrderByTotalLikesDescCreatedAtDesc(pageable);
+    }
+
+    @Override
+    public List<Post> getAnnouncements() {
+        Pageable pageable = PageRequest.of(0, 10);
+        return postRepository.findFirst10ByIsAnnouncementOrderByCreatedAtDesc(true, pageable);
+    }
+
+    @Override
+    public List<String> getAllGenre() {
+        return postRepository.findDistinctByGenre();
     }
 }

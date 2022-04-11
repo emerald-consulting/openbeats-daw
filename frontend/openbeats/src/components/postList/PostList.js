@@ -92,7 +92,7 @@ const PostList = ({ uriParam, refresh }) => {
             }}
           ></div>
           {posts.map((p) => (
-            <SocialPost key={posts.userId} details={p} />
+            <SocialPost key={p.postId} details={p} />
           ))}
         </InfiniteScroll>
       </div>

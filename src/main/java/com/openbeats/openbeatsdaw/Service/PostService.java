@@ -17,4 +17,8 @@ public interface PostService {
     public Page<Post> getPosts(Long userid, int pageNo);
 
     public List<Post> getTrending();
+
+    List<Post> getAnnouncements();
+
+    List<String> getAllGenre();
 }

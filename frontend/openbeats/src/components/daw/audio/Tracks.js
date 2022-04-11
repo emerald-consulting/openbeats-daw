@@ -22,6 +22,8 @@ import VolumeDown from "@material-ui/icons/VolumeDown";
 import Slider from "@material-ui/core/Slider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import CropIcon from "@mui/icons-material/Crop";
+import Tooltip from "@mui/material/Tooltip";
+import UndoIcon from "@mui/icons-material/Undo";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -99,6 +101,7 @@ const divStyle = {
   height: "60vh",
   width: "100px%",
   overflow: "hidden",
+  backgroundColor: "#e5e7eb"
 };
 
 const arr = Array.from(Array(300).keys());
@@ -130,6 +133,7 @@ function Tracks() {
   const [cropRegion, setCropRegion] = useState([]);
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
+  const [fileVersions, setFileVersions] = useState([]);
 
   const playHandler = () => {
     setIsPlaying(true);
@@ -155,14 +159,15 @@ function Tracks() {
     const offset = event.clientX - 250;
     setBarOffset(offset);
     setplayHeadPos(offset);
-    steps = (6 * offset)/ 30;
+    steps = (6 * offset) / 30;
   };
 
   const [state, dispatch] = useContext(UserContext);
 
   let jwtToken = `${user.jwtToken}`;
 
-  const uploadFIle = (file) => {
+  const uploadFIle = async (file) => {
+    setIsLoading(true);
     const formData = new FormData();
 
     formData.append("fileName", "hello");
@@ -193,7 +198,7 @@ function Tracks() {
       session.sessionId +
       "&bucketName=" +
       session.bucketName;
-    axios.post(url + "/studioSession", formData, {
+    await axios.post(url + "/studioSession", formData, {
       headers: {
         // axios.post(url+"/studioSession",formData,{headers: {
         Accept: "application/json",
@@ -204,6 +209,7 @@ function Tracks() {
         Authorization: "Bearer " + jwtToken,
       },
     });
+    setIsLoading(false);
   };
 
   const onFileChange = (event) => {
@@ -223,7 +229,6 @@ function Tracks() {
     setCropRegion([...cropRegion, false]);
     setCutRegion([...cutRegion, 0]);
     setPlayRegion([...playRegion, 0]);
-    console.log("CROP REGION", cropRegion);
   };
 
   const remove = (index) => {
@@ -243,7 +248,7 @@ function Tracks() {
       formData.append("fileId", session.audioTracks[index]?.audioTrackId);
       formData.append("sessionId", session.sessionId);
       formData.append("fileName", session.audioTracks[index]?.file);
-  
+
       axios.put(url + "/removeFile", formData, {
         headers: {
           Accept: "application/json",
@@ -254,7 +259,6 @@ function Tracks() {
           Authorization: "Bearer " + jwtToken,
         },
       });
-
     }
   };
 
@@ -264,6 +268,13 @@ function Tracks() {
     setBarOffset(0);
     setplayHeadPos(0);
     steps = 0;
+  };
+
+  const fileVersionHandler = (index, prevName) => {
+    let temp = fileVersions;
+    temp[index] = prevName;
+    setFileVersions([...temp]);
+    localStorage.setItem("versions", JSON.stringify([...temp]));
   };
 
   let transportPlayButton;
@@ -462,6 +473,7 @@ function Tracks() {
     const temp = regionArray.map((r) => 1);
     setVolumes([...temp]);
     console.log([...temp]);
+    // setFileVersions(regionArray.map((r) => ""));
     setIsLoading(false);
   }
 
@@ -539,6 +551,14 @@ function Tracks() {
   useEffect(() => {
     getAllFiles();
   }, [session.audioTracks]);
+
+  useEffect(() => {
+    let preVersions = JSON.parse(localStorage.getItem("versions") || "[]");
+    if (preVersions.length) {
+      setFileVersions([...preVersions]);
+      console.log(preVersions[0] && preVersions[0].length > 0);
+    }
+  }, []);
 
   function getFileNames(sessionId = session.sessionId) {
     const formData = new FormData();
@@ -628,6 +648,30 @@ function Tracks() {
     // dispatch2(setAudioTrackOffsets([audioTr]));
   };
 
+  const undoChange = async (index) => {
+    if (!fileVersions[index].length) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("fileId", session.audioTracks[index]?.audioTrackId);
+    formData.append("prevFileName", fileVersions[index]);
+    formData.append("sessionId", session.sessionId);
+
+    const res = await axios.put(url + "/undoFileChange", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+    if (res.data == true) {
+      fileVersionHandler(index, "");
+    }
+  };
+
   const handleVolumeChange = (index, value) => {
     const temp = [...volumes];
     temp[index] = value;
@@ -638,13 +682,13 @@ function Tracks() {
     <>
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
-          <div className="flex flex-row pl-20">
-            <div className="  bg-gr2 hover:bg-gr3">
+          <div className= {`flex flex-row ${classes.controlButtons}`} style={{marginLeft: "250px"}}>
+            <div>
               <Microphone style={{}} pushFile={onMicInput} />
             </div>
-            <div className="p-2 ml-0.5  pt-5  bg-gr2 hover:bg-gr3">
+            <div className="p-2 ml-0.5 pt-5">
               <label for={"file-upload"} className=" cursor-pointer">
-                File+
+                Import
               </label>
               <input
                 id={"file-upload"}
@@ -655,7 +699,7 @@ function Tracks() {
               />
             </div>
             {/* <Fileupload/> */}
-            <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
+            <div className=" p-2 ml-0.5 flex flex-row">
               <Checkbox
                 style={{ color: "#00e676" }}
                 checked={allSelected || false}
@@ -663,24 +707,23 @@ function Tracks() {
               />
               <p className="pt-3 pr-1">Select All</p>
             </div>
-            <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+            <div className=" ml-0.5 pt-2">
               {transportPlayButton}
             </div>
-            <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+            <div className=" ml-0.5 pt-2">
               <IconButton onClick={stopPlayTracks}>
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
-            <div>
+            <div className=" p-4 ml-0.5 pt-5">
               <button
                 onClick={handleRecord}
                 style={{ height: "100%" }}
-                className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3"
               >
                 {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
               </button>
             </div>
-            <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+            <div className="p-4 pt-5 ml-0.5">
               <button onClick={exportAsWav}>Export as WAV</button>
             </div>
           </div>
@@ -690,7 +733,7 @@ function Tracks() {
               <div
                 style={{
                   height: "25px",
-                  backgroundColor: "green",
+                  backgroundColor: "#10b981",
                   position: "sticky",
                   top: 0,
                 }}
@@ -698,7 +741,7 @@ function Tracks() {
               {files.map((file, index) => (
                 <div style={{ height: "100px" }}>
                   <Checkbox
-                    style={{ color: "#00e676" }}
+                    style={{ color: "#10b981" }}
                     checked={selected[index] || false}
                     onChange={(e) => toggleSelectOne(e, index)}
                   />
@@ -710,21 +753,34 @@ function Tracks() {
                   </div>
                   <div style={{ height: "30px" }}>
                     <span className="float-left px-2 mt-1">
-                      <button onClick={() => playRegionHandler(index)}>
-                        <PlayArrowIcon />
-                      </button>
+                      <Tooltip title="Play region">
+                        <button onClick={() => playRegionHandler(index)}>
+                          <PlayArrowIcon />
+                        </button>
+                      </Tooltip>
                       {/* <button
                         className="ml-3"
                         onClick={() => cutRegionHandler(index)}
                       >
                         <ContentCutIcon />
                       </button> */}
-                      <button
-                        className="ml-3"
-                        onClick={() => cropRegionHandler(index)}
-                      >
-                        <CropIcon />
-                      </button>
+                      <Tooltip title="crop">
+                        <button
+                          className="ml-3"
+                          onClick={() => cropRegionHandler(index)}
+                        >
+                          <CropIcon />
+                        </button>
+                      </Tooltip>
+                      {fileVersions[index] && fileVersions[index].length > 0 && (
+                        <span className="ml-3">
+                          <Tooltip title="Undo crop">
+                            <button onClick={(e) => undoChange(index)}>
+                              <UndoIcon />
+                            </button>
+                          </Tooltip>
+                        </span>
+                      )}
                     </span>
                     <VolumeDown style={{ verticalAlign: "super" }} />
                     <Slider
@@ -732,8 +788,10 @@ function Tracks() {
                       max={1}
                       step={0.01}
                       style={{ width: "20%", margin: "5px" }}
-                      value={volumes[index] != undefined ? volumes[index] : 1} 
-                      onChangeCommitted={(event, value)=>handleVolumeChange(index, value)}
+                      value={volumes[index] != undefined ? volumes[index] : 1}
+                      onChangeCommitted={(event, value) =>
+                        handleVolumeChange(index, value)
+                      }
                     />
                     <button
                       onClick={() => remove(index)}
@@ -752,21 +810,20 @@ function Tracks() {
                 component="div"
                 sx={{
                   my: 2,
-                  backgroundColor: "#575757",
+                  backgroundColor: "#9ca3af",
                   height: "500px",
                   overflow: "auto",
                   whiteSpace: "nowrap",
                 }}
                 ref={rulerRef}
               >
-
                 <div className={classes.timerBar}>
                   <h1
                     style={{
-                      left: `${ steps<100? barOffset: barOffset+250}px`,
+                      left: `${steps < 100 ? barOffset : barOffset + 250}px`,
                       height: "500px",
                       borderRight: "2px solid red",
-                      position: `${steps<100?"absolute": "fixed"}` ,
+                      position: `${steps < 100 ? "absolute" : "fixed"}`,
                       zIndex: 20,
                     }}
                   ></h1>
@@ -775,11 +832,12 @@ function Tracks() {
                       component="div"
                       sx={{
                         display: "inline-block",
-                        color: "#c4ccc6",
-                        border: "1px solid #138236",
+                        color: "black",
+                        border: "1px solid #575757",
                         width: "30px",
                         textAlign: "center",
                         height: "25px",
+                        backgroundColor: "#10b981"
                       }}
                       className={isPlaying ? "" : "cursor-pointer"}
                       onClick={(e) => !isPlaying && changeBarStartHandler(e)}
@@ -801,9 +859,12 @@ function Tracks() {
                         cutRegion={cutRegion[index]}
                         cropRegion={cropRegion[index]}
                         updateFileOffsets={updadeFileOffsets}
+                        fileVersionHandler={fileVersionHandler}
                         fileId={session.audioTracks[index]?.audioTrackId}
                         initOffset={session.audioTracks[index]?.offset}
-                        volume = {volumes[index]}
+                        fileName={session.audioTracks[index]?.file}
+                        index={index}
+                        volume={volumes[index]}
                         seek={seekValue}
                         zoom={zoom}
                         owner={
