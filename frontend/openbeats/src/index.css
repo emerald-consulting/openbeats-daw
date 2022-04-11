@@ -168,3 +168,6 @@ wave::-webkit-scrollbar-thumb {
 .createHover:hover {
   background-color: #059669;
 }
+.bg-white{
+  background-color: #ffff;
+}
