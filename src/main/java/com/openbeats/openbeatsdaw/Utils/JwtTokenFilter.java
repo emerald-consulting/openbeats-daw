@@ -35,6 +35,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                     FilterChain chain) throws ServletException, IOException {
         // Get authorization header and validate
         final String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        logger.debug("Hello header = "+header);
         if (null==header || !header.startsWith("Bearer ")) {
             chain.doFilter(request, response);
             return;
@@ -42,6 +43,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         // Get jwt token and validate
         final String token = header.split(" ")[1].trim();
+        logger.debug("Hello token = "+token);
+        logger.debug("Hello response = "+response);
+        logger.debug("Hello request = "+request);
         if (!tokenProvider.validateToken(token)) {
             chain.doFilter(request, response);
             return;

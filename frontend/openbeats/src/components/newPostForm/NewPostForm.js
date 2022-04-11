@@ -8,6 +8,7 @@ import classes from "./newPostForm.module.css";
 const NewPostForm = ({ refreshPosts }) => {
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+  console.log("states = ",user);
   const [track, setTrack] = useState(null);
   const [cover, setCover] = useState(null);
   const [isAnnouncement, setIsAnnouncement] = useState(false);

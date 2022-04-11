@@ -9,7 +9,6 @@
   overflow-y: scroll;
 }
   /* Left chat members Tab */
-
   .member{
     display: flex;
     flex-direction: row;

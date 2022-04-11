@@ -25,6 +25,7 @@ public class Conversations {
     @Column(name = "user2_id", insertable = false, updatable = false)
     private Long userId2;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user1_id", referencedColumnName = "user_id", nullable = false)
     @JsonIgnore

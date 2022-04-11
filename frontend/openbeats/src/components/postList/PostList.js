@@ -45,6 +45,7 @@ const PostList = ({ uriParam, refresh }) => {
     if (isLoading) {
       setIsLoading(false);
       console.log("making it false");
+      console.log("making it false"+posts);
     }
   };
 

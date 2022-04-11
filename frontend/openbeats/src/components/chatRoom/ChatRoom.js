@@ -1,78 +1,33 @@
-// import { useState } from "react";
-// import NewPostForm from "../newPostForm/NewPostForm";
-// import Playlist from "../playlist/Playlist";
-// import PostList from "../postList/PostList";
-// import TrendingList from "../trendingList/TrendingList";
-// import classes from "../pages/SocialHomePage.module.css";
-
-// const ChatRoom = () => {
-
-//   const [refresh, setRefresh] = useState(0);
-//   const refreshPosts = () => {
-//     setRefresh((prev) => prev + 1);
-//   };
-
-// // ChatRoom 
-
-
-//   return (
-//     <div className={classes.container}>
-//       <div className="p-5">
-//         <div className={classes.leftpane}>
-//           <div className={classes.splitScreen}>
-//             <div className={classes.topPane}>
-            
-//               <NewPostForm refreshPosts={refreshPosts} />
-//             </div>
-//             <div className={classes.bottomPane}>
-//               <Playlist />
-//             </div>
-//           </div>
-//         </div>
-//         {/* <div className={classes.middlepane}>
-//           <PostList uriParam="getPosts" refresh={refresh} />
-//         </div> */}
-//         {/* <div className={classes.rightpane}>
-//           <div className={classes.splitScreen}>
-//             <div className={classes.topPane}>
-//               <TrendingList/>
-//             </div>
-//             <div className={classes.bottomPane}>
-//               Newly Released/ Announcements
-//             </div>
-//           </div>
-//         </div> */}
-
-        
-
-//       </div>
-//     </div>
-//   );
-// };
-// export default ChatRoom;
-
-
-
-
-
+import axios from "axios";
 import React, { useEffect, useState } from 'react'
 import {over} from 'stompjs';
 import SockJS from 'sockjs-client';
 import chatcss from "./chatRoom.module.css";
+import InfiniteScroll from "react-infinite-scroll-component";
 import pic from "../bg.jpg";
+import { url } from "../../utils/constants";
 import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
 import classes from "../pages/SocialHomePage.module.css";
+import ConversationListItem from "./ConversationListItem";
 
 var stompClient =null;
 const ChatRoom = () => {
+
+    let token = localStorage.getItem("auth-token");
 
     const [refresh, setRefresh] = useState(0);
     const refreshPosts = () => {
         setRefresh((prev) => prev + 1);
     };
     
+    useEffect(()=>{
+        getUserId();
+        getConversationsList();
+    },[]);
 
+    const [currentUserId, setCurrentUserId] = useState([]);
+    const [conversations, setConversations] = useState([]);
     const [privateChats, setPrivateChats] = useState(new Map());
     const [publicChats, setPublicChats] = useState([]);
     const [tab,setTab] =useState("CHATROOM");
@@ -86,6 +41,45 @@ const ChatRoom = () => {
         connect();
         console.log(userData);
     }, []);
+
+    const getUserId = async () => {
+        const res = await axios.get(url+"/getUserDetails?emailId="+localStorage.getItem("emailId"),
+        {headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            Authorization: "Bearer " + token,
+}}).then((response1) => {
+    if(response1.data.status==200){
+        setCurrentUserId(()=>{
+            console.log("response1.data.data.userid = ", response1.data.data.userid);
+                return response1.data.data.userid
+            })
+    }
+})}
+    
+    let uriParam = "getConversationsList"
+    const getConversationsList = async () => {
+        console.log("Conversations  ");
+        const res = await axios.get(url + "/" + uriParam, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            Authorization: "Bearer " + token,
+          },
+        });
+        setConversations(()=>{
+        console.log("Conversation list = ", res.data);
+            return res.data
+        })
+        console.log("Conversations = ",res);
+      };
+    
 
     const connect =()=>{
         ////alert("connect")
@@ -112,7 +106,7 @@ const ChatRoom = () => {
     }
 
     const onMessageReceived = (payload)=>{
-        debugger;
+        // debugger;
         var payloadData = JSON.parse(payload.body);
         switch(payloadData.status){
             case "JOIN":
@@ -194,6 +188,7 @@ const ChatRoom = () => {
         setUserData({...userData,"username": value});
     }
 
+
     return (
 
     <div className={classes.container}>
@@ -212,23 +207,31 @@ const ChatRoom = () => {
             </div>
 {/* Rightpane */}
 
+
+
+
     <div className={chatcss.container}>
         <div className={chatcss.chatBox}>
             <div className={chatcss.memberList}>
-                <ul>
-                    <li onClick={()=>{setTab("CHATROOM")}} className={chatcss.member}>
-                    <div> 
-                        <img alt={userData.member} src={pic} className={chatcss.memberPic}></img>
-                    </div>
-                    <div className={chatcss.membersTab}>
-                        <span className={chatcss.memberProfileName}>{userData.receivername}</span>
-                        <span className={chatcss.memberProfileId}>@akshata</span>
-                    </div>
-                    </li>
-                    {[...privateChats.keys()].map((name,index)=>(
-                        <li onClick={()=>{setTab(name)}} className={chatcss.member} key={index}>{name}</li>
-                    ))}
-                </ul>
+
+            <InfiniteScroll
+          dataLength={conversations.length}
+          loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
+          height={"75vh"}
+          endMessage={
+            <p style={{ textAlign: "center" }}>
+              <b>Yay! You have seen it all</b>
+            </p>
+          }
+
+        >
+          
+          {conversations.map((c,i) => (
+            <ConversationListItem key={i} senderId = {currentUserId} conversation={c} />
+          ))}
+        </InfiniteScroll>
+
+                
             </div>
             {tab==="CHATROOM" && <div className={chatcss.chatContent}>
                 <div className={chatcss.chatProfile}>
