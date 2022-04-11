@@ -21,7 +21,7 @@ public class UserController {
 
     @GetMapping("/getAuthorDetails/{userId}")
     @ResponseBody
-    public UserFetchDTO getPosts(@PathVariable("userId") Long userId) {
+    public UserFetchDTO getAuthorDetails(@PathVariable("userId") Long userId) {
         return userService.getUserDetails(userId);
     }
 

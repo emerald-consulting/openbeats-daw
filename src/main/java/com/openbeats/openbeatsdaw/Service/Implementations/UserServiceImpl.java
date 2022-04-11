@@ -22,7 +22,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFetchDTO getUserDetails(Long userid) {
-        return userRepository.getUserDetailsByUserId(userid);
+        UserFetchDTO userDetails = userRepository.getUserDetailsByUserId(userid);
+        if(userDetails.getProfilePictureFileName() != null && userDetails.getProfilePictureFileName().length() > 0){
+            userDetails.setProfilePictureFileName(awsStorageService.getUrl(userDetails.getBucketName(), userDetails.getProfilePictureFileName()).toString());
+        }
+        return  userDetails;
     }
 
     @Override

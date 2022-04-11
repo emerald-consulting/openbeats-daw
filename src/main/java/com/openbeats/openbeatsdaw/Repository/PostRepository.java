@@ -19,4 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     List<Post> findFirst10ByOrderByTotalLikesDescCreatedAtDesc(Pageable pageable);
 
     List<Post> findFirst10ByIsAnnouncementOrderByCreatedAtDesc(@Param("isAnnouncement") boolean isAnnouncement, Pageable pageable);
+
+    @Query("SELECT p.genre FROM Post p WHERE p.genre <> '' order by p.genre asc")
+    List<String> findDistinctByGenre();
 }

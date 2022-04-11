@@ -18,4 +18,6 @@ public interface PostService {
     public List<Post> getTrending();
 
     List<Post> getAnnouncements();
+
+    List<String> getAllGenre();
 }

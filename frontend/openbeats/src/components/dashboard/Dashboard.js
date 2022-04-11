@@ -56,7 +56,7 @@ const Dashboard = () => {
           window.location.href = '/login';
         }
       }
-
+    localStorage.removeItem("versions");
    }, []);
 
 

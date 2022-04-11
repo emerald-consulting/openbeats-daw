@@ -1,9 +1,10 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useInput from "../../hooks/use-input";
 import { url } from "../../utils/constants";
 import classes from "./newPostForm.module.css";
+import { Typeahead } from "react-bootstrap-typeahead";
 
 const NewPostForm = ({ refreshPosts }) => {
   const user = useSelector((_state) => _state.user);
@@ -12,6 +13,26 @@ const NewPostForm = ({ refreshPosts }) => {
   const [cover, setCover] = useState(null);
   const [isAnnouncement, setIsAnnouncement] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [genre, setGenre] = useState([]);
+  const [genreOptions, setGenreOptions] = useState([]);
+
+  useEffect(() => {
+    getGenreList();
+  }, []);
+
+  const getGenreList = async () => {
+    const res = await axios.get(url + "/getAllGenre", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+    setGenreOptions([...res.data]);
+  };
 
   const {
     value: enteredDescription,
@@ -29,18 +50,7 @@ const NewPostForm = ({ refreshPosts }) => {
     inputChangeHandler: enteredTitleChangeHandler,
     inputBlueHandler: enteredTitleBlurHandler,
     reset: resetTitle,
-  } = useInput((value) => value.trim().length > 0);
-
-  const {
-    value: enteredGenre,
-    isTouched: isenteredGenreTouched,
-    hasError: isenteredGenreInValid,
-    inputChangeHandler: enteredGenreChangeHandler,
-    inputBlueHandler: enteredGenreBlurHandler,
-    reset: resetGenre,
   } = useInput((value) => true);
-
-  let isFormValid = false;
 
   const trackChangeHandler = (event) => {
     setTrack(event.target.files[0]);
@@ -50,9 +60,9 @@ const NewPostForm = ({ refreshPosts }) => {
     setCover(event.target.files[0]);
   };
 
-  const announcementChangeHandler = (event)=>{
+  const announcementChangeHandler = (event) => {
     setIsAnnouncement(event.target.checked);
-  }
+  };
 
   const formSubmitHandler = async (event) => {
     event.preventDefault();
@@ -61,7 +71,7 @@ const NewPostForm = ({ refreshPosts }) => {
     }
     const json = {
       description: enteredDescription,
-      genre: enteredGenre,
+      genre: genre[0] && genre[0].customOption ? genre[0].name : genre[0] || "",
       isAnnouncement: false,
       isMediaAdded: false,
       trackFileName: null,
@@ -72,7 +82,7 @@ const NewPostForm = ({ refreshPosts }) => {
       updatedAt: new Date(),
       bucketName: null,
       title: enteredTitle,
-      isAnnouncement: isAnnouncement
+      isAnnouncement: isAnnouncement,
     };
 
     const formData = new FormData();
@@ -101,28 +111,33 @@ const NewPostForm = ({ refreshPosts }) => {
       },
     });
 
-    const newReaction = await axios.post(url + "/reactions/"+res.data.postId,null, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + jwtToken,
-      },
-    });
+    const newReaction = await axios.post(
+      url + "/reactions/" + res.data.postId,
+      null,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + jwtToken,
+        },
+      }
+    );
     clearForm();
     setIsLoading(false);
+    getGenreList();
     refreshPosts();
   };
 
   const clearForm = () => {
     resetTitle();
-    resetGenre();
     resetDescription();
     setIsAnnouncement(false);
     setTrack(null);
     setCover(null);
+    setGenre([]);
   };
 
   const cancelHandler = () => {
@@ -136,14 +151,6 @@ const NewPostForm = ({ refreshPosts }) => {
   const enteredTitleClasses = isEnteredTitleInValid
     ? "form-control invalid"
     : "form-control";
-
-  const enteredGenreClasses = isenteredGenreInValid
-    ? "form-control invalid"
-    : "form-control";
-
-  if (!isEnteredTitleInValid && isEnteredTitleTouched) {
-    isFormValid = true;
-  }
 
   return (
     <form onSubmit={formSubmitHandler} className={classes.new}>
@@ -167,30 +174,24 @@ const NewPostForm = ({ refreshPosts }) => {
           onBlur={enteredTitleBlurHandler}
           placeholder="Title"
         />
-        {/* {isEnteredTitleInValid && (
-          <p className="error-text">required</p>
-        )} */}
       </div>
 
-      <div className={enteredGenreClasses} style={{ width: "45%" }}>
-        <select
-          type="text"
-          id="genre"
-          onChange={enteredGenreChangeHandler}
-          value={enteredGenre}
-          onBlur={enteredGenreBlurHandler}
-        >
-          <option value="null" hidden>
-            Select Genre
-          </option>
-          <option value="R&B">R&B</option>
-          <option value="Hip Hop">Hip Hop</option>
-          <option value="Country">Country</option>
-          <option value="House">House</option>
-        </select>
+      <div className="form-control" style={{ width: "45%" }}>
+        <Typeahead
+          allowNew
+          id="basic-typeahead-single"
+          labelKey="name"
+          newSelectionPrefix="new genre: "
+          onChange={setGenre}
+          options={genreOptions}
+          placeholder="Genre"
+          selected={genre}
+        />
       </div>
       <div className="form-control" className={classes.fileUpload}>
-        <label htmlFor="track-upload">{ track ? track.name:  "Upload track"}</label>
+        <label htmlFor="track-upload">
+          {track ? track.name : "Upload track"}
+        </label>
         <input
           type="file"
           id="track-upload"
@@ -200,7 +201,9 @@ const NewPostForm = ({ refreshPosts }) => {
       </div>
 
       <div className="form-control" className={classes.fileUpload}>
-        <label htmlFor="cover-upload">{ cover ? cover.name:  "Upload Cover"}</label>
+        <label htmlFor="cover-upload">
+          {cover ? cover.name : "Upload Cover"}
+        </label>
         <input
           type="file"
           id="cover-upload"
@@ -209,14 +212,15 @@ const NewPostForm = ({ refreshPosts }) => {
         />
       </div>
       <div className="form-control" className={classes.checkbox}>
-      <label>Announcement?
-        <input
-          type="checkbox"
-          id="announcement"
-          onChange={announcementChangeHandler}
-          checked={isAnnouncement}
-        />
-        <span className={classes.checkmark}></span>
+        <label>
+          Announcement?
+          <input
+            type="checkbox"
+            id="announcement"
+            onChange={announcementChangeHandler}
+            checked={isAnnouncement}
+          />
+          <span className={classes.checkmark}></span>
         </label>
       </div>
       <div className="form-actions">
@@ -230,7 +234,7 @@ const NewPostForm = ({ refreshPosts }) => {
         <button
           type="submit"
           className={classes.submitButton}
-          disabled={!isFormValid || isLoading}
+          disabled={isLoading}
         >
           Post{isLoading ? "..." : null}
         </button>
