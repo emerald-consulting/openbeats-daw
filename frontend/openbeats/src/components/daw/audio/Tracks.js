@@ -101,6 +101,7 @@ const divStyle = {
   height: "60vh",
   width: "100px%",
   overflow: "hidden",
+  backgroundColor: "#e5e7eb"
 };
 
 const arr = Array.from(Array(300).keys());
@@ -681,13 +682,13 @@ function Tracks() {
     <>
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
-          <div className="flex flex-row pl-20">
-            <div className="  bg-gr2 hover:bg-gr3">
+          <div className= {`flex flex-row ${classes.controlButtons}`} style={{marginLeft: "250px"}}>
+            <div>
               <Microphone style={{}} pushFile={onMicInput} />
             </div>
-            <div className="p-2 ml-0.5  pt-5  bg-gr2 hover:bg-gr3">
+            <div className="p-2 ml-0.5 pt-5">
               <label for={"file-upload"} className=" cursor-pointer">
-                File+
+                Import
               </label>
               <input
                 id={"file-upload"}
@@ -698,7 +699,7 @@ function Tracks() {
               />
             </div>
             {/* <Fileupload/> */}
-            <div className=" p-2 ml-0.5 flex  flex-row  bg-gr2 hover:bg-gr3">
+            <div className=" p-2 ml-0.5 flex flex-row">
               <Checkbox
                 style={{ color: "#00e676" }}
                 checked={allSelected || false}
@@ -706,24 +707,23 @@ function Tracks() {
               />
               <p className="pt-3 pr-1">Select All</p>
             </div>
-            <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+            <div className=" ml-0.5 pt-2">
               {transportPlayButton}
             </div>
-            <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
+            <div className=" ml-0.5 pt-2">
               <IconButton onClick={stopPlayTracks}>
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
-            <div>
+            <div className=" p-4 ml-0.5 pt-5">
               <button
                 onClick={handleRecord}
                 style={{ height: "100%" }}
-                className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3"
               >
                 {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
               </button>
             </div>
-            <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
+            <div className="p-4 pt-5 ml-0.5">
               <button onClick={exportAsWav}>Export as WAV</button>
             </div>
           </div>
@@ -733,7 +733,7 @@ function Tracks() {
               <div
                 style={{
                   height: "25px",
-                  backgroundColor: "green",
+                  backgroundColor: "#10b981",
                   position: "sticky",
                   top: 0,
                 }}
@@ -741,7 +741,7 @@ function Tracks() {
               {files.map((file, index) => (
                 <div style={{ height: "100px" }}>
                   <Checkbox
-                    style={{ color: "#00e676" }}
+                    style={{ color: "#10b981" }}
                     checked={selected[index] || false}
                     onChange={(e) => toggleSelectOne(e, index)}
                   />
@@ -810,7 +810,7 @@ function Tracks() {
                 component="div"
                 sx={{
                   my: 2,
-                  backgroundColor: "#575757",
+                  backgroundColor: "#9ca3af",
                   height: "500px",
                   overflow: "auto",
                   whiteSpace: "nowrap",
@@ -832,11 +832,12 @@ function Tracks() {
                       component="div"
                       sx={{
                         display: "inline-block",
-                        color: "#c4ccc6",
-                        border: "1px solid #138236",
+                        color: "black",
+                        border: "1px solid #575757",
                         width: "30px",
                         textAlign: "center",
                         height: "25px",
+                        backgroundColor: "#10b981"
                       }}
                       className={isPlaying ? "" : "cursor-pointer"}
                       onClick={(e) => !isPlaying && changeBarStartHandler(e)}

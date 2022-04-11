@@ -103,6 +103,11 @@ h2 {
   margin-bottom: 5px
 }
 
+
+.controle  h2{
+  color: #000000;
+}
+
 .controle button{
   border: none;
   color: #7a7474;

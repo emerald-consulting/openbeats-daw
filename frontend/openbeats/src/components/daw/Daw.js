@@ -22,7 +22,7 @@ const Daw = () => {
 
     return (
       // <div><LogNavbar/>
-        <div style={{ backgroundImage: `url(${bgimg})` ,backgroundSize:'cover',backgroundRepeat:'no-repeat' }} >
+        <div style={{ backgroundColor: "#10b981"}} >
             
             <div className="flex flex-col" style={{overflowX:'hidden'}}>
                 {/* <LogNavbar className="mb-0.5"/> */}
@@ -39,14 +39,14 @@ const Daw = () => {
                     </div>
 
                     <div className="  mb-0.5" style={{width:'15%'}}>
-                        <p className=" p-5 bg-gr2 hover:bg-gr3 mb-1 " style={{textAlign:'center'}}>Session ID : {session.sessionId}</p>
-                        <p className=" p-5 bg-gr2 hover:bg-gr3 mb-1 " style={{textAlign:'center'}}>Collaborators</p>
+                        <p className=" p-5 mb-1 " style={{textAlign:'center', backgroundColor: "#10b981"}}>Session ID : {session.sessionId}</p>
+                        <p className=" p-5 mb-1 " style={{textAlign:'center', backgroundColor: "#10b981"}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
                         {session.participants.map((p)=>(<p className="p-2 bg-gr4 mb-1">{p.firstName}</p>))}
                         {/* <button onClick={connect}>Connect</button> */}
                     </div>
                 </div>
-                <div style={{ borderTop: "4px solid green"}} ></div>
+                <div style={{ borderTop: "4px solid #059669"}} ></div>
                 <div className="flex flex-row" style={{height:'20%'}}>
                     <div className=" pr-5 pl-10" style={{width:'30%',whiteSpace:"break-spaces"}}>
                         <Drum/>
