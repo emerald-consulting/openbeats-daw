@@ -165,7 +165,8 @@ function Tracks() {
 
   let jwtToken = `${user.jwtToken}`;
 
-  const uploadFIle = (file) => {
+  const uploadFIle = async (file) => {
+    setIsLoading(true);
     const formData = new FormData();
 
     formData.append("fileName", "hello");
@@ -196,7 +197,7 @@ function Tracks() {
       session.sessionId +
       "&bucketName=" +
       session.bucketName;
-    axios.post(url + "/studioSession", formData, {
+    await axios.post(url + "/studioSession", formData, {
       headers: {
         // axios.post(url+"/studioSession",formData,{headers: {
         Accept: "application/json",
@@ -207,6 +208,7 @@ function Tracks() {
         Authorization: "Bearer " + jwtToken,
       },
     });
+    setIsLoading(false);
   };
 
   const onFileChange = (event) => {
@@ -226,7 +228,6 @@ function Tracks() {
     setCropRegion([...cropRegion, false]);
     setCutRegion([...cutRegion, 0]);
     setPlayRegion([...playRegion, 0]);
-    console.log("CROP REGION", cropRegion);
   };
 
   const remove = (index) => {
