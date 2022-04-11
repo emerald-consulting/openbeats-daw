@@ -56,6 +56,12 @@ public class PostController {
         return postService.getPosts(currentUser.get().getUserid(), pageNo);
     }
 
+    @GetMapping("/getAllGenre")
+    @ResponseBody
+    public List<String> getAllGenre() {
+        return postService.getAllGenre();
+    }
+
     @GetMapping("/getTrending")
     @ResponseBody
     public List<Post> getTrending() {

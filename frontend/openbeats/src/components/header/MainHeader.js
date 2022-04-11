@@ -51,6 +51,7 @@ const MainHeader = (props) => {
     localStorage.removeItem("auth-token");
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
+    localStorage.removeItem("versions");
     window.location.href = '/login';
   };
 

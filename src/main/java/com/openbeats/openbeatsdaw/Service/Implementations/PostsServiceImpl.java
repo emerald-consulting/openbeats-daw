@@ -98,4 +98,9 @@ public class PostsServiceImpl implements PostService {
         Pageable pageable = PageRequest.of(0, 10);
         return postRepository.findFirst10ByIsAnnouncementOrderByCreatedAtDesc(true, pageable);
     }
+
+    @Override
+    public List<String> getAllGenre() {
+        return postRepository.findDistinctByGenre();
+    }
 }
