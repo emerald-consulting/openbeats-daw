@@ -218,11 +218,11 @@ const ChatRoom = () => {
           dataLength={conversations.length}
           loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
           height={"75vh"}
-          endMessage={
-            <p style={{ textAlign: "center" }}>
-              <b>Yay! You have seen it all</b>
-            </p>
-          }
+        //   endMessage={
+        //     <p style={{ textAlign: "center" }}>
+        //       <b>Yay! You have seen it all</b>
+        //     </p>
+        //   }
 
         >
           

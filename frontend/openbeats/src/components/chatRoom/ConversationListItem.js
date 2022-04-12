@@ -39,19 +39,18 @@ const ConversationListItem = ({ senderId, conversation }) => {
       {receiverDetails && (
         <Card >
           <Card.Header className="mb-2">
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <img
-                alt="Harry"
-                src={pic}
-                className={chatcss.memberPic}
-              />
-              <span >
-                <strong
-                >{`${receiverDetails?.firstName} ${receiverDetails?.lastName}`}</strong>
-                <a >@{receiverDetails?.userid}</a>
-                <br />
+            <div className={chatcss.member}>
+
+              <div>
+              <img alt="Harry" src={pic} className={chatcss.memberPic} />
+              </div>
+
+              <div className={chatcss.member}>
+                <div className={chatcss.memberProfileName}>{`${receiverDetails?.firstName}`}</div> <span className={chatcss.memberProfileName}>{`${receiverDetails?.lastName}`}</span>
+                <div><span className={chatcss.memberProfileId}>@{receiverDetails?.username}</span></div>
+                {/* <br /> */}
                 {/* <small className="text-muted">{createdAt}</small> */}
-              </span>
+              </div>
             </div>
           </Card.Header>
 
