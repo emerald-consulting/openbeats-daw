@@ -51,8 +51,9 @@ const LikeButton = ({ details, token }) => {
       style={{
         display: "block",
         width: "fit-content",
-        float: "right",
+        marginLeft: "auto",
         marginTop: "-30px",
+        width: "60px",
       }}
     >
       <FormControlLabel
