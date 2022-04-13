@@ -116,7 +116,7 @@ public class PostController {
         return postService.getNewlyReleased();
     }
 
-    @GetMapping("/search/{searchText}")
+    /* @GetMapping("/search/{searchText}")
     @ResponseBody
     public UserAndPosts search(@PathVariable("searchText") String searchText) {
         return postService.search(searchText);
@@ -127,5 +127,5 @@ public class PostController {
     public List<Post> allSearchPosts(@PathVariable("searchText") String searchText) {
         return postService.allSearchPosts(searchText);
     }
-
+*/
 }

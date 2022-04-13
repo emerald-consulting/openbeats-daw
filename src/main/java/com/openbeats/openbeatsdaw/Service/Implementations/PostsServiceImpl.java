@@ -183,7 +183,7 @@ public class PostsServiceImpl implements PostService {
 
     }
 
-    @Override
+    /* @Override
     public UserAndPosts search(String searchText) {
         Pageable pageable = PageRequest.of(0, 5);
         Page<User> users = userRepository.searchUsers(searchText, pageable);
@@ -217,7 +217,7 @@ public class PostsServiceImpl implements PostService {
         });
         return posts.getContent();
 
-    }
+    } */
 
 
     public List<String> getAllGenre() {
