@@ -43,7 +43,6 @@ const Profile = () => {
     });
   };
   const updateUser = async () => {
-    console.log("pizza ", currentUser);
     const res = await axios.put(url + "/updateUserProfile", currentUser, {
       headers: {
         Accept: "application/json",
@@ -162,11 +161,6 @@ const Profile = () => {
       });
   };
 
-  // const saveCurrentUser = () => {
-  //   console.log("pizza ", currentUser);
-  //   handleProfileModalClose();
-  // };
-
   return (
     <div>
       <div>
@@ -189,7 +183,11 @@ const Profile = () => {
           <Button
             variant="contained"
             onClick={handleProfileModalOpen}
-            style={{ float: "right", marginTop: "20px",backgroundColor:"#1E90FF" }}
+            style={{
+              float: "right",
+              marginTop: "20px",
+              backgroundColor: "#1E90FF",
+            }}
           >
             Edit Profile
           </Button>
@@ -207,7 +205,14 @@ const Profile = () => {
           ) : null}
         </div>
         <button onClick={handleClickOpen}>
-          <Avatar src={profileUrl} sx={{ width: 202, height: 202,transform: `translate(30px, -100px)` }}></Avatar>
+          <Avatar
+            src={profileUrl}
+            sx={{
+              width: 202,
+              height: 202,
+              transform: `translate(30px, -100px)`,
+            }}
+          ></Avatar>
         </button>
         {open ? (
           <ProfilePicture
@@ -233,30 +238,6 @@ const Profile = () => {
           </Typography>
         </div>
       </div>
-      {/* <div className="row">
-        <div className="col-md-4 animated fadeIn">
-          <div className="card">
-            <div className="card-body">
-              <div className="avatar">
-                <img className="card-img-top" alt="" />
-              </div>
-              <h5 className="card-title">
-                {currentUser.firstName} {currentUser.lastName}
-              </h5>
-              <p className="card-text">
-                @{currentUser.username}
-                <br />
-              </p>
-
-              <p className="card-text">
-                {currentUser.bio}
-                <br />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr style={{ color: "gray" }} /> */}
     </div>
   );
 };

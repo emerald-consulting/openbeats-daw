@@ -60,7 +60,6 @@ const SocialPost = ({ details }) => {
         Authorization: "Bearer " + token,
       },
     });
-    // setIsLiked(res.data);
   };
 
   const addToPlaylistHandler = () => {
