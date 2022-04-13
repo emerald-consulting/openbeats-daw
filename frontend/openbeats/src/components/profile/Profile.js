@@ -1,13 +1,18 @@
 import { Avatar, Button, Typography } from "@mui/material";
 import React, { useEffect, useContext, useState, useRef } from "react";
+import { UserContext } from "../../model/user-context/UserContext";
 import axios from "axios";
 import "./Profile.module.css";
 import { url } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
+import { useLocation } from "react-router";
 
 const Profile = () => {
+  const [state, dispatch] = useContext(UserContext);
+  const loggedInUserEmailId = state.user?.emailId;
+
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -16,9 +21,15 @@ const Profile = () => {
   const [preview, setPreview] = useState(null);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [userEmailId, setUserEmailId] = useState("");
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
+
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+
+  const location = useLocation();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -58,7 +69,7 @@ const Profile = () => {
   };
 
   const getPicture = async () => {
-    const res = await axios.get(url + "/getPicture", {
+    const res = await axios.get(url + "/getPicture/" + userEmailId, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -68,6 +79,7 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
+    if (res.data.emailId === loggedInUserEmailId) setIsCurrentUser(true);
     setCurrentUser(res.data);
     setProfileUrl(res.data.profilePictureFileUrl);
     setCoverUrl(res.data.coverPictureFileUrl);
@@ -87,8 +99,9 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setProfileUrl(res.data.profilePictureFileUrl);
-    setCoverUrl(res.data.coverPictureFileUrl);
+    getPicture();
+    // setProfileUrl(res.data.profilePictureFileUrl);
+    // setCoverUrl(res.data.coverPictureFileUrl);
     handleClose();
   };
 
@@ -123,6 +136,18 @@ const Profile = () => {
   useEffect(() => {
     getPicture();
   }, [profileUrl]);
+
+  useEffect(() => {
+    getPicture();
+  }, [coverUrl]);
+
+  useEffect(() => {
+    getPicture();
+  }, [userEmailId]);
+
+  useEffect(() => {
+    setUserEmailId(location.state.emailId);
+  }, [location]);
 
   useEffect(() => {
     addProfilePicture();
@@ -165,12 +190,15 @@ const Profile = () => {
     <div>
       <div>
         <div>
-          <button onClick={() => fileRef.current.click()}>
+          <Button
+            onClick={() => fileRef.current.click()}
+            disabled={!isCurrentUser}
+          >
             <img
               src={coverUrl}
               style={{ width: "1000px", height: "300px" }}
             ></img>
-          </button>
+          </Button>
           <input
             ref={fileRef}
             onChange={(e) => {
@@ -180,7 +208,7 @@ const Profile = () => {
             type="file"
             hidden
           />
-          <Button
+         {isCurrentUser && <Button
             variant="contained"
             onClick={handleProfileModalOpen}
             style={{
@@ -188,9 +216,10 @@ const Profile = () => {
               marginTop: "20px",
               backgroundColor: "#1E90FF",
             }}
+            disabled={!isCurrentUser}
           >
             Edit Profile
-          </Button>
+          </Button>}
 
           {openUserModal ? (
             <UserProfileForm
@@ -204,7 +233,7 @@ const Profile = () => {
             ></UserProfileForm>
           ) : null}
         </div>
-        <button onClick={handleClickOpen}>
+        <Button onClick={handleClickOpen} disabled={!isCurrentUser}>
           <Avatar
             src={profileUrl}
             sx={{
@@ -213,7 +242,7 @@ const Profile = () => {
               transform: `translate(30px, -100px)`,
             }}
           ></Avatar>
-        </button>
+        </Button>
         {open ? (
           <ProfilePicture
             handleClickOpen={handleClickOpen}

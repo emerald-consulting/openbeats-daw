@@ -1,6 +1,7 @@
 import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
 import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router"
 import axios from "axios";
 import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
@@ -10,11 +11,13 @@ import profileImg from "../profileIcon.png";
 import Tooltip from "@mui/material/Tooltip";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../likeButton/LikeButton";
+
 const SocialPost = ({ details }) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
   const playlistCntxt = useContext(PlaylistContext);
+  const history = useHistory();
 
   useEffect(() => {
     getAuthorDetails();
@@ -62,6 +65,13 @@ const SocialPost = ({ details }) => {
     });
   };
 
+  const profile = () => {
+    history.push({
+      pathname: "profile",
+      state: { emailId: author?.emailId },
+    });
+  };
+
   const addToPlaylistHandler = () => {
     playlistCntxt.addItem({ ...details, ...author });
   };
@@ -82,7 +92,7 @@ const SocialPost = ({ details }) => {
     <>
       {author && (
         <Card className={classes.card}>
-          <Card.Header className="mb-2">
+          <Card.Header className="mb-2" onClick={profile}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 alt="Harry"

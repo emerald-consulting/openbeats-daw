@@ -16,4 +16,5 @@ public class UserFetchDTO {
     private String lastName;
     private String profilePictureFileName;
     private String bucketName;
+    private String emailId;
 }
