@@ -28,4 +28,6 @@ public interface PostService {
     public UserAndPosts search(String searchText);
 
     public List<Post> allSearchPosts(String searchText);
+    
+    List<String> getAllGenre();
 }

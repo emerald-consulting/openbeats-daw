@@ -4,6 +4,7 @@ import { url } from "../../../utils/constants";
 import classes from "./TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../../likeButton/LikeButton";
+import profileImg from "../../profileIcon.png";
 
 const TrendingListItem = ({ details }) => {
   const [author, setAuthor] = useState();
@@ -36,7 +37,7 @@ const TrendingListItem = ({ details }) => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <img
           alt="Harry"
-          src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
+          src={author?.profilePictureFileName || profileImg}
           className={classes.profileIcon}
         />
         <span className={classes.author}>

@@ -68,7 +68,7 @@ const reducer = (state, action) => {
         loading: false
       };
     default:
-      throw new Error();
+      
   }
 };
 

@@ -27,7 +27,7 @@ const MainHeader = (props) => {
   const [state, dispatch] = useContext(UserContext);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const history = useHistory();
-  const isUserLoggedin = state.user?.emailId.trim().length > 0;
+  const isUserLoggedin = state?.user?.emailId.trim().length > 0;
   const [searchOptions, setSearchOptions] = useState([])
   const searchText = useSelector(state => state.search.searchText);
   const [autoCompleteState, setAutoCompleteState] = useState(false)
@@ -45,7 +45,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    dispatch({ type: 'CLEAR_ALL_SEARCH' })
+    dispatcher({ type: 'CLEAR_ALL_SEARCH' })
     history.push("/profile");
   };
 
@@ -59,6 +59,7 @@ const MainHeader = (props) => {
     localStorage.removeItem("auth-token");
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
+    localStorage.removeItem("versions");
     window.location.href = '/login';
   };
 

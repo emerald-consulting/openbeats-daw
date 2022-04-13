@@ -15,7 +15,7 @@ import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 
 const Profile = () => {
-  const [state, dispatch] = useContext(UserContext);
+  //const [state, dispatch] = useContext(UserContext);
   const [posts, setPosts] = useState([]);
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
@@ -23,10 +23,40 @@ const Profile = () => {
   const [coverFile, setCoverFile] = useState(null);
   const [open, setOpen] = useState(false);
   const [preview, setPreview] = useState(null);
-
+  const [userDetails, setUserDetails] = useState({});
   let token = localStorage.getItem("auth-token");
+  const [isLoading,setIsLoading]=useState(false);
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+
+  useEffect(() => {
+    getCurrentUser();
+  }, [])
+
+  const getCurrentUser = () => {
+    if (selectedUserId) {
+
+    }
+    else {
+      let email = localStorage.getItem("emailId");
+
+      axios
+        .get(url + "/getUserDetails?emailId=" + email, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
+          },
+        })
+        .then((response1) => {
+          if (response1.data.status === 207) {
+          } else if (response1.data) {
+            setUserDetails(response1.data.data);
+          }
+          setIsLoading(false);
+        });
+    }
+  }
+
   const selectedUserId = window.location.pathname.split('/')[1];
 
   const handleClickOpen = () => {
@@ -38,7 +68,7 @@ const Profile = () => {
 
   const getPosts = () => {
     axios
-      .get("http://localhost:5000/posts/users/" + state.user.userid)
+      .get("http://localhost:5000/posts/users/" + userDetails.userid)
       .then((response) => {
         setPosts(response.data);
       });
@@ -128,7 +158,7 @@ const Profile = () => {
       <div>
         <div>
           <button onClick={() => fileRef.current.click()}>
-            <img src={coverUrl} style={{width:"1000px",height:"300px"}}></img>
+            <img src={coverUrl} style={{ width: "1000px", height: "300px" }}></img>
           </button>
           <input
             ref={fileRef}
@@ -164,10 +194,10 @@ const Profile = () => {
                 <img className="card-img-top" alt="" />
               </div>
               <h5 className="card-title">
-                {state.user.firstName} {state.user.lastName}
+                {userDetails.firstName} {userDetails.lastName}
               </h5>
               <p className="card-text">
-                @{state.user.username}
+                @{userDetails.username}
                 <br />
               </p>
             </div>
@@ -189,15 +219,15 @@ const Profile = () => {
             />
             <CardContent>
               <Typography gutterBottom variant="h7" component="div">
-                {state.user.firstName} {state.user.lastName}
+                {userDetails.firstName} {userDetails.lastName}
               </Typography>
               <Typography variant="h7" color="text.secondary">
-                @{state.user.username}
+                @{userDetails.username}
               </Typography>
               <Typography>{post.description}</Typography>
 
               {/* <Typography variant="h7" color="text.secondary">
-              @{state.user.username}
+              @{userDetails.username}
             </Typography>
             <Typography>{post.description}</Typography> */}
             </CardContent>

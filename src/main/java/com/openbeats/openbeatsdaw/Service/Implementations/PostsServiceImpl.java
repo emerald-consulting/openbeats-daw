@@ -220,4 +220,7 @@ public class PostsServiceImpl implements PostService {
     }
 
 
+    public List<String> getAllGenre() {
+        return postRepository.findDistinctByGenre();
+    }
 }

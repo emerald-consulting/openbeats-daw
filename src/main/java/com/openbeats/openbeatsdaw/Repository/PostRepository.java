@@ -25,4 +25,7 @@ public interface PostRepository extends JpaRepository<Post, Long>{
 
     @Query("SELECT p FROM Post p where p.description like %:searchText% or p.title like %:searchText% or p.genre like %:searchText% ")
     Page<Post> searchPosts(@Param("searchText")String searchText, Pageable pageable);
+    
+    @Query("SELECT p.genre FROM Post p WHERE p.genre <> '' order by p.genre asc")
+    List<String> findDistinctByGenre();
 }

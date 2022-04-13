@@ -4,6 +4,7 @@ import { url } from "../../../utils/constants";
 import classes from "./AnnouncementItem.module.css";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../../likeButton/LikeButton";
+import profileImg from "../../profileIcon.png";
 
 const AnnouncementItem = ({ details }) => {
   const [author, setAuthor] = useState();
@@ -37,7 +38,7 @@ const AnnouncementItem = ({ details }) => {
       <div style={{ display: "flex", alignItems: "center" }}>
         <img
           alt="Harry"
-          src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
+          src={author?.profilePictureFileName || profileImg}
           className={classes.profileIcon}
         />
         <span className={classes.author}>
