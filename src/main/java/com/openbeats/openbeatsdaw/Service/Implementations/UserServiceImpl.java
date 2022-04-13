@@ -52,12 +52,20 @@ public class UserServiceImpl implements UserService {
     public User getPicture(String emailId) {
         User user = userRepository.findByEmailId(emailId).get();
         if (user.getProfilePictureFileName() != null && user.getProfilePictureFileName().length() > 0) {
-            user.setProfilePictureFileName(awsStorageService.getUrl(user.getBucketName(), user.getProfilePictureFileName()).toString());
+            user.setProfilePictureFileUrl(
+                    awsStorageService.getUrl(user.getBucketName(), user.getProfilePictureFileName()).toString());
         }
 
         if (user.getCoverPictureFileName() != null && user.getCoverPictureFileName().length() > 0) {
-            user.setCoverPictureFileName(awsStorageService.getUrl(user.getBucketName(), user.getCoverPictureFileName()).toString());
+            user.setCoverPictureFileUrl(
+                    awsStorageService.getUrl(user.getBucketName(), user.getCoverPictureFileName()).toString());
         }
+        return user;
+    }
+
+    @Override
+    public User updateUser(User user) {
+        userRepository.saveAndFlush(user);
         return user;
     }
 }

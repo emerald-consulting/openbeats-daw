@@ -30,3 +30,11 @@
   margin-top: "6px";
   color: "red";
 }
+
+.controlButtons div{
+  background-color: #10b981;
+}
+
+.controlButtons div:hover{
+  background-color: #059669;
+}

@@ -1,19 +1,13 @@
 package com.openbeats.openbeatsdaw.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.openbeats.openbeatsdaw.Repository.UserRepository;
-import com.openbeats.openbeatsdaw.Service.PostService;
 import com.openbeats.openbeatsdaw.Service.UserService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
-import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.UserFetchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/")
@@ -48,6 +42,14 @@ public class UserController {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
         User user = userService.getPicture(currentUser.getEmailId());
         return user;
+    }
+
+
+    @PutMapping("/updateUserProfile")
+    @ResponseBody
+    public User updateUserProfile(@RequestBody User user) {
+        User updatedUser = userService.updateUser(user);
+        return updatedUser;
     }
 
 }

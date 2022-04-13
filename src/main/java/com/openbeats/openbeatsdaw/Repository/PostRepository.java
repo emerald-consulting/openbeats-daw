@@ -28,4 +28,13 @@ public interface PostRepository extends JpaRepository<Post, Long>{
     
     @Query("SELECT p.genre FROM Post p WHERE p.genre <> '' order by p.genre asc")
     List<String> findDistinctByGenre();
+
+    @Query("SELECT p FROM Post p WHERE p.userId= :userId order by p.createdAt desc")
+    Page<Post> getPostsByUser(@Param("userId")Long userId, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.postId in (select r.postId from Reactions r where r.userId= :userId and r.isLike = 1) order by p.createdAt desc")
+    Page<Post> getPostsLikedByUser(Long userId, Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.userId= :userId and p.isMediaAdded = 1 order by p.createdAt desc")
+    Page<Post> getMediaPostsByUser(Long userId, Pageable pageable);
 }

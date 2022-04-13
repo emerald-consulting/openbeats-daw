@@ -1,6 +1,6 @@
 import React from "react";
-//import Avatar from "react-avatar-edit";
-import './Profile.css';
+import Avatar from "react-avatar-edit";
+import './Profile.module.css';
 
 const ProfileImage = (props) => {
   return (

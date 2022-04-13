@@ -223,4 +223,51 @@ public class PostsServiceImpl implements PostService {
     public List<String> getAllGenre() {
         return postRepository.findDistinctByGenre();
     }
+
+    @Override
+    public Page<Post> getPostsByUser(Long userId, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
+        Page<Post> posts = postRepository.getPostsByUser(userId, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+
+        return posts;
+    }
+
+    @Override
+    public Page<Post> getPostsLikedByUser(Long userId, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
+        Page<Post> posts = postRepository.getPostsLikedByUser(userId, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+
+        return posts;
+    }
+
+    @Override
+    public Page<Post> getMediaPostsByUser(Long userId, int pageNo) {
+        Pageable pageable = PageRequest.of(pageNo, 10);
+        Page<Post> posts = postRepository.getMediaPostsByUser(userId, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+        return posts;
+    }
 }
