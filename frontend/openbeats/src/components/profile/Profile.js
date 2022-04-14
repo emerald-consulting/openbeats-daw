@@ -19,7 +19,6 @@ import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
 
 const Profile = (props) => {
-  console.log("pizza ",props)
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -93,7 +92,7 @@ const Profile = (props) => {
   };
 
   const getPicture = async () => {
-    const res = await axios.get(url + "/getPicture/" + eId, {
+    const res = await axios.get(url + "/getPicture/" + props.username, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

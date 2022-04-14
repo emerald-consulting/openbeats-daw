@@ -11,7 +11,7 @@ public interface UserService {
 
     public User uploadOrEditPicture(String emailId, MultipartFile profilePictureName, MultipartFile coverPictureName);
 
-    public User getPicture(String emailId);
+    public User getPicture(String username);
 
     public User updateUser(User user);
 

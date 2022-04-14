@@ -67,7 +67,7 @@ const SocialPost = ({ details }) => {
 
   const profile = () => {
     history.push({
-      pathname: "profile",
+      pathname: "/profile/"+author?.username,
       state: { emailId: author?.emailId, userid: author?.userid },
     });
   };

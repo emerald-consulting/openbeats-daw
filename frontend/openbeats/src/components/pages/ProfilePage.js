@@ -6,19 +6,19 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router";
 import { url } from "../../utils/constants";
 import axios from "axios";
-
+import { useParams } from "react-router-dom";
 import Announcements from "../announcements/Announcements";
 
 const ProfilePage = () => {
   const location = useLocation();
+  const params = useParams();
   const authorId = location.state?.userid;
   const eId = location.state?.emailId;
+  const username = params.username;
   const loggedInUserEmailId = localStorage.getItem("emailId");
   let token = localStorage.getItem("auth-token");
   const [followingList, setFollowingList] = useState([]);
   const [followersList, setFollowersList] = useState([]);
-  // console.log("pizza ",eId,loggedInUserEmailId)
-
   const [refresh, setRefresh] = useState(0);
   const [follow, setFollow] = useState(false);
   const refreshPosts = () => {
@@ -124,6 +124,7 @@ const ProfilePage = () => {
             isFollowing={follow}
             followingList={followingList}
             followersList={followersList}
+            username={username}
           />
         </div>
         <div className={classes.rightpane}>
