@@ -1,4 +1,14 @@
-import { Avatar, Button, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Profile.module.css";
@@ -7,19 +17,9 @@ import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles({
-  follow: {
-    color: "#66CDAA",
-    fontWeight: "bold",
-  },
-});
 
 const Profile = (props) => {
-  // console.log("pizza ",props)
-  const loggedInUserEmailId = localStorage.getItem("emailId");
-  const classes = useStyles();
+  console.log("pizza ",props)
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -28,15 +28,13 @@ const Profile = (props) => {
   const [preview, setPreview] = useState(null);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  // const [userEmailId, setUserEmailId] = useState("");
-  // const [isCurrentUser, setIsCurrentUser] = useState();
-  // const [isFollowing, setIsFollowing] = useState(props.isFollowing);
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
 
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
   const location = useLocation();
-  const authorId = location.state?.userid;
   const eId = location.state?.emailId;
 
   const handleClickOpen = () => {
@@ -53,6 +51,22 @@ const Profile = (props) => {
 
   const handleProfileModalClose = () => {
     setOpenUserModal(false);
+  };
+
+  const handleFollowingModalOpen = () => {
+    setShowFollowing(true);
+  };
+
+  const handleFollowingModalClose = () => {
+    setShowFollowing(false);
+  };
+
+  const handleFollowerModalOpen = () => {
+    setShowFollowers(true);
+  };
+
+  const handleFollowerModalClose = () => {
+    setShowFollowers(false);
   };
 
   const handleInputChange = (e) => {
@@ -297,7 +311,27 @@ const Profile = (props) => {
             <span style={{ color: "black" }}>0</span>
           )}
           &nbsp;&nbsp;
-          <span style={{ color: "#66CDAA" }}>Following</span>
+          <Button onClick={handleFollowingModalOpen}>
+            <span style={{ color: "#66CDAA" }}>Following</span>
+          </Button>
+          {showFollowing && (
+            <Dialog
+              open={showFollowing}
+              onClose={handleFollowingModalClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">FOLLOWING</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {props.followingList}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleFollowingModalClose}>Ok</Button>
+              </DialogActions>
+            </Dialog>
+          )}
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           {currentUser.totalFollowers ? (
             <span style={{ color: "black" }}>{currentUser.totalFollowers}</span>
@@ -305,7 +339,27 @@ const Profile = (props) => {
             <span style={{ color: "black" }}>0</span>
           )}
           &nbsp;&nbsp;
-          <span style={{ color: "#66CDAA" }}>Followers</span>
+          <Button onClick={handleFollowerModalOpen}>
+            <span style={{ color: "#66CDAA" }}>Followers</span>
+          </Button>{" "}
+          {showFollowers && (
+            <Dialog
+              open={showFollowers}
+              onClose={handleFollowerModalClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">FOLLOWERS</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  {props.followersList}
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleFollowerModalClose}>Ok</Button>
+              </DialogActions>
+            </Dialog>
+          )}
         </div>
       </div>
     </div>

@@ -18,6 +18,8 @@ import com.openbeats.openbeatsdaw.model.Entity.Followers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -45,9 +47,29 @@ public class FollowersController {
 	public Boolean isFollowing(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token){
 		Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
 		Followers follower = followersRepository.findByFollowingUserIdAndFollowedUserId(currentUser.get().getUserid(),userId);
-		System.out.println("******************************************** "+follower);
 		if(follower!=null)return true;
 		return false;
+	}
+
+	@GetMapping("/getFollowing/{userId}")
+	public List<String> getFollowing(@PathVariable("userId") Long userId){
+		List<Followers> followingUserIds = followersRepository.findByFollowingUserId(userId);
+		List<String> followingUsers=new ArrayList<>();
+		for(int i=0;i<followingUserIds.size();i++){
+			followingUsers.add(followingUserIds.get(i).getFollowedUserRef().getUsername());
+		}
+		return followingUsers;
+	}
+
+
+	@GetMapping("/getFollowers/{userId}")
+	public List<String> getFollowers(@PathVariable("userId") Long userId){
+		List<Followers> followedUserIds = followersRepository.findByFollowedUserId(userId);
+		List<String> followedUsers=new ArrayList<>();
+		for(int i=0;i<followedUserIds.size();i++){
+			followedUsers.add(followedUserIds.get(i).getFollowingUserRef().getUsername());
+		}
+		return followedUsers;
 	}
 
 

@@ -15,10 +15,12 @@ const ProfilePage = () => {
   const eId = location.state?.emailId;
   const loggedInUserEmailId = localStorage.getItem("emailId");
   let token = localStorage.getItem("auth-token");
+  const [followingList, setFollowingList] = useState([]);
+  const [followersList, setFollowersList] = useState([]);
   // console.log("pizza ",eId,loggedInUserEmailId)
 
   const [refresh, setRefresh] = useState(0);
-  const[follow,setFollow]=useState(false)
+  const [follow, setFollow] = useState(false);
   const refreshPosts = () => {
     setRefresh((prev) => prev + 1);
   };
@@ -34,7 +36,36 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setFollow(res.data)
+    setFollow(res.data);
+  };
+
+  const getFollowing = async () => {
+    const res = await axios.get(url + "/getFollowing/" + authorId, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    setFollowingList(...res.data);
+  };
+
+  const getFollowed = async () => {
+    const res = await axios.get(url + "/getFollowers/" + authorId, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    // console.log("pizza ",res.data)
+    setFollowersList(...res.data);
   };
 
   const followUser = async () => {
@@ -67,7 +98,9 @@ const ProfilePage = () => {
 
   useEffect(() => {
     isFollowing();
-  },[]);
+    getFollowing();
+    getFollowed();
+  }, []);
 
   return (
     <div className={classes.container}>
@@ -84,7 +117,14 @@ const ProfilePage = () => {
         </div>
 
         <div className={classes.middlepane}>
-          <Profile isCurrentUser={eId === loggedInUserEmailId} followUser={followUser} unfollowUser={unfollowUser} isFollowing={follow}/>
+          <Profile
+            isCurrentUser={eId === loggedInUserEmailId}
+            followUser={followUser}
+            unfollowUser={unfollowUser}
+            isFollowing={follow}
+            followingList={followingList}
+            followersList={followersList}
+          />
         </div>
         <div className={classes.rightpane}>
           <div className={classes.splitScreen}>
