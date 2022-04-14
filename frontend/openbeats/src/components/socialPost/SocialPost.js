@@ -92,7 +92,7 @@ const SocialPost = ({ details }) => {
     <>
       {author && (
         <Card className={classes.card}>
-          <Card.Header className="mb-2" onClick={profile}>
+          <Card.Header className="mb-2" style={{cursor: "pointer"}} onClick={profile}>
             <div style={{ display: "flex", alignItems: "center" }}>
               <img
                 alt="Harry"
