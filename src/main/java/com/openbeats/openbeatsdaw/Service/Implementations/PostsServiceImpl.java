@@ -11,6 +11,7 @@ import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.Reactions;
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.UserAndPosts;
+import com.openbeats.openbeatsdaw.model.UserFetchDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -183,11 +184,12 @@ public class PostsServiceImpl implements PostService {
 
     }
 
-    /* @Override
+     @Override
     public UserAndPosts search(String searchText) {
         Pageable pageable = PageRequest.of(0, 5);
-        Page<User> users = userRepository.searchUsers(searchText, pageable);
+        Page<UserFetchDTO> users = userRepository.searchUsers(searchText, pageable);
         Page<Post> posts = postRepository.searchPosts(searchText, pageable);
+
         posts.forEach(post->{
             if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
                 post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
@@ -217,7 +219,7 @@ public class PostsServiceImpl implements PostService {
         });
         return posts.getContent();
 
-    } */
+    }
 
 
     public List<String> getAllGenre() {

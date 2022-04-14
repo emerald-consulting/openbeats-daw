@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,4 +130,17 @@ public class UserManagementService implements UserDetailsService {
         return userRepository.save(usr);
     }
 
+    public Boolean verifyCredentials(String decodedString) {
+        String[] credentials = decodedString.split(":");
+        String emailId = credentials[0];
+        String pass = credentials[1];
+        Optional<User> user = findUser(emailId);
+        if(user.isPresent()){
+            if(passwordEncoder.matches(pass, user.get().getPassword())){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
 }

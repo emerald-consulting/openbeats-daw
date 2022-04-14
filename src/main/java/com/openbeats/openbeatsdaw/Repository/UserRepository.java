@@ -39,7 +39,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 
-    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName) FROM User u where u.username like %:searchText% ")
-    Page<User> searchUsers(@Param("searchText")String searchText, Pageable pageable);
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName, u.bucketName) FROM User u where u.username like %:searchText% ")
+    Page<UserFetchDTO> searchUsers(@Param("searchText")String searchText, Pageable pageable);
 
 }
