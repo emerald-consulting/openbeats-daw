@@ -70,8 +70,8 @@
     "websocket": "^1.0.34"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
-    "build": "react-scripts --openssl-legacy-provider build",
+    "start": "carco start",
+    "build": "carco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },
