@@ -43,7 +43,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    history.push({ pathname: "profile", state: { emailId: state.user?.emailId } });
+    history.push({ pathname: "profile", state: { emailId: state.user?.emailId,userid:state.user?.userid } });
   };
 
   const navigationHandler = (event) => {

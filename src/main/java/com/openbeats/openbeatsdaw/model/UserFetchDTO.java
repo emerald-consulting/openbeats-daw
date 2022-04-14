@@ -15,6 +15,11 @@ public class UserFetchDTO {
     private String firstName;
     private String lastName;
     private String profilePictureFileName;
+    private String coverPictureFileName;
+    private String profilePictureFileUrl;
+    private String coverPictureFileUrl;
     private String bucketName;
     private String emailId;
+    private Integer totalFollowers;
+    private Integer totalFollowing;
 }

@@ -1,6 +1,5 @@
 import { Avatar, Button, Typography } from "@mui/material";
-import React, { useEffect, useContext, useState, useRef } from "react";
-import { UserContext } from "../../model/user-context/UserContext";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Profile.module.css";
 import { url } from "../../utils/constants";
@@ -8,11 +7,19 @@ import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
+import { makeStyles } from "@material-ui/core/styles";
 
-const Profile = () => {
-  const [state, dispatch] = useContext(UserContext);
-  const loggedInUserEmailId = state.user?.emailId;
+const useStyles = makeStyles({
+  follow: {
+    color: "#66CDAA",
+    fontWeight: "bold",
+  },
+});
 
+const Profile = (props) => {
+  // console.log("pizza ",props)
+  const loggedInUserEmailId = localStorage.getItem("emailId");
+  const classes = useStyles();
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -21,14 +28,16 @@ const Profile = () => {
   const [preview, setPreview] = useState(null);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [userEmailId, setUserEmailId] = useState("");
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
+  // const [userEmailId, setUserEmailId] = useState("");
+  // const [isCurrentUser, setIsCurrentUser] = useState();
+  // const [isFollowing, setIsFollowing] = useState(props.isFollowing);
 
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
-
   const location = useLocation();
+  const authorId = location.state?.userid;
+  const eId = location.state?.emailId;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -53,6 +62,7 @@ const Profile = () => {
       [name]: value,
     });
   };
+
   const updateUser = async () => {
     const res = await axios.put(url + "/updateUserProfile", currentUser, {
       headers: {
@@ -69,7 +79,7 @@ const Profile = () => {
   };
 
   const getPicture = async () => {
-    const res = await axios.get(url + "/getPicture/" + userEmailId, {
+    const res = await axios.get(url + "/getPicture/" + eId, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -79,7 +89,6 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
-    if (res.data.emailId === loggedInUserEmailId) setIsCurrentUser(true);
     setCurrentUser(res.data);
     setProfileUrl(res.data.profilePictureFileUrl);
     setCoverUrl(res.data.coverPictureFileUrl);
@@ -100,8 +109,6 @@ const Profile = () => {
       },
     });
     getPicture();
-    // setProfileUrl(res.data.profilePictureFileUrl);
-    // setCoverUrl(res.data.coverPictureFileUrl);
     handleClose();
   };
 
@@ -135,18 +142,6 @@ const Profile = () => {
 
   useEffect(() => {
     getPicture();
-  }, [profileUrl]);
-
-  useEffect(() => {
-    getPicture();
-  }, [coverUrl]);
-
-  useEffect(() => {
-    getPicture();
-  }, [userEmailId]);
-
-  useEffect(() => {
-    setUserEmailId(location.state.emailId);
   }, [location]);
 
   useEffect(() => {
@@ -192,7 +187,7 @@ const Profile = () => {
         <div>
           <Button
             onClick={() => fileRef.current.click()}
-            disabled={!isCurrentUser}
+            disabled={!props.isCurrentUser}
           >
             <img
               src={coverUrl}
@@ -208,18 +203,48 @@ const Profile = () => {
             type="file"
             hidden
           />
-         {isCurrentUser && <Button
-            variant="contained"
-            onClick={handleProfileModalOpen}
-            style={{
-              float: "right",
-              marginTop: "20px",
-              backgroundColor: "#1E90FF",
-            }}
-            disabled={!isCurrentUser}
-          >
-            Edit Profile
-          </Button>}
+          {props.isCurrentUser ? (
+            <Button
+              variant="contained"
+              onClick={handleProfileModalOpen}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+              }}
+              disabled={!props.isCurrentUser}
+            >
+              Edit Profile
+            </Button>
+          ) : !props.isFollowing ? (
+            <Button
+              variant="contained"
+              onClick={props.followUser}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+                color: "black",
+              }}
+              disabled={props.isCurrentUser}
+            >
+              Follow
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={props.unfollowUser}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+                color: "black",
+              }}
+              disabled={props.isCurrentUser}
+            >
+              Unfollow
+            </Button>
+          )}
 
           {openUserModal ? (
             <UserProfileForm
@@ -233,7 +258,7 @@ const Profile = () => {
             ></UserProfileForm>
           ) : null}
         </div>
-        <Button onClick={handleClickOpen} disabled={!isCurrentUser}>
+        <Button onClick={handleClickOpen} disabled={!props.isCurrentUser}>
           <Avatar
             src={profileUrl}
             sx={{
@@ -255,7 +280,7 @@ const Profile = () => {
             addProfilePicture={addProfilePicture}
           />
         ) : null}
-        <div style={{ transform: `translate(20px, -80px)` }}>
+        <div style={{ transform: `translate(55px, -80px)` }}>
           <Typography sx={{ fontSize: 25, fontWeight: "bold" }}>
             {currentUser.firstName} {currentUser.lastName}
           </Typography>
@@ -265,6 +290,22 @@ const Profile = () => {
           <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             {currentUser.bio}
           </Typography>
+          <br />
+          {currentUser.totalFollowing ? (
+            <span style={{ color: "black" }}>{currentUser.totalFollowing}</span>
+          ) : (
+            <span style={{ color: "black" }}>0</span>
+          )}
+          &nbsp;&nbsp;
+          <span style={{ color: "#66CDAA" }}>Following</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {currentUser.totalFollowers ? (
+            <span style={{ color: "black" }}>{currentUser.totalFollowers}</span>
+          ) : (
+            <span style={{ color: "black" }}>0</span>
+          )}
+          &nbsp;&nbsp;
+          <span style={{ color: "#66CDAA" }}>Followers</span>
         </div>
       </div>
     </div>

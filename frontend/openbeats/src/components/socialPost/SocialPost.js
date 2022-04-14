@@ -1,7 +1,7 @@
 import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
 import { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router"
+import { useHistory } from "react-router";
 import axios from "axios";
 import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
@@ -68,7 +68,7 @@ const SocialPost = ({ details }) => {
   const profile = () => {
     history.push({
       pathname: "profile",
-      state: { emailId: author?.emailId },
+      state: { emailId: author?.emailId, userid: author?.userid },
     });
   };
 
