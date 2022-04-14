@@ -185,7 +185,7 @@ public class PostsServiceImpl implements PostService {
     }
 
      @Override
-    public UserAndPosts search(String searchText) {
+    public UserAndPosts search(String searchText, Long userId) {
         Pageable pageable = PageRequest.of(0, 5);
         Page<UserFetchDTO> users = userRepository.searchUsers(searchText, pageable);
         Page<Post> posts = postRepository.searchPosts(searchText, pageable);
@@ -201,6 +201,7 @@ public class PostsServiceImpl implements PostService {
         UserAndPosts usersAndPosts = new UserAndPosts();
         usersAndPosts.users=users;
         usersAndPosts.posts=posts;
+        usersAndPosts.userId=userId;
         return usersAndPosts;
 
     }

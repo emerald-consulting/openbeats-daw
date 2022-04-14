@@ -47,7 +47,7 @@ const MainHeader = (props) => {
   };
   const profile = () => {
     dispatcher({ type: 'CLEAR_ALL_SEARCH' })
-    history.push("/profile");
+    history.push("/profile/0");
   };
 
   const navigationHandler = (event) => {
@@ -116,7 +116,7 @@ const MainHeader = (props) => {
       },
     });
     const data = res.data;
-    const allItems = data.users.content.concat(data.posts.content);
+    const allItems = data.users.content.filter(i=>i.userid != res.data.userId).concat(data.posts.content);
     let userid = '-1'
     if (allItems.length === 0) userid = '-2';
     allItems.push({ username: '-1', userid: userid, postId: '-1', title: searchText })

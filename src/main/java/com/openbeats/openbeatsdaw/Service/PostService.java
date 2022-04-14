@@ -25,7 +25,7 @@ public interface PostService {
 
     public List<Post> getNewlyReleased();
 
-     public UserAndPosts search(String searchText);
+     public UserAndPosts search(String searchText,Long userId);
 
     public List<Post> allSearchPosts(String searchText);
     

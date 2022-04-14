@@ -118,8 +118,9 @@ public class PostController {
 
     @GetMapping("/search/{searchText}")
     @ResponseBody
-    public UserAndPosts search(@PathVariable("searchText") String searchText) {
-        return postService.search(searchText);
+    public UserAndPosts search(@PathVariable("searchText") String searchText,@RequestHeader(name = "Authorization") String token) {
+        User currentUser = tokenProvider.getLoggedinUser(token).get();
+        return postService.search(searchText,currentUser.getUserid());
     }
 
     @GetMapping("/allSearchPosts/{searchText}")

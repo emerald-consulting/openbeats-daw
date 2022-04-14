@@ -20,8 +20,14 @@ const Profile = () => {
   const [isLoading,setIsLoading]=useState(false);
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+  
+  const currentUserId=+window.location.pathname.split('/')[2];
+  
   const handleClickOpen = () => {
-    setOpen(true);
+    if(!currentUserId){
+
+      setOpen(true);
+    }
   };
 
   const handleClose = () => {
@@ -44,7 +50,6 @@ const Profile = () => {
     });
   };
   const updateUser = async () => {
-    console.log("pizza ", currentUser);
     const res = await axios.put(url + "/updateUserProfile", currentUser, {
       headers: {
         Accept: "application/json",
@@ -60,6 +65,26 @@ const Profile = () => {
   };
 
   const getPicture = async () => {
+    if(currentUserId){
+      const res = await axios.get(
+        url + "/getAuthorDetails/" + currentUserId,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
+
+    setCurrentUser(res.data);
+    setProfileUrl(res.data.profilePictureFileUrl);
+    setCoverUrl(res.data.coverPictureFileUrl);
+    }
+    else{
     const res = await axios.get(url + "/getPicture", {
       headers: {
         Accept: "application/json",
@@ -73,6 +98,7 @@ const Profile = () => {
     setCurrentUser(res.data);
     setProfileUrl(res.data.profilePictureFileUrl);
     setCoverUrl(res.data.coverPictureFileUrl);
+  }
   };
 
   const addProfilePicture = async () => {
@@ -123,7 +149,9 @@ const Profile = () => {
   }, []);
 
   useEffect(() => {
-    getPicture();
+    if(!currentUserId){
+      getPicture();
+    }
   }, [profileUrl]);
 
   useEffect(() => {
@@ -172,12 +200,14 @@ const Profile = () => {
     <div>
       <div>
         <div>
-          <button onClick={() => fileRef.current.click()}>
+          <button onClick={() => fileRef?.current?.click()}>
             <img
               src={coverUrl}
               style={{ width: "1000px", height: "300px" }}
             ></img>
           </button>
+          {
+            !currentUserId && (<>
           <input
             ref={fileRef}
             onChange={(e) => {
@@ -186,7 +216,8 @@ const Profile = () => {
             multiple={false}
             type="file"
             hidden
-          />
+          />          
+           
           <Button
             variant="contained"
             onClick={handleProfileModalOpen}
@@ -194,7 +225,8 @@ const Profile = () => {
           >
             Edit Profile
           </Button>
-
+          </>)
+          }
           {openUserModal ? (
             <UserProfileForm
               user={currentUser}

@@ -6,4 +6,5 @@ import org.springframework.data.domain.Page;
 public class UserAndPosts {
     public Page<Post> posts;
     public Page<UserFetchDTO> users;
+    public Long userId;
 }
