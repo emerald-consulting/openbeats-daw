@@ -47,12 +47,12 @@ const Login = () => {
             type: "STORE_PASSCODE",
             payload: password
           });
-        dispatch2(setUserPassword(password));
-        dispatch2(setUserEmail(email));
+        // dispatch2(setUserPassword(password));
+        // dispatch2(setUserEmail(email));
         
 
 
-      axios.get(url+"/userlogin?emailId="+email,{headers: {
+      axios.get(url+"/userlogin?encodedString="+encodedString,{headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
             "Access-Control-Allow-Headers" : "Content-Type",
@@ -69,6 +69,8 @@ const Login = () => {
                 setIsLoaded(false)
                 // http://localhost:8655/getUserDetails?emailId=wrong@gmail.com' --header 'Content-Type: application/json' --header 'Authorization: Basic aGFyaXNoQGdtYWlsLmNvbTp0ZXN0' \
                 dispatch2(setUserToken(response.data.data));
+                dispatch2(setUserPassword(password));
+                dispatch2(setUserEmail(email));
                 localStorage.setItem("auth-token",response.data.data);
                 localStorage.setItem("emailId",email);
                 axios.get(url+"/getUserDetails?emailId="+email,{headers: {
