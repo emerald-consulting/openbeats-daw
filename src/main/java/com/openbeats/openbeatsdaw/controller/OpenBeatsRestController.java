@@ -29,6 +29,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -77,11 +78,18 @@ public class OpenBeatsRestController {
     }
 
     @GetMapping("/userlogin")
-    public ResponseEntity<Object> login(@RequestParam String emailId){
+    public ResponseEntity<Object> login(@RequestParam String encodedString) throws Exception {
         log.info("Received login request");
-        String token=tokenProvider.createToken(emailId);
-        return ResponseHandler.generateResponse("Login success", HttpStatus.OK,token);
-
+        byte[] decodedBytes = Base64.getDecoder().decode(encodedString);
+        String decodedString = new String(decodedBytes);
+        Boolean isAuthenticated = createUser.verifyCredentials(decodedString);
+        if(isAuthenticated){
+            String emailId = decodedString.split(":")[0];
+            String token=tokenProvider.createToken(emailId);
+            return ResponseHandler.generateResponse("Login success", HttpStatus.OK,token);
+        }else{
+            throw  new Exception("Invalid Credentials");
+        }
     }
 
     @GetMapping("/getUserDetails")
@@ -109,13 +117,13 @@ public class OpenBeatsRestController {
         if (createUser.verify(code)) {
             log.info("User verified Successfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("https://d3bd7i1jol9mgp.cloudfront.net/confirmation");
+            redirectView.setUrl("https://d363hd6yi8f217.cloudfront.net/confirmation");
             return redirectView;
 
         } else {
             log.info("User verified Unsuccessfully.");
             RedirectView redirectView = new RedirectView();
-            redirectView.setUrl("https://d3bd7i1jol9mgp.cloudfront.net");
+            redirectView.setUrl("https://d363hd6yi8f217.cloudfront.net");
             return redirectView;
 
         }
