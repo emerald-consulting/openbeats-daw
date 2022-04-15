@@ -19,6 +19,7 @@ import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
 
 const Profile = (props) => {
+  // console.log("pizza ",props.isFollowing)
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);

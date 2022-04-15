@@ -16,6 +16,7 @@ const ProfilePage = () => {
   const eId = location.state?.emailId;
   const username = params.username;
   const loggedInUserEmailId = localStorage.getItem("emailId");
+ 
   let token = localStorage.getItem("auth-token");
   const [followingList, setFollowingList] = useState([]);
   const [followersList, setFollowersList] = useState([]);
@@ -26,7 +27,7 @@ const ProfilePage = () => {
   };
 
   const isFollowing = async () => {
-    const res = await axios.get(url + "/followers/" + authorId, {
+    const res = await axios.get(url + "/followers/" + username, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -36,11 +37,12 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
+    console.log("pizza ",res.data)
     setFollow(res.data);
   };
 
   const getFollowing = async () => {
-    const res = await axios.get(url + "/getFollowing/" + authorId, {
+    const res = await axios.get(url + "/getFollowing/" + username, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -54,7 +56,7 @@ const ProfilePage = () => {
   };
 
   const getFollowed = async () => {
-    const res = await axios.get(url + "/getFollowers/" + authorId, {
+    const res = await axios.get(url + "/getFollowers/" + username, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -64,27 +66,29 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
-    // console.log("pizza ",res.data)
     setFollowersList(...res.data);
   };
 
   const followUser = async () => {
     setFollow(true);
-    const res = await axios.post(url + "/follow/" + authorId, null, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + token,
-      },
-    });
+    const res = await axios.post(
+      url + "/follow/" + username,null,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
   };
 
   const unfollowUser = async () => {
     setFollow(false);
-    const res = await axios.put(url + "/unfollow/" + authorId, null, {
+    const res = await axios.put(url + "/unfollow/" + username, null, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

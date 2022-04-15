@@ -43,17 +43,17 @@ public class FollowersController {
 	@Autowired
 	private TokenProvider tokenProvider;
 
-	@GetMapping("/followers/{userId}")
-	public Boolean isFollowing(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token){
+	@GetMapping("/followers/{username}")
+	public Boolean isFollowing(@PathVariable("username") String username, @RequestHeader(name = "Authorization") String token){
 		Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
-		Followers follower = followersRepository.findByFollowingUserIdAndFollowedUserId(currentUser.get().getUserid(),userId);
+		Followers follower = followersRepository.findByFollowingUserIdAndFollowedUserId(currentUser.get().getUserid(),userRepository.findByUsername(username).get().getUserid());
 		if(follower!=null)return true;
 		return false;
 	}
 
-	@GetMapping("/getFollowing/{userId}")
-	public List<String> getFollowing(@PathVariable("userId") Long userId){
-		List<Followers> followingUserIds = followersRepository.findByFollowingUserId(userId);
+	@GetMapping("/getFollowing/{username}")
+	public List<String> getFollowing(@PathVariable("username") String username){
+		List<Followers> followingUserIds = followersRepository.findByFollowingUserId(userRepository.findByUsername(username).get().getUserid());
 		List<String> followingUsers=new ArrayList<>();
 		for(int i=0;i<followingUserIds.size();i++){
 			followingUsers.add(followingUserIds.get(i).getFollowedUserRef().getUsername());
@@ -62,9 +62,9 @@ public class FollowersController {
 	}
 
 
-	@GetMapping("/getFollowers/{userId}")
-	public List<String> getFollowers(@PathVariable("userId") Long userId){
-		List<Followers> followedUserIds = followersRepository.findByFollowedUserId(userId);
+	@GetMapping("/getFollowers/{username}")
+	public List<String> getFollowers(@PathVariable("username") String username){
+		List<Followers> followedUserIds = followersRepository.findByFollowedUserId(userRepository.findByUsername(username).get().getUserid());
 		List<String> followedUsers=new ArrayList<>();
 		for(int i=0;i<followedUserIds.size();i++){
 			followedUsers.add(followedUserIds.get(i).getFollowingUserRef().getUsername());
@@ -73,38 +73,38 @@ public class FollowersController {
 	}
 
 
-	@PostMapping("/follow/{userId}")
+	@PostMapping("/follow/{username}")
 	@ResponseBody
-	public Followers follow(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token) {
+	public Followers follow(@PathVariable("username") String username,@RequestHeader(name = "Authorization") String token) {
 		Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
 		User followingUser = currentUser.get();
-		UserFetchDTO followedUser = userRepository.getUserDetailsByUserId(userId);
+		User followedUser = userRepository.findByUsername(username).get();
 		FollowersDTO followersDTO = new FollowersDTO();
 		followersDTO.setFollowingUserId(followingUser.getUserid());
-		followersDTO.setFollowedUserId(userId);
+		followersDTO.setFollowedUserId(followedUser.getUserid());
 		followingUser.setTotalFollowing(followingUser.getTotalFollowing()!=null? (followingUser.getTotalFollowing()+ 1):1); 
 		followedUser.setTotalFollowers(followedUser.getTotalFollowers()!=null? (followedUser.getTotalFollowers()+ 1):1); 
 		userRepository.save(followingUser);
-		User followedUserEntity = new User();
-		BeanUtils.copyProperties(followedUser, followedUserEntity);
-		userRepository.save(followedUserEntity);
+		userRepository.save(followedUser);
 		Followers followers = mapper.followersDTOToMetadata(followersDTO);
 		return followersService.follow(followers);
 	}
 
-	@PutMapping("/unfollow/{userId}")
+	@PutMapping("/unfollow/{username}")
 	@ResponseBody
-	public boolean unfollow(@PathVariable("userId") Long userId, @RequestHeader(name = "Authorization") String token) {
+	public boolean unfollow(@PathVariable("username") String username, @RequestHeader(name = "Authorization") String token) {
 		Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
 		User user = currentUser.get();
+		
+		User followedUser = userRepository.findByUsername(username).get();
 		user.setTotalFollowing(user.getTotalFollowing()- 1); 
-		UserFetchDTO followedUser = userRepository.getUserDetailsByUserId(userId);
+		// UserFetchDTO followedUser = userRepository.getUserDetailsByUserId(userId);
 		followedUser.setTotalFollowers(followedUser.getTotalFollowers()-1); 
-		User followedUserEntity = new User();
-		BeanUtils.copyProperties(followedUser, followedUserEntity);
-		userRepository.save(followedUserEntity);
+		// User followedUserEntity = new User();
+		// BeanUtils.copyProperties(followedUser, followedUserEntity);
+		userRepository.save(followedUser);
 		userRepository.save(user);
-		return followersService.unfollow(currentUser.get().getUserid(), userId);
+		return followersService.unfollow(currentUser.get().getUserid(), followedUser.getUserid());
 	}
 
 }
