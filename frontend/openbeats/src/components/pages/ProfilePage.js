@@ -37,7 +37,6 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
-    console.log("pizza ",res.data)
     setFollow(res.data);
   };
 
@@ -52,7 +51,8 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setFollowingList(...res.data);
+    const ar = res.data;
+    setFollowingList(ar);
   };
 
   const getFollowed = async () => {
@@ -66,7 +66,8 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setFollowersList(...res.data);
+    const ar = res.data;
+    setFollowersList(ar);
   };
 
   const followUser = async () => {

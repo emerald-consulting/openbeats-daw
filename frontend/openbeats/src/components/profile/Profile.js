@@ -19,7 +19,7 @@ import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
 
 const Profile = (props) => {
-  // console.log("pizza ",props.isFollowing)
+  console.log("pizza ",props)
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -323,9 +323,12 @@ const Profile = (props) => {
             >
               <DialogTitle id="alert-dialog-title">FOLLOWING</DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  {props.followingList}
-                </DialogContentText>
+                {props.followingList &&
+                  props.followingList.map((val) => (
+                    <DialogContentText id="alert-dialog-description">
+                      <a href={"http://localhost:3000/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                    </DialogContentText>
+                  ))}
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleFollowingModalClose}>Ok</Button>
@@ -351,9 +354,12 @@ const Profile = (props) => {
             >
               <DialogTitle id="alert-dialog-title">FOLLOWERS</DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  {props.followersList}
-                </DialogContentText>
+                {props.followersList &&
+                  props.followersList.map((val) => (
+                    <DialogContentText id="alert-dialog-description">
+                      <a href={"http://localhost:3000/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                    </DialogContentText>
+                  ))}
               </DialogContent>
               <DialogActions>
                 <Button onClick={handleFollowerModalClose}>Ok</Button>
