@@ -70,6 +70,7 @@ const SocialPost = ({ details }) => {
       pathname: "/profile/"+author?.username,
       state: { emailId: author?.emailId, userid: author?.userid },
     });
+    history.go()
   };
 
   const addToPlaylistHandler = () => {

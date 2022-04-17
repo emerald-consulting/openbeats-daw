@@ -12,7 +12,7 @@ import Announcements from "../announcements/Announcements";
 const ProfilePage = () => {
   const location = useLocation();
   const params = useParams();
-  const authorId = location.state?.userid;
+  // const authorId = location.state?.userid;
   const eId = location.state?.emailId;
   const username = params.username;
   const loggedInUserEmailId = localStorage.getItem("emailId");
@@ -71,7 +71,6 @@ const ProfilePage = () => {
   };
 
   const followUser = async () => {
-    setFollow(true);
     const res = await axios.post(
       url + "/follow/" + username,null,
       {
@@ -85,10 +84,10 @@ const ProfilePage = () => {
         },
       }
     );
+    setFollow(true);
   };
 
   const unfollowUser = async () => {
-    setFollow(false);
     const res = await axios.put(url + "/unfollow/" + username, null, {
       headers: {
         Accept: "application/json",
@@ -99,6 +98,7 @@ const ProfilePage = () => {
         Authorization: "Bearer " + token,
       },
     });
+    setFollow(false);
   };
 
   useEffect(() => {

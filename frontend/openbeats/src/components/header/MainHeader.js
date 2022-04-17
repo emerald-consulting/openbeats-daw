@@ -43,14 +43,18 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    history.push({ pathname: "/profile/"+state.user?.username, state: { emailId: state.user?.emailId,userid:state.user?.userid } });
+    history.push({
+      pathname: "/profile/" + state.user?.username,
+      state: { emailId: state.user?.emailId, userid: state.user?.userid },
+    });
+    history.go();
   };
 
   const navigationHandler = (event) => {
     if (event.target.value == "DAW") {
       history.push("dashboard");
     } else {
-      history.replace({ pathname: "/"+event.target.value.toString().toLowerCase(), state: {} })
+      history.push("/" + event.target.value.toString().toLowerCase());
     }
   };
 

@@ -19,7 +19,6 @@ import UserProfileForm from "./UserProfileForm";
 import { useLocation } from "react-router";
 
 const Profile = (props) => {
-  console.log("pizza ",props)
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -35,7 +34,7 @@ const Profile = (props) => {
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
   const location = useLocation();
-  const eId = location.state?.emailId;
+  // const eId = location.state?.emailId;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -156,7 +155,7 @@ const Profile = (props) => {
 
   useEffect(() => {
     getPicture();
-  }, [location]);
+  }, [location,props.isFollowing]);
 
   useEffect(() => {
     addProfilePicture();
@@ -326,7 +325,7 @@ const Profile = (props) => {
                 {props.followingList &&
                   props.followingList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"http://localhost:3000/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
                     </DialogContentText>
                   ))}
               </DialogContent>
@@ -357,7 +356,7 @@ const Profile = (props) => {
                 {props.followersList &&
                   props.followersList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"http://localhost:3000/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
                     </DialogContentText>
                   ))}
               </DialogContent>
