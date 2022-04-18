@@ -30,7 +30,6 @@ const MainHeader = (props) => {
   const [userDetails, setUserDetails] = useState();
   const history = useHistory();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
-  console.log(state.user);
   const pages = isUserLoggedin
     ? ["HOME", "INBOX", "DAW"]
     : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
