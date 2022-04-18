@@ -49,8 +49,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getPicture(String emailId) {
-        User user = userRepository.findByEmailId(emailId).get();
+    public User getPicture(String username) {
+        User user = userRepository.findByUsername(username).get();
         if (user.getProfilePictureFileName() != null && user.getProfilePictureFileName().length() > 0) {
             user.setProfilePictureFileUrl(
                     awsStorageService.getUrl(user.getBucketName(), user.getProfilePictureFileName()).toString());

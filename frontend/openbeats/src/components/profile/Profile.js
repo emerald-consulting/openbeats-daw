@@ -1,13 +1,24 @@
-import { Avatar, Button, Typography } from "@mui/material";
-import React, { useEffect, useContext, useState, useRef } from "react";
+import {
+  Avatar,
+  Button,
+  Card,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./Profile.module.css";
 import { url } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
+import { useLocation } from "react-router";
 
-const Profile = () => {
+const Profile = (props) => {
   const [profileUrl, setProfileUrl] = useState(null);
   const [profileFile, setProfileFile] = useState(null);
   const [coverUrl, setCoverUrl] = useState(null);
@@ -16,9 +27,15 @@ const Profile = () => {
   const [preview, setPreview] = useState(null);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
+  const [showFollowing, setShowFollowing] = useState(false);
+  const [showFollowers, setShowFollowers] = useState(false);
+
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
+  const location = useLocation();
+  // const eId = location.state?.emailId;
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -35,6 +52,22 @@ const Profile = () => {
     setOpenUserModal(false);
   };
 
+  const handleFollowingModalOpen = () => {
+    setShowFollowing(true);
+  };
+
+  const handleFollowingModalClose = () => {
+    setShowFollowing(false);
+  };
+
+  const handleFollowerModalOpen = () => {
+    setShowFollowers(true);
+  };
+
+  const handleFollowerModalClose = () => {
+    setShowFollowers(false);
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentUser({
@@ -42,8 +75,8 @@ const Profile = () => {
       [name]: value,
     });
   };
+
   const updateUser = async () => {
-    console.log("pizza ", currentUser);
     const res = await axios.put(url + "/updateUserProfile", currentUser, {
       headers: {
         Accept: "application/json",
@@ -59,7 +92,7 @@ const Profile = () => {
   };
 
   const getPicture = async () => {
-    const res = await axios.get(url + "/getPicture", {
+    const res = await axios.get(url + "/getPicture/" + props.username, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -88,8 +121,7 @@ const Profile = () => {
         Authorization: "Bearer " + token,
       },
     });
-    setProfileUrl(res.data.profilePictureFileUrl);
-    setCoverUrl(res.data.coverPictureFileUrl);
+    getPicture();
     handleClose();
   };
 
@@ -123,7 +155,7 @@ const Profile = () => {
 
   useEffect(() => {
     getPicture();
-  }, [profileUrl]);
+  }, [location,props.isFollowing]);
 
   useEffect(() => {
     addProfilePicture();
@@ -162,21 +194,19 @@ const Profile = () => {
       });
   };
 
-  // const saveCurrentUser = () => {
-  //   console.log("pizza ", currentUser);
-  //   handleProfileModalClose();
-  // };
-
   return (
     <div>
       <div>
         <div>
-          <button onClick={() => fileRef.current.click()}>
+          <Button
+            onClick={() => fileRef.current.click()}
+            disabled={!props.isCurrentUser}
+          >
             <img
               src={coverUrl}
               style={{ width: "1000px", height: "300px" }}
             ></img>
-          </button>
+          </Button>
           <input
             ref={fileRef}
             onChange={(e) => {
@@ -186,13 +216,48 @@ const Profile = () => {
             type="file"
             hidden
           />
-          <Button
-            variant="contained"
-            onClick={handleProfileModalOpen}
-            style={{ float: "right", marginTop: "20px",backgroundColor:"#1E90FF" }}
-          >
-            Edit Profile
-          </Button>
+          {props.isCurrentUser ? (
+            <Button
+              variant="contained"
+              onClick={handleProfileModalOpen}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+              }}
+              disabled={!props.isCurrentUser}
+            >
+              Edit Profile
+            </Button>
+          ) : !props.isFollowing ? (
+            <Button
+              variant="contained"
+              onClick={props.followUser}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+                color: "black",
+              }}
+              disabled={props.isCurrentUser}
+            >
+              Follow
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              onClick={props.unfollowUser}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                backgroundColor: "#1E90FF",
+                color: "black",
+              }}
+              disabled={props.isCurrentUser}
+            >
+              Unfollow
+            </Button>
+          )}
 
           {openUserModal ? (
             <UserProfileForm
@@ -206,9 +271,16 @@ const Profile = () => {
             ></UserProfileForm>
           ) : null}
         </div>
-        <button onClick={handleClickOpen}>
-          <Avatar src={profileUrl} sx={{ width: 202, height: 202,transform: `translate(30px, -100px)` }}></Avatar>
-        </button>
+        <Button onClick={handleClickOpen} disabled={!props.isCurrentUser}>
+          <Avatar
+            src={profileUrl}
+            sx={{
+              width: 202,
+              height: 202,
+              transform: `translate(30px, -100px)`,
+            }}
+          ></Avatar>
+        </Button>
         {open ? (
           <ProfilePicture
             handleClickOpen={handleClickOpen}
@@ -221,7 +293,7 @@ const Profile = () => {
             addProfilePicture={addProfilePicture}
           />
         ) : null}
-        <div style={{ transform: `translate(20px, -80px)` }}>
+        <div style={{ transform: `translate(55px, -80px)` }}>
           <Typography sx={{ fontSize: 25, fontWeight: "bold" }}>
             {currentUser.firstName} {currentUser.lastName}
           </Typography>
@@ -231,32 +303,70 @@ const Profile = () => {
           <Typography variant="subtitle1" sx={{ fontSize: 18 }}>
             {currentUser.bio}
           </Typography>
+          <br />
+          {currentUser.totalFollowing ? (
+            <span style={{ color: "black" }}>{currentUser.totalFollowing}</span>
+          ) : (
+            <span style={{ color: "black" }}>0</span>
+          )}
+          &nbsp;&nbsp;
+          <Button onClick={handleFollowingModalOpen}>
+            <span style={{ color: "#66CDAA" }}>Following</span>
+          </Button>
+          {showFollowing && (
+            <Dialog
+              open={showFollowing}
+              onClose={handleFollowingModalClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">FOLLOWING</DialogTitle>
+              <DialogContent>
+                {props.followingList &&
+                  props.followingList.map((val) => (
+                    <DialogContentText id="alert-dialog-description">
+                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                    </DialogContentText>
+                  ))}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleFollowingModalClose}>Ok</Button>
+              </DialogActions>
+            </Dialog>
+          )}
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {currentUser.totalFollowers ? (
+            <span style={{ color: "black" }}>{currentUser.totalFollowers}</span>
+          ) : (
+            <span style={{ color: "black" }}>0</span>
+          )}
+          &nbsp;&nbsp;
+          <Button onClick={handleFollowerModalOpen}>
+            <span style={{ color: "#66CDAA" }}>Followers</span>
+          </Button>{" "}
+          {showFollowers && (
+            <Dialog
+              open={showFollowers}
+              onClose={handleFollowerModalClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">FOLLOWERS</DialogTitle>
+              <DialogContent>
+                {props.followersList &&
+                  props.followersList.map((val) => (
+                    <DialogContentText id="alert-dialog-description">
+                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                    </DialogContentText>
+                  ))}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleFollowerModalClose}>Ok</Button>
+              </DialogActions>
+            </Dialog>
+          )}
         </div>
       </div>
-      {/* <div className="row">
-        <div className="col-md-4 animated fadeIn">
-          <div className="card">
-            <div className="card-body">
-              <div className="avatar">
-                <img className="card-img-top" alt="" />
-              </div>
-              <h5 className="card-title">
-                {currentUser.firstName} {currentUser.lastName}
-              </h5>
-              <p className="card-text">
-                @{currentUser.username}
-                <br />
-              </p>
-
-              <p className="card-text">
-                {currentUser.bio}
-                <br />
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <hr style={{ color: "gray" }} /> */}
     </div>
   );
 };

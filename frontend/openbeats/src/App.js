@@ -33,7 +33,7 @@ function App() {
         <Route path="/test" component={Test} />
         <Route path="/daw" component={Daw} />
         <Route path="/home" component={SocialHomePage} />
-        <Route path="/profile" component={ProfilePage} />
+        <Route path="/profile/:username" component={ProfilePage} />
         <Route component={NotFound} />
       </Switch>
       </Layout>
