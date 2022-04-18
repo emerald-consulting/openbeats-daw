@@ -1,12 +1,6 @@
-import React from "react";
-import Navbar from "../navbar/Navbar";
-import About from "../about/About";
-import gif from "../landing-gif.gif";
-import Footer from "../footer/Footer";
-import { Link } from "react-router-dom";
-import classes from './HomePage.module.css';
+import classes from './NotFound.module.css';
 
-const HomePage = () => {
+const NotFound = () => {
   return (
     <div style={{position:"fixed", width:"100%"}}>
       <div
@@ -23,7 +17,7 @@ const HomePage = () => {
             className="text-white text-7xl "
             style={{ position: "absolute", top: "80%", width: "100%", textAlign:"center", fontWeight: "900" }}
           >
-            The <span className="text-emrald-gr">Music Studio</span> in the cloud...
+            <span className="text-emrald-gr">Whoops!</span> Looks like the page can't be found.
           </h1>
         </div>
 
@@ -33,4 +27,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default NotFound;

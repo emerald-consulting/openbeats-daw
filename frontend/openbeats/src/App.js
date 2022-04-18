@@ -15,6 +15,7 @@ import Confirmation from "./components/signup/Confirmation";
 import SocialHomePage from "./components/pages/SocialHomePage";
 import Layout from "./components/UI/Layout/Layout";
 import ProfilePage from "./components/pages/ProfilePage";
+import NotFound from "./components/notFound/NotFound";
 
 library.add(fab, faCheckSquare, fas ,faUserEdit, faUser)
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/daw" component={Daw} />
         <Route path="/home" component={SocialHomePage} />
         <Route path="/profile" component={ProfilePage} />
+        <Route component={NotFound} />
       </Switch>
       </Layout>
     </>
