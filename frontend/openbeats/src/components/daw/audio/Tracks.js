@@ -101,7 +101,7 @@ const divStyle = {
   height: "60vh",
   width: "100px%",
   overflow: "hidden",
-  backgroundColor: "#e5e7eb"
+  backgroundColor: "#e5e7eb",
 };
 
 const arr = Array.from(Array(300).keys());
@@ -134,7 +134,8 @@ function Tracks() {
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
   const [fileVersions, setFileVersions] = useState([]);
-
+  const [offsetValue, setOffsetValue] = useState(0);
+  
   const playHandler = () => {
     setIsPlaying(true);
     interval = setInterval(() => {
@@ -420,7 +421,12 @@ function Tracks() {
     });
     let expBuffer = await crunker.fetchAudio(...temp);
     let mergedBuffer = await crunker.mergeAudio(expBuffer);
-    let exportedAudio = await crunker.export(mergedBuffer, "audio/wav");
+    let paddedBuffer = await crunker.padAudio(
+      mergedBuffer,
+      0,
+      offsetValue / 30
+    );
+    let exportedAudio = await crunker.export(paddedBuffer, "audio/wav");
     await crunker.download(exportedAudio.blob, "merged");
     setIsLoading(false);
   }
@@ -629,6 +635,7 @@ function Tracks() {
   };
 
   const updadeFileOffsets = (data) => {
+    setOffsetValue(data.offset);
     const reqData = {
       ...data,
       sessionId: session.sessionId,
@@ -682,7 +689,10 @@ function Tracks() {
     <>
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
-          <div className= {`flex flex-row ${classes.controlButtons}`} style={{marginLeft: "250px"}}>
+          <div
+            className={`flex flex-row ${classes.controlButtons}`}
+            style={{ marginLeft: "250px" }}
+          >
             <div>
               <Microphone style={{}} pushFile={onMicInput} />
             </div>
@@ -707,19 +717,14 @@ function Tracks() {
               />
               <p className="pt-3 pr-1">Select All</p>
             </div>
-            <div className=" ml-0.5 pt-2">
-              {transportPlayButton}
-            </div>
+            <div className=" ml-0.5 pt-2">{transportPlayButton}</div>
             <div className=" ml-0.5 pt-2">
               <IconButton onClick={stopPlayTracks}>
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
             <div className=" p-4 ml-0.5 pt-5">
-              <button
-                onClick={handleRecord}
-                style={{ height: "100%" }}
-              >
+              <button onClick={handleRecord} style={{ height: "100%" }}>
                 {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
               </button>
             </div>
@@ -837,7 +842,7 @@ function Tracks() {
                         width: "30px",
                         textAlign: "center",
                         height: "25px",
-                        backgroundColor: "#10b981"
+                        backgroundColor: "#10b981",
                       }}
                       className={isPlaying ? "" : "cursor-pointer"}
                       onClick={(e) => !isPlaying && changeBarStartHandler(e)}
