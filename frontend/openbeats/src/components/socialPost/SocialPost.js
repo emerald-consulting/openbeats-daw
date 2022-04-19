@@ -150,6 +150,7 @@ const SocialPost = ({ details }) => {
             </button>
           </Card.Footer> */}
           <LikeButton details={details} token={token} />
+          <div className={classes.borderBottom}></div>
         </Card>
       )}
     </>

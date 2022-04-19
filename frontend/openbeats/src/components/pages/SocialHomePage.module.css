@@ -3,8 +3,12 @@
   height: 82vh;
   background-color: #10b981 !important;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
 }
-
+.typeahead{
+  position: absolute;
+}
 .leftpane,
 .rightpane {
   width: 25%;
@@ -22,7 +26,7 @@
 
 .middlepane {
   width: 45%;
-  height: 85vh;
+  height: 613px;
   float: left;
   border-collapse: collapse;
   padding: 1rem; 
@@ -36,11 +40,12 @@
   display: flex;
   flex-flow: column wrap;
   justify-content: space-between;
+  width: -webkit-fill-available;
 
 }
 
 .topPane{
-  height: 45vh !important;
+  height: 48vh !important;
 }
 .bottomPane {
   height: 25vh !important;
@@ -55,5 +60,6 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 10px;
   background-color: white;
-  overflow-y: scroll;
+  overflow-y: auto;
+  width: inherit;
 }

@@ -34,7 +34,7 @@ const TrendingListItem = ({ details }) => {
   };
   return (
     <div className="mb-5">
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
         <img
           alt="Harry"
           src={author?.profilePictureFileName || profileImg}
@@ -44,21 +44,26 @@ const TrendingListItem = ({ details }) => {
           <strong
             className={classes.username}
           >{`${author?.firstName} ${author?.lastName}`}</strong>
-          <a className="ml-2">@{author?.username}</a>
+            <div style={{ marginTop: "5px" }}>
+              <a className="ml-2" style={{ fontSize: "13px" }}>@{author?.username}</a>
+              <button
+              style={{
+                marginLeft: "auto",
+                color: "gray",
+              }}
+              >
+              <LikeButton details={details} token={token} />
+              </button>
+            </div>
+          </span>
           <br />
+          <div>
           <small className={classes.description}>
             <ReactHashtag>{description}</ReactHashtag>
-          </small>
+          </small></div>
           <br />
-        </span>
-        <button
-          style={{
-            marginLeft: "auto",
-            color: "gray"
-          }}
-        >
-         <LikeButton details={details} token={token} />
-        </button>
+        
+        <div className={classes.borderBottom}></div>
       </div>
     </div>
   );

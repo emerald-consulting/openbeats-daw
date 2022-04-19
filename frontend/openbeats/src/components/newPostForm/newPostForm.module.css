@@ -25,6 +25,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
+  width: 100%;
 }
 
 .new button:disabled {
@@ -122,3 +123,4 @@
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
