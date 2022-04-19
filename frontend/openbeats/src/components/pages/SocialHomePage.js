@@ -21,35 +21,32 @@ const SocialHomePage = () => {
     <div className={classes.container}>
 
       <div className={classes.leftpane}>
-        {
-          !showOnlyPosts && (
-            <div className={classes.splitScreen}>
-              <div className={classes.topPane}>
-                <NewPostForm refreshPosts={refreshPosts} />
-              </div>
 
-              <div className={classes.bottomPane}>
-                <Playlist />
-              </div>
-            </div>
-          )}
+        <div className={classes.splitScreen}>
+          <div className={classes.topPane}>
+            <NewPostForm refreshPosts={refreshPosts} />
+          </div>
+
+          <div className={classes.bottomPane}>
+            <Playlist />
+          </div>
+        </div>
+
       </div>
       <div className={classes.middlepane}>
         <PostList uriParam="getPosts" refresh={refresh} refreshPosts={refreshPosts} />
       </div>
       <div className={classes.rightPane}>
-        {
-          !showOnlyPosts && (
-            <div className={classes.splitScreen}>
-              <div className={classes.topPane}>
-                <TrendingList refresh={refresh} />
-              </div>
-              <div className={classes.bottomPane}>
-                <NewlyReleasedList refresh={refresh} />
-              </div>
-            </div>
-          )
-        }
+
+        <div className={classes.splitScreen}>
+          <div className={classes.topPane}>
+            <TrendingList refresh={refresh} />
+          </div>
+          <div className={classes.bottomPane}>
+            <NewlyReleasedList refresh={refresh} />
+          </div>
+        </div>
+
       </div>
 
     </div>

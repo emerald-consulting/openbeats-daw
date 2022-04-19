@@ -2,6 +2,7 @@ import React from 'react';
 import classes from "./SocialPost.module.css";
 import Card from "react-bootstrap/Card";
 import { useContext, useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import axios from "axios";
 import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
@@ -21,6 +22,7 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
   const playlistCntxt = useContext(PlaylistContext);
+  const history = useHistory();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -78,7 +80,14 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
         Authorization: "Bearer " + token,
       },
     });
-    // setIsLiked(res.data);
+  };
+
+  const profile = () => {
+    history.push({
+      pathname: "/profile/"+author?.username,
+      state: { emailId: author?.emailId, userid: author?.userid },
+    });
+    history.go()
   };
 
   const deletePost = async () => {

@@ -42,7 +42,8 @@ public class ReactionsController {
 
     @PutMapping("/posts/{postId}/likes/{isLike}")
     public Reactions updateReaction(@PathVariable("postId") Long postId,
-            @PathVariable("isLike") Boolean isLike, @RequestHeader(name = "Authorization") String token) {
+            @PathVariable("isLike") Boolean isLike,
+            @RequestHeader(name = "Authorization") String token) {
         Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
         return reactionsService.updateReaction(postId, currentUser.get().getUserid(), isLike);
     }

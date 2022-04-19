@@ -28,12 +28,12 @@ const MainHeader = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userDetails, setUserDetails] = useState();
   const history = useHistory();
-  const isUserLoggedin = state?.user?.emailId.trim().length > 0;
   const [searchOptions, setSearchOptions] = useState([])
   const searchText = useSelector(state => state.search.searchText);
   const [autoCompleteState, setAutoCompleteState] = useState(false)
   const dispatcher = useDispatch();
 
+  const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
     ? ["HOME", "INBOX", "DAW"]
     : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
@@ -47,7 +47,11 @@ const MainHeader = (props) => {
   };
   const profile = () => {
     dispatcher({ type: 'CLEAR_ALL_SEARCH' })
-    history.push("/profile/0");
+    history.push({
+      pathname: "/profile/" + state.user?.username,
+      state: { emailId: state.user?.emailId, userid: state.user?.userid },
+    });
+    history.go();
   };
 
   const navigationHandler = (event) => {
@@ -55,7 +59,7 @@ const MainHeader = (props) => {
     if (event.target.value == "DAW") {
       history.push("/dashboard");
     } else {
-      history.push("/"+event.target.value.toString().toLowerCase());
+      history.push("/" + event.target.value.toString().toLowerCase());
     }
   };
 
@@ -116,7 +120,7 @@ const MainHeader = (props) => {
       },
     });
     const data = res.data;
-    const allItems = data.users.content.filter(i=>i.userid != res.data.userId).concat(data.posts.content);
+    const allItems = data.users?.filter(i=>i.userid != res.data.userId)?.concat(data.posts.content);
     let userid = '-1'
     if (allItems.length === 0) userid = '-2';
     allItems.push({ username: '-1', userid: userid, postId: '-1', title: searchText })

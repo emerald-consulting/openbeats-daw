@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 @RestController
 @RequestMapping("/")
 public class UserController {
@@ -36,14 +35,15 @@ public class UserController {
         return user;
     }
 
-    @GetMapping("/getPicture")
+    @GetMapping("/getPicture/{emailId}")
     @ResponseBody
-    public User getProfilePicture(@RequestHeader(name = "Authorization") String token) {
+    public User getProfilePicture(@PathVariable("emailId") String emailId,
+            @RequestHeader(name = "Authorization") String token) {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
-        User user = userService.getPicture(currentUser.getEmailId());
+        // User user = userService.getPicture(currentUser.getEmailId());
+        User user = userService.getPicture(emailId);
         return user;
     }
-
 
     @PutMapping("/updateUserProfile")
     @ResponseBody

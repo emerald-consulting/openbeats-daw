@@ -15,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.List;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
@@ -24,6 +25,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     // Optional<User> findByUserId(@Param("userid") Long userid);
 
     Optional<User> findByEmailId(String email);
+
+    Optional<User> findByUsername(String username);
 
     Optional<MyUserDetails> findMyUserDetailsByEmailId(String email);
 
@@ -35,11 +38,18 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("update User u set u.subscriptionType='paid' where u.emailId = ?1")
     int upgradeUserSubscription(String email);
 
-    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName, u.bucketName)" +
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName,u.coverPictureFileName,u.profilePictureFileUrl,u.coverPictureFileUrl, u.bucketName, u.emailId, u.totalFollowers, u.totalFollowing)" +
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 
-    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName, u.bucketName) FROM User u where u.username like %:searchText% ")
-    Page<UserFetchDTO> searchUsers(@Param("searchText")String searchText, Pageable pageable);
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName,u.coverPictureFileName,u.profilePictureFileUrl,u.coverPictureFileUrl, u.bucketName, u.emailId, u.totalFollowers, u.totalFollowing)" +
+            " from User u where u.username like %:searchText%")
+    List<UserFetchDTO> getUsersByUsername(@Param("searchText")String searchText);
+
+    /*
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName,
+    u.profilePictureFileName, u.bucketName) FROM User u where u.username like %:searchText% ")
+    public List<UserFetchDTO> searchUsers(@Param("searchText")String searchText);
+*/
 
 }

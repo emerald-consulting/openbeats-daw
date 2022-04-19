@@ -10,6 +10,7 @@ const LikeButton = ({ details, token }) => {
   
   const [totalLikes, setTotalLikes] = useState(details.totalLikes);
   const [checked, setChecked] = useState(false);
+
   const updateReaction = (isChecked) => {
     setChecked(isChecked);
     axios
