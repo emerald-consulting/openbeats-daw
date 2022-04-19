@@ -29,6 +29,7 @@ const Profile = (props) => {
   const [currentUser, setCurrentUser] = useState({});
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
+  const [existUser, setExistUser] = useState(false);
 
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
@@ -77,18 +78,24 @@ const Profile = (props) => {
   };
 
   const updateUser = async () => {
-    const res = await axios.put(url + "/updateUserProfile", currentUser, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + token,
-      },
-    });
-    setCurrentUser(res.data);
-    handleProfileModalClose();
+    try {
+      const res = await axios.put(url + "/updateUserProfile", currentUser, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      });
+      setCurrentUser(res.data);
+      handleProfileModalClose();
+    } catch (error) {
+      if (error.response) {
+        setExistUser(true);
+      }
+    }
   };
 
   const getPicture = async () => {
@@ -155,11 +162,15 @@ const Profile = (props) => {
 
   useEffect(() => {
     getPicture();
-  }, [location,props.isFollowing]);
+  }, [location, props.isFollowing]);
 
   useEffect(() => {
     addProfilePicture();
   }, [coverFile]);
+
+  useEffect(() => {
+    getPicture();
+  }, [existUser]);
 
   const fileRef = useRef();
 
@@ -268,6 +279,8 @@ const Profile = (props) => {
               handleInputChange={handleInputChange}
               updateUser={updateUser}
               upgradeUser={upgradeUser}
+              existUser={existUser}
+              setExistUser={setExistUser}
             ></UserProfileForm>
           ) : null}
         </div>
@@ -325,7 +338,12 @@ const Profile = (props) => {
                 {props.followingList &&
                   props.followingList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a
+                        href={"/profile/" + val}
+                        style={{ cursor: "pointer", color: "#66CDAA" }}
+                      >
+                        @{val}
+                      </a>
                     </DialogContentText>
                   ))}
               </DialogContent>
@@ -356,7 +374,12 @@ const Profile = (props) => {
                 {props.followersList &&
                   props.followersList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a
+                        href={"/profile/" + val}
+                        style={{ cursor: "pointer", color: "#66CDAA" }}
+                      >
+                        @{val}
+                      </a>
                     </DialogContentText>
                   ))}
               </DialogContent>

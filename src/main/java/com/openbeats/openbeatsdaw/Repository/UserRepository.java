@@ -38,4 +38,6 @@ public interface UserRepository extends JpaRepository<User,Long> {
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 
+    Long countByUsername(@Param("username") String username);
+
 }

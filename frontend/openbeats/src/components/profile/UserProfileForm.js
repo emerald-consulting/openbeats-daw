@@ -12,7 +12,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import './Profile.module.css'
+import "./Profile.module.css";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialogContent-root": {
@@ -35,8 +35,8 @@ const BootstrapDialogTitle = (props) => {
           onClick={onClose}
           sx={{
             position: "absolute",
-            left: 430,
-            top: 2,
+            left: 530,
+            top: 8,
             color: (theme) => theme.palette.grey[500],
           }}
         >
@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme) =>
     disabledButton: {
       backgroundColor: "green",
       color: "black",
-      width:"180px",
-      height:"30px"
+      // width:"180px",
+      // height:"30px"
     },
   })
 );
@@ -94,6 +94,7 @@ export default function UserProfileForm(props) {
                 name="username"
                 defaultValue={props.user.username}
                 onChange={props.handleInputChange}
+                helperText={props.existUser ? <div style={{color:"red"}}>Username already exists</div> : ""}
               />
               <TextField
                 id="outlined-disabled"
