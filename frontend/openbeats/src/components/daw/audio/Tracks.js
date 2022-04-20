@@ -105,6 +105,62 @@ const arr = Array.from(Array(300).keys());
 let interval;
 let steps = 0;
 
+const KNOB = 9;
+const PAD = 48;
+const DEVICE = "MPD218 Port A";
+let ratio = 1;
+let on = false;
+//let device_name = ['hello','hi','test','foo','bar'];
+let device_name = '';
+const track = new MidiWriter.Track();
+const midi = new MIDI(handleEvent);
+midi.initialize().then(() => {
+  console.log("initialized!");
+
+  notify();
+});
+const selected_device = '';
+function handleEvent(event) {
+  console.log(event);
+
+  const { device, type, a, b } = event;
+//  device_name = device.map(device=>{
+//  return device.name})
+  device_name = device.name;
+  console.log(device_name);
+  if (a != null && (type === 'note_on' || type === 'note_off')){
+      track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
+      console.log(a.value);}
+  if(type === "device_disconnected"){
+    const write = new MidiWriter.Writer(track);
+    const mid_uri = write.dataUri();
+  }
+
+  if (device.name !== DEVICE) return;
+  if (type === "mode_change" && a.value === KNOB) {
+    ratio = b.ratio;
+  } else if (type === "note_on" && a.value === PAD) {
+    on = true;
+  } else if (type === "note_off" && a.value === PAD) {
+    on = false;
+  } else if (type === "aftertouch" && on) {
+    ratio = a.ratio;
+  }
+}
+
+function notify() {
+  const loop = () => {
+    const noteOff = 128;
+    const noteOn = 144;
+    if (!on) midi.notify([noteOn, PAD, 127], DEVICE);
+    setTimeout(() => {
+      if (!on) midi.notify([noteOff, PAD, 0], DEVICE);
+    }, 100);
+  };
+  setInterval(loop, 100);
+}
+//
+
 function Tracks() {
   const [files, setFiles] = useState([]);
   const [playTracks, setPlayTracks] = useState([]);
@@ -126,7 +182,7 @@ function Tracks() {
   //const [track, setTrack] = useState(null);
   const [record, setRecord] = useState(false);
   let jwtToken = `${user.jwtToken}`;
-
+  const [val, setState] = useState('fruit');
   const [device, setDevice] = useState({});
   const [open, setOpen] = useState(false);
   const [barOffset, setBarOffset] = useState(0);
@@ -135,140 +191,106 @@ function Tracks() {
   const [cropRegion, setCropRegion] = useState([]);
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
-  const KNOB = 9;
-  const PAD = 48;
-  const DEVICE = "MPD218 Port A";
-  let ratio = 1;
-  let on = false;
-  const track = new MidiWriter.Track();
-  let midi = null;
+  const [toBeRemoved, setToBeRemoved] = useState(false);
+
+
   useEffect(() => {
       if(record){
-        handlemidi()
+        handlemidi();
       }
       else{
-        midi_handle()
+        midi_handle();
       }
 
   }, [record])
   const handlemidi = () => {
-
-    //track.addEvent(new MidiWriter.ProgramChangeEvent({instrument: 1}));
-    midi = new MIDI(handle_event);
-    midi.initialize().then(() => {
-      console.log("initialized!");
-
-      notify();
-      // This is the fun pad pattern. Replace with an array of your own pad numbers!
-      // notifyAnimation([48, 49, 50, 51, 47, 43, 39, 38, 37, 36, 40, 44]);
-    });
-
+    setToBeRemoved(true);
   };
 
-  const handle_event = async(event) => {
-    // Uncomment this to see every event from every controller
-    console.log(event);
 
-    const { device, type, a, b } = event;
-    setDevice(device)
-    toastr.success('Device Connected!!', `${device.name}`);
-    if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel_control')) {
-      track.addEvent(new MidiWriter.NoteEvent({ pitch: [a.value], velocity: b.value, duration: '8', channel: 1 }));
-      console.log(a.value);
-    }
-    console.log(record)
-//    if (type === "device_disconnected" || !record) {
-//      const write = new MidiWriter.Writer(track);
-//      //    console.log(write)
-//      const mid_uri = write.dataUri();
-//      console.log(mid_uri);
-//      //   var link = document.createElement("a");
-//      //    link.download = "download.mid";
-//      //    link.href = mid_uri;
-//      //    document.body.appendChild(link);
-//      //    link.click();
-//      //    document.body.removeChild(link);
-//      var binaryVal;
-//      var inputMIME = mid_uri.split(',')[0].split(':')[1].split(';')[0];
-//      if (mid_uri.split(',')[0].indexOf('base64') >= 0)
-//        binaryVal = atob(mid_uri.split(',')[1]);
-//      else
-//        binaryVal = unescape(mid_uri.split(',')[1]);
-//      var blobArray = [];
-//      for (var index = 0; index < binaryVal.length; index++) {
-//        blobArray.push(binaryVal.charCodeAt(index));
-//      }
-//      var blobObject = new Blob([blobArray], { type: inputMIME });
-//      console.log(blobObject);
-//      const formData = new FormData();
-//      let _file = null;
-//      _file = new File([blobObject], "audio.mid");
-//      formData.append(
-//        'track', _file
-//      );
-//      await axios.post(url + "/midiUpload", formData);
-//      // Create Blob file from URL
-//
-//    }
-
-    if (device.name !== DEVICE) return;
-    if (type === "mode_change" && a.value === KNOB) {
-      ratio = b.ratio;
-    } else if (type === "note_on" && a.value === PAD) {
-      on = true;
-    } else if (type === "note_off" && a.value === PAD) {
-      on = false;
-    } else if (type === "aftertouch" && on) {
-      ratio = a.ratio;
-    }
-  };
   const midi_handle = async() => {
-    if (!record) {
+    if (!record  && toBeRemoved) {
       const write = new MidiWriter.Writer(track);
-      //    console.log(write)
       const mid_uri = write.dataUri();
-      console.log(mid_uri);
-      //   var link = document.createElement("a");
-      //    link.download = "download.mid";
-      //    link.href = mid_uri;
-      //    document.body.appendChild(link);
-      //    link.click();
-      //    document.body.removeChild(link);
-      var binaryVal;
-      var inputMIME = mid_uri.split(',')[0].split(':')[1].split(';')[0];
-      if (mid_uri.split(',')[0].indexOf('base64') >= 0)
-        binaryVal = atob(mid_uri.split(',')[1]);
-      else
-        binaryVal = unescape(mid_uri.split(',')[1]);
-      var blobArray = [];
-      for (var index = 0; index < binaryVal.length; index++) {
-        blobArray.push(binaryVal.charCodeAt(index));
-      }
-      var blobObject = new Blob([blobArray], { type: inputMIME });
-      console.log(blobObject);
+      console.log(mid_uri);;
+      let testBlob = await fetch(mid_uri).then(r => r.blob());
+      let crunker = new Crunker();
+      // await crunker.download(blobObject, "midi");
+      // await crunker.download(testBlob, "test");
+      // console.log(blobObject);
       const formData = new FormData();
       let _file = null;
-      _file = new File([blobObject], "audio.mid");
+      _file = new File([testBlob], "audio.mid");
+
+
       formData.append(
         'track', _file
       );
-      await axios.post(url + "/midiUpload", formData);
-      // Create Blob file from URL
+      axios.post(url + "/midiUpload", formData, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + jwtToken,
+        },
+      });
+    const { data } =  await axios.get(url+"/putmidi", {
+            responseType: 'arraybuffer',
+            headers: { 'Accept': '*/*', 'Content-Type': 'audio/wav' }
+        }).then(resp => resp);
+        const blob = new Blob([data], {
+            type: 'audio/wav'
+        })
+        const url_new = URL.createObjectURL(blob);
+
+        let final_blob =fetch(url_new).then(res => res.blob());
+//         await crunker.download(final_blob, "test");
+    pushFile(url_new);
+    uploadMidi(url_new);
+    };
 
     }
+  const uploadMidi = (blob) => {
+    const formData = new FormData();
+
+    formData.append("fileName", "hello");
+    let _file = null;
+//    console.log(file.blob);
+    if (blob) {
+      _file = new File([blob], "audio.mp3");
+    }
+    formData.append("file", _file);
+
+    formData.append("sessionId", session.sessionId);
+
+    formData.append("bucketName", session.bucketName);
+
+    formData.append("owner", state.user.firstName);
+
+    formData.append("email", state.user.emailId);
+
+    let requestsParams =
+      "fileName=hello&file=" +
+      _file +
+      "&sessionId=" +
+      session.sessionId +
+      "&bucketName=" +
+      session.bucketName;
+    axios.post(url + "/studioSession", formData, {
+      headers: {
+        // axios.post(url+"/studioSession",formData,{headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
   };
 
-  const notify = () => {
-    const loop = () => {
-      const noteOff = 128;
-      const noteOn = 144;
-      if (!on) midi.notify([noteOn, PAD, 127], DEVICE);
-      setTimeout(() => {
-        if (!on) midi.notify([noteOff, PAD, 0], DEVICE);
-      }, 100);
-    };
-    setInterval(loop, 100);
-  };
   const playHandler = () => {
     setIsPlaying(true);
     interval = setInterval(() => {
@@ -394,7 +416,10 @@ function Tracks() {
 
     }
   };
-
+  const handleChange = event =>{
+    setState(event.target.val);
+    selected_device = event.target.val
+  }
   const stopPlayTracks = () => {
     rulerRef.current.scrollLeft = 0;
     stopHanlder();
@@ -791,20 +816,20 @@ function Tracks() {
       </IconButton>
     </React.Fragment>
   );
-
-  const vertical = 'top';
-  const horizontal = 'right'
+    console.log("device name in react compo",device_name)
+  // const vertical = 'top';
+  // const horizontal = 'right'
 
   return (
     <>
-      <Snackbar
+      {/* <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
         onClose={handleClose}
         action={action}
         message={`Device connected: ${device.name}, \nPlease start recording`}
         key={vertical + horizontal}
-    />
+    /> */}
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
           <div className="flex flex-row pl-20">
@@ -862,6 +887,19 @@ function Tracks() {
 
                 {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
               </button>
+            </div>
+            <div className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
+              <label>
+                        Pick midi device:
+                        <select  onChange={handleChange}>
+                            {/*device_name.map(device=>{
+                                return <option value="device">{device}</option>
+                            })*/}
+                            <option value="device">{device_name}</option>
+
+                        </select>
+              </label>
+
             </div>
             <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
               <button onClick={exportAsWav}>Export as WAV</button>

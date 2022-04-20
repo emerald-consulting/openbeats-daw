@@ -3,9 +3,9 @@
     text-align: center;
   }
   
-  header {
+  /* header {
     margin-bottom: 30px;
-  }
+  } */
   
   .col-md-4 {
     margin-bottom: 30px;
@@ -62,4 +62,4 @@
       max-width: 1040px;
     }
   }
-  
+

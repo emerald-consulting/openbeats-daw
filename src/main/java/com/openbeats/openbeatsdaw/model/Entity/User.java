@@ -62,6 +62,12 @@ public class User {
     @Column(name = "cover_picture_file_name")
     private String coverPictureFileName;
 
+    @Column(name = "profile_picture_file_url")
+    private String profilePictureFileUrl;
+
+    @Column(name = "cover_picture_file_url")
+    private String coverPictureFileUrl;
+
     @Column(name = "bio", length = 500)
     private String bio;
 
