@@ -22,6 +22,8 @@ import VolumeDown from "@material-ui/icons/VolumeDown";
 import Slider from "@material-ui/core/Slider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import CropIcon from "@mui/icons-material/Crop";
+import Tooltip from "@mui/material/Tooltip";
+import UndoIcon from "@mui/icons-material/Undo";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -64,9 +66,49 @@ import audio_Ab from "./components/AudioPlayer/Ab.mp3";
 import audio_A from "./components/AudioPlayer/A.mp3";
 import audio_Bb from "./components/AudioPlayer/Bb.mp3";
 import audio_B from "./components/AudioPlayer/B.mp3";
-
-//overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
 import Crunker from "crunker";
+//import { WebUSB } from 'usb';
+//    const customWebUSB = new WebUSB({
+//        // Bypass cheking for authorised devices
+//        allowAllDevices: true
+//    });
+//
+//    // Uses blocking calls, so is async
+//    const devices = customWebUSB.getDevices();
+//
+//    for (const device of devices) {
+//        console.log(device); // WebUSB device
+//    }
+//import usb from "usb";
+//import getDeviceList from "usb";
+//const devices: usb.Device[] = getDeviceList();
+//console.log(devices);
+//import usbDetect from 'usb-detection';
+
+//usbDetect.startMonitoring();
+//let button = document.getElementById('request-device');
+//button.addEventListener('click', async () => {
+//  let devize;
+////  let usbDeviceProperties = { name: "Bixolon", vendorId: 5380, productId: 31 };
+//  try {
+//    devize = await navigator.usb.requestDevice({ filters: [] });
+//    console.log(devize);
+//  } catch (error) {
+//    alert('Error: ' + error.message);
+//  }
+//});
+//navigator.usb.requestDevice({filters:[]}).then(function(device){
+//   console.log(device);
+//});
+//navigator.usb.getDevices()
+//.then(devices => {
+//  console.log("Total devices: " + devices.length);
+//  devices.forEach(device => {
+//    console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
+//  });
+//});
+//overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
+//usbDetect.on('change', function(device) { console.log('change', device); });
 var recording = false;
 const map1 = new Map();
 var context = new AudioContext();
@@ -110,30 +152,36 @@ const PAD = 48;
 const DEVICE = "MPD218 Port A";
 let ratio = 1;
 let on = false;
+let i = false;
 //let device_name = ['hello','hi','test','foo','bar'];
-let device_name = '';
-const track = new MidiWriter.Track();
+//let device_name = '';
+let device_name = new Set();
+let track;
+let types = new Set();
 const midi = new MIDI(handleEvent);
 midi.initialize().then(() => {
   console.log("initialized!");
-
   notify();
 });
-const selected_device = '';
+
+let selected_device = '';
 function handleEvent(event) {
   console.log(event);
-
   const { device, type, a, b } = event;
+
 //  device_name = device.map(device=>{
-//  return device.name})
-  device_name = device.name;
-  console.log(device_name);
-  if (a != null && (type === 'note_on' || type === 'note_off')){
+//  return device?.name})
+//  device_name = device.name;
+  console.log('***', selected_device);
+  device_name.add(device.name);
+  types.add(type);
+  console.log([...types][0]);
+  if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && i ){
       track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
-      console.log(a.value);}
+      console.log(a.value);
+    }
   if(type === "device_disconnected"){
-    const write = new MidiWriter.Writer(track);
-    const mid_uri = write.dataUri();
+    device_name.delete(device.name);
   }
 
   if (device.name !== DEVICE) return;
@@ -182,7 +230,7 @@ function Tracks() {
   //const [track, setTrack] = useState(null);
   const [record, setRecord] = useState(false);
   let jwtToken = `${user.jwtToken}`;
-  const [val, setState] = useState('fruit');
+  const [val, setVal] = useState('None');
   const [device, setDevice] = useState({});
   const [open, setOpen] = useState(false);
   const [barOffset, setBarOffset] = useState(0);
@@ -192,27 +240,50 @@ function Tracks() {
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
   const [toBeRemoved, setToBeRemoved] = useState(false);
-
+  const [fileVersions, setFileVersions] = useState([]);
+  const [devices, setdevices] = useState([]);
+//(async () => {
+//    const customWebUSB = new WebUSB({
+//        // Bypass cheking for authorised devices
+//        allowAllDevices: true
+//    });
+//
+//    // Uses blocking calls, so is async
+//    const devices = await customWebUSB.getDevices();
+//
+//    for (const device of devices) {
+//        console.log(device); // WebUSB device
+//    }
+//})()
 
   useEffect(() => {
       if(record){
         handlemidi();
+        i = true;
       }
       else{
+        i = false;
         midi_handle();
       }
 
   }, [record])
+
+  const setNewDevices = (dev) => {
+    setdevices([...devices, dev])
+  }
+
   const handlemidi = () => {
+    track = new MidiWriter.Track();
     setToBeRemoved(true);
   };
 
-
   const midi_handle = async() => {
-    if (!record  && toBeRemoved) {
+    if (!record  && toBeRemoved && [...types].pop() != 'device_disconnected') {
+      console.log([...types].pop());
       const write = new MidiWriter.Writer(track);
+      track = null;
       const mid_uri = write.dataUri();
-      console.log(mid_uri);;
+      console.log(mid_uri);
       let testBlob = await fetch(mid_uri).then(r => r.blob());
       let crunker = new Crunker();
       // await crunker.download(blobObject, "midi");
@@ -248,7 +319,7 @@ function Tracks() {
         let final_blob =fetch(url_new).then(res => res.blob());
 //         await crunker.download(final_blob, "test");
     pushFile(url_new);
-    uploadMidi(url_new);
+    uploadMidi(blob);
     };
 
     }
@@ -320,6 +391,7 @@ function Tracks() {
 
   const [state, dispatch] = useContext(UserContext);
 
+//  let jwtToken = `${user.jwtToken}`;
 
   const uploadFIle = (file) => {
     const formData = new FormData();
@@ -416,9 +488,9 @@ function Tracks() {
 
     }
   };
-  const handleChange = event =>{
-    setState(event.target.val);
-    selected_device = event.target.val
+  const handleChange = (device) =>{
+    setVal(device);
+    selected_device = device;
   }
   const stopPlayTracks = () => {
     rulerRef.current.scrollLeft = 0;
@@ -426,6 +498,13 @@ function Tracks() {
     setBarOffset(0);
     setplayHeadPos(0);
     steps = 0;
+  };
+
+  const fileVersionHandler = (index, prevName) => {
+    let temp = fileVersions;
+    temp[index] = prevName;
+    setFileVersions([...temp]);
+    localStorage.setItem("versions", JSON.stringify([...temp]));
   };
 
   let transportPlayButton;
@@ -624,6 +703,7 @@ function Tracks() {
     const temp = regionArray.map((r) => 1);
     setVolumes([...temp]);
     console.log([...temp]);
+    // setFileVersions(regionArray.map((r) => ""));
     setIsLoading(false);
   }
 
@@ -701,6 +781,14 @@ function Tracks() {
   useEffect(() => {
     getAllFiles();
   }, [session.audioTracks]);
+
+  useEffect(() => {
+    let preVersions = JSON.parse(localStorage.getItem("versions") || "[]");
+    if (preVersions.length) {
+      setFileVersions([...preVersions]);
+      console.log(preVersions[0] && preVersions[0].length > 0);
+    }
+  }, []);
 
   function getFileNames(sessionId = session.sessionId) {
     const formData = new FormData();
@@ -790,12 +878,29 @@ function Tracks() {
     // dispatch2(setAudioTrackOffsets([audioTr]));
   };
 
-  const handleVolumeChange = (index, value) => {
-    const temp = [...volumes];
-    temp[index] = value;
-    setVolumes(temp);
-  };
+  const undoChange = async (index) => {
+    if (!fileVersions[index].length) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("fileId", session.audioTracks[index]?.audioTrackId);
+    formData.append("prevFileName", fileVersions[index]);
+    formData.append("sessionId", session.sessionId);
 
+    const res = await axios.put(url + "/undoFileChange", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+    if (res.data == true) {
+      fileVersionHandler(index, "");
+    }
+  };
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -803,7 +908,19 @@ function Tracks() {
 
     setOpen(false);
   };
-
+  const handleClick=(device)=>{
+    setVal(device);
+    [...device_name].map(device=>{
+      console.log(device);
+  })
+  }
+//<<<<<<< Updated upstream
+  const handleVolumeChange = (index, value) => {
+    const temp = [...volumes];
+    temp[index] = value;
+    setVolumes(temp);
+  };
+//=======
   const action = (
     <React.Fragment>
       <IconButton
@@ -817,19 +934,20 @@ function Tracks() {
     </React.Fragment>
   );
     console.log("device name in react compo",device_name)
-  // const vertical = 'top';
-  // const horizontal = 'right'
+   const vertical = 'top';
+   const horizontal = 'right'
+//>>>>>>> Stashed changes
 
   return (
     <>
-      {/* <Snackbar
+      <Snackbar
         anchorOrigin={{ vertical, horizontal }}
         open={open}
         onClose={handleClose}
         action={action}
-        message={`Device connected: ${device.name}, \nPlease start recording`}
+        message={`Please start recording`}
         key={vertical + horizontal}
-    /> */}
+    />
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
           <div className="flex flex-row pl-20">
@@ -857,16 +975,6 @@ function Tracks() {
               />
               <p className="pt-3 pr-1">Select All</p>
             </div>
-             {/* midi file */}
-            {/* <div className="form-control">
-            <label htmlFor="name">Get Midi</label>
-              <input
-                              type="file"
-                              id="file-upload"
-                              accept="audio/*"
-                              onChange={trackChangeHandler}
-              />
-            </div> */}
             <div className=" ml-0.5 pt-2 bg-gr2 hover:bg-gr3">
               {transportPlayButton}
             </div>
@@ -874,6 +982,20 @@ function Tracks() {
               <IconButton onClick={stopPlayTracks}>
                 <StopIcon smooth={true} />
               </IconButton>
+            </div>
+            <div className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
+              <label>
+                        <select value = {val} onClick={(e)=>handleClick(e.target.value)} onChange={(e) => handleChange(e.target.value)}>
+                          <option>Pick a midi device</option>
+                          {console.log([...device_name])}
+                            {[...device_name].map(device=>{
+                                return <option value={device}>{device}</option>
+                            })}
+                            {/*<option value="device">{device_name}</option>*/}
+
+                        </select>
+              </label>
+
             </div>
             <div>
               <button
@@ -887,19 +1009,6 @@ function Tracks() {
 
                 {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
               </button>
-            </div>
-            <div className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
-              <label>
-                        Pick midi device:
-                        <select  onChange={handleChange}>
-                            {/*device_name.map(device=>{
-                                return <option value="device">{device}</option>
-                            })*/}
-                            <option value="device">{device_name}</option>
-
-                        </select>
-              </label>
-
             </div>
             <div className="p-4 pt-5 ml-0.5 bg-gr2 hover:bg-gr3">
               <button onClick={exportAsWav}>Export as WAV</button>
@@ -931,21 +1040,34 @@ function Tracks() {
                   </div>
                   <div style={{ height: "30px" }}>
                     <span className="float-left px-2 mt-1">
-                      <button onClick={() => playRegionHandler(index)}>
-                        <PlayArrowIcon />
-                      </button>
+                      <Tooltip title="Play region">
+                        <button onClick={() => playRegionHandler(index)}>
+                          <PlayArrowIcon />
+                        </button>
+                      </Tooltip>
                       {/* <button
                         className="ml-3"
                         onClick={() => cutRegionHandler(index)}
                       >
                         <ContentCutIcon />
                       </button> */}
-                      <button
-                        className="ml-3"
-                        onClick={() => cropRegionHandler(index)}
-                      >
-                        <CropIcon />
-                      </button>
+                      <Tooltip title="crop">
+                        <button
+                          className="ml-3"
+                          onClick={() => cropRegionHandler(index)}
+                        >
+                          <CropIcon />
+                        </button>
+                      </Tooltip>
+                      {fileVersions[index] && fileVersions[index].length > 0 && (
+                        <span className="ml-3">
+                          <Tooltip title="Undo crop">
+                            <button onClick={(e) => undoChange(index)}>
+                              <UndoIcon />
+                            </button>
+                          </Tooltip>
+                        </span>
+                      )}
                     </span>
                     <VolumeDown style={{ verticalAlign: "super" }} />
                     <Slider
@@ -954,7 +1076,9 @@ function Tracks() {
                       step={0.01}
                       style={{ width: "20%", margin: "5px" }}
                       value={volumes[index] != undefined ? volumes[index] : 1}
-                      onChangeCommitted={(event, value) => handleVolumeChange(index, value)}
+                      onChangeCommitted={(event, value) =>
+                        handleVolumeChange(index, value)
+                      }
                     />
                     <button
                       onClick={() => remove(index)}
@@ -980,7 +1104,6 @@ function Tracks() {
                 }}
                 ref={rulerRef}
               >
-
                 <div className={classes.timerBar}>
                   <h1
                     style={{
@@ -1022,8 +1145,11 @@ function Tracks() {
                         cutRegion={cutRegion[index]}
                         cropRegion={cropRegion[index]}
                         updateFileOffsets={updadeFileOffsets}
+                        fileVersionHandler={fileVersionHandler}
                         fileId={session.audioTracks[index]?.audioTrackId}
                         initOffset={session.audioTracks[index]?.offset}
+                        fileName={session.audioTracks[index]?.file}
+                        index={index}
                         volume={volumes[index]}
                         seek={seekValue}
                         zoom={zoom}

@@ -3,6 +3,7 @@ package com.openbeats.openbeatsdaw.controller;
 import com.openbeats.openbeatsdaw.Repository.SessionRepository;
 import com.openbeats.openbeatsdaw.Service.*;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
+import com.openbeats.openbeatsdaw.common.Constants;
 import com.openbeats.openbeatsdaw.model.*;
 import com.openbeats.openbeatsdaw.model.Entity.File;
 import com.openbeats.openbeatsdaw.model.Entity.Session;
@@ -16,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.sound.sampled.AudioFileFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -222,8 +222,8 @@ public class StudioSessionController {
 
     @PutMapping("/updateFile")
     public boolean updateFile(@RequestParam(value = "file") MultipartFile file,
-                                 @RequestParam(value = "fileId") Long fileId,
-                                 @RequestParam(value = "sessionId") String sessionId) throws Exception {
+                              @RequestParam(value = "fileId") Long fileId,
+                              @RequestParam(value = "sessionId") String sessionId) throws Exception {
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
         String fileName = awsStorageService.uploadFile(file, studioSession.getBucketName());
         boolean res = audioFileService.updateAudioFileDetails(fileId, fileName);
@@ -312,23 +312,16 @@ public class StudioSessionController {
         var fileName = "testing";
         java.io.File convFile = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+fileName);
         track.transferTo(convFile);
-//        Path file = Files.createTempFile("temp", ".mid");
-//        track.transferTo(file);
-//        java.io.File tempFile = tempFile.mid;
-//        System.out.println(file);
-//        System.out.println(convFile.getClass().getSimpleName());
+
         AudioInputStream stream = AudioSystem.getAudioInputStream(convFile);
-        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, new java.io.File("D:\\openbeats_new\\openbeats-daw\\src\\main\\java\\com\\openbeats\\openbeatsdaw\\controller\\sample.wav"));
+        java.io.File newfile = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+"sound.wav");
+        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, newfile);
         stream.close();
 
-//        PostDTO postDTO = mapper.readValue(json, PostDTO.class);
-//        postDTO.setUserId(currentUser.get().getUserid());
-//        Post post = postMapper.postDTOToMetadata(postDTO);
-//        return postService.addPost(post, track, picture);
     }
     @RequestMapping(value = "/putmidi", method = RequestMethod.GET)
     public ResponseEntity<byte[]> updatemidi() throws Exception {
-        java.io.File f = new java.io.File("D:\\openbeats_new\\openbeats-daw\\src\\main\\java\\com\\openbeats\\openbeatsdaw\\controller\\sample.wav");
+        java.io.File f = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+"sound.wav");
         byte[] file = Files.readAllBytes(f.toPath());
 
         HttpHeaders headers = new HttpHeaders();
@@ -337,4 +330,6 @@ public class StudioSessionController {
 
         return response;
     }
+
+
 }
