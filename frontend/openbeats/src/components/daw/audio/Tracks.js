@@ -174,6 +174,7 @@ function handleEvent(event) {
 //  device_name = device.name;
   console.log('***', selected_device);
   device_name.add(device.name);
+  console.log('qwerty, ', device_name);
   types.add(type);
   console.log([...types][0]);
   if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && i ){
@@ -182,6 +183,7 @@ function handleEvent(event) {
     }
   if(type === "device_disconnected"){
     device_name.delete(device.name);
+    console.log(device_name);
   }
 
   if (device.name !== DEVICE) return;
@@ -307,6 +309,7 @@ function Tracks() {
           Authorization: "Bearer " + jwtToken,
         },
       });
+    setTimeout(() => { console.log("World!"); }, 2000);
     const { data } =  await axios.get(url+"/putmidi", {
             responseType: 'arraybuffer',
             headers: { 'Accept': '*/*', 'Content-Type': 'audio/wav' }
