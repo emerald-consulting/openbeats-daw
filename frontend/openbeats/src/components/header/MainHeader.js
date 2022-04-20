@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../newLogo.png";
 import { useSelector } from "react-redux";
@@ -19,17 +19,19 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
 import { UserContext } from "../../model/user-context/UserContext";
 import { ListItem } from "@mui/material";
+import axios from "axios";
+import { url } from "../../utils/constants";
 
 const settings = ["Profile", "Account", "Logout"];
 
 const MainHeader = (props) => {
   const [state, dispatch] = useContext(UserContext);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [userDetails, setUserDetails] = useState();
   const history = useHistory();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
-  console.log(state.user);
   const pages = isUserLoggedin
-    ? ["HOME", "INBOX", "DASHBOARD"]
+    ? ["HOME", "INBOX", "DAW"]
     : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
 
   const handleOpenUserMenu = (event) => {
@@ -40,11 +42,19 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    history.push("profile");
+    history.push({
+      pathname: "/profile/" + state.user?.username,
+      state: { emailId: state.user?.emailId, userid: state.user?.userid },
+    });
+    history.go();
   };
 
   const navigationHandler = (event) => {
-    history.push(event.target.value.toString().toLowerCase());
+    if (event.target.value == "DAW") {
+      history.push("dashboard");
+    } else {
+      history.push("/" + event.target.value.toString().toLowerCase());
+    }
   };
 
   const logout = () => {
@@ -52,7 +62,31 @@ const MainHeader = (props) => {
     localStorage.removeItem("emailId");
     localStorage.removeItem("playlist");
     localStorage.removeItem("versions");
-    window.location.href = '/login';
+    window.location.href = "/login";
+  };
+
+  useEffect(() => {
+    if (isUserLoggedin) {
+      getUserDetails();
+    }
+  }, [state]);
+
+  const getUserDetails = async () => {
+    let token = localStorage.getItem("auth-token");
+    const res = await axios.get(
+      url + "/getAuthorDetails/" + state.user.userid,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    setUserDetails(res.data);
   };
 
   const addedClasses = props.className + "custom-header";
@@ -121,11 +155,14 @@ const MainHeader = (props) => {
               </Tooltip>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt={state.user.username} src="/static/images/avatar/2.jpg" />
+                  <Avatar
+                    alt={state.user.username}
+                    src={userDetails?.profilePictureFileName}
+                  />
                 </IconButton>
               </Tooltip>
               <Menu
-                sx={{ mt: "45px" }}
+                sx={{ mt: "45px", maxWidth: "200px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
                 anchorOrigin={{

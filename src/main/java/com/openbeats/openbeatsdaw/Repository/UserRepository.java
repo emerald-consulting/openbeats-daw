@@ -22,6 +22,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByEmailId(String email);
 
+    Optional<User> findByUsername(String username);
+
     Optional<MyUserDetails> findMyUserDetailsByEmailId(String email);
 
     @Query("SELECT u FROM User u WHERE u.verificationCode = ?1")
@@ -32,7 +34,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("update User u set u.subscriptionType='paid' where u.emailId = ?1")
     int upgradeUserSubscription(String email);
 
-    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName, u.bucketName)" +
+    @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName,u.coverPictureFileName,u.profilePictureFileUrl,u.coverPictureFileUrl, u.bucketName, u.emailId, u.totalFollowers, u.totalFollowing)" +
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 

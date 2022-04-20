@@ -168,3 +168,14 @@ wave::-webkit-scrollbar-thumb {
 .createHover:hover {
   background-color: #059669;
 }
+.bg-white{
+  background-color: #ffff;
+}
+
+.text-emrald-gr{
+  color: #10b981;
+}
+
+.text-white{
+  color: #ffff;
+}

@@ -188,7 +188,7 @@ const NewPostForm = ({ refreshPosts }) => {
           selected={genre}
         />
       </div>
-      <div className="form-control" className={classes.fileUpload}>
+      <div className={`form-control ${classes.fileUpload}`}>
         <label htmlFor="track-upload">
           {track ? track.name : "Upload track"}
         </label>
@@ -200,7 +200,7 @@ const NewPostForm = ({ refreshPosts }) => {
         />
       </div>
 
-      <div className="form-control" className={classes.fileUpload}>
+      <div className={`form-control ${classes.fileUpload}`}>
         <label htmlFor="cover-upload">
           {cover ? cover.name : "Upload Cover"}
         </label>
@@ -211,7 +211,7 @@ const NewPostForm = ({ refreshPosts }) => {
           onChange={coverChangeHandler}
         />
       </div>
-      <div className="form-control" className={classes.checkbox}>
+      <div className={`form-control ${classes.checkbox}`}>
         <label>
           Announcement?
           <input

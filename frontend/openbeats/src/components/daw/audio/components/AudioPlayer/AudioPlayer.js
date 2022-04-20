@@ -101,8 +101,8 @@ function AudioPlayer({
     const colors = ["hsl(0,100%,50%, 0,5)", "hsl(300,100%,50%, 0.3)"];
     wavesurfer.current = WaveSurfer.create({
       container: `#${wavesurferId}`,
-      waveColor: "green",
-      progressColor: "green",
+      waveColor: "#34d399",
+      progressColor: "#34d399",
       hideScrollbar: true,
       cursorWidth: 0,
       height: 100,

@@ -20,4 +20,10 @@ public interface PostService {
     List<Post> getAnnouncements();
 
     List<String> getAllGenre();
+
+    Page<Post> getPostsByUser(Long userId, int pageNo);
+
+    Page<Post> getPostsLikedByUser(Long userId, int pageNo);
+
+    Page<Post> getMediaPostsByUser(Long userId, int pageNo);
 }

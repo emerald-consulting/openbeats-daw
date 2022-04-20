@@ -56,29 +56,41 @@ public class ReactionsServiceImpl implements ReactionsService {
     @Override
     public Reactions updateReaction(Long postId, Long userId, Boolean isLike) {
         Optional<Reactions> optionalReaction = reactionsRepository.findByPostIdAndUserId(postId, userId);
-        Reactions reaction = optionalReaction.get();
-        Post post = reaction.getPostRef();
-        if (isLike) {
-            post.setTotalLikes(post.getTotalLikes() + 1);
-            reaction.setIsLike(isLike);
-            reaction.setIsDislike(!isLike);
-
-        } else {
-            if (post.getTotalLikes() != 0) {
-                post.setTotalLikes(post.getTotalLikes() - 1);
+        Post post = postRepository.getById(postId);
+        Reactions reaction;
+        
+        if (optionalReaction.isPresent()) {
+            reaction = optionalReaction.get();
+            if (isLike) {
+                post.setTotalLikes(post.getTotalLikes() + 1);
                 reaction.setIsLike(isLike);
                 reaction.setIsDislike(!isLike);
+
+            } else {
+                if (post.getTotalLikes() != 0) {
+                    post.setTotalLikes(post.getTotalLikes() - 1);
+                    reaction.setIsLike(isLike);
+                    reaction.setIsDislike(!isLike);
+                }
             }
+        } else {
+            reaction = createReaction(postId, userId);
+            reaction.setIsLike(isLike);
+            reaction.setIsDislike(!isLike);
+            post.setTotalLikes(post.getTotalLikes() + 1);
         }
-        reaction.setPostRef(post);
+        System.out.println("************************** "+reaction);
         reactionsRepository.save(reaction);
         return reaction;
     }
 
     @Override
     public Reactions getReactionByPostIdAndUserId(Long postId, Long userId) {
-        Reactions reaction = reactionsRepository.findByPostIdAndUserId(postId, userId).get();
-        return reaction;
+        Optional<Reactions> reaction = reactionsRepository.findByPostIdAndUserId(postId, userId);
+        if (reaction.isPresent()) {
+            return reaction.get();
+        }
+        return null;
     }
 
     @Override
@@ -93,5 +105,4 @@ public class ReactionsServiceImpl implements ReactionsService {
         reactionsRepository.saveAndFlush(newReaction);
         return newReaction;
     }
-
 }

@@ -56,6 +56,24 @@ public class PostController {
         return postService.getPosts(currentUser.get().getUserid(), pageNo);
     }
 
+    @GetMapping("/getPostsByUser/{userId}/{pageNo}")
+    @ResponseBody
+    public Page<Post> getPostsByUser(@PathVariable("userId") Long userId, @PathVariable("pageNo") int pageNo) {
+        return postService.getPostsByUser(userId, pageNo);
+    }
+
+    @GetMapping("/getPostsLikedByUser/{userId}/{pageNo}")
+    @ResponseBody
+    public Page<Post> getPostsLikedByUser(@PathVariable("userId") Long userId, @PathVariable("pageNo") int pageNo) {
+        return postService.getPostsLikedByUser(userId, pageNo);
+    }
+
+    @GetMapping("/getMediaPostsByUser/{userId}/{pageNo}")
+    @ResponseBody
+    public Page<Post> getMediaPostsByUser(@PathVariable("userId") Long userId, @PathVariable("pageNo") int pageNo) {
+        return postService.getMediaPostsByUser(userId, pageNo);
+    }
+
     @GetMapping("/getAllGenre")
     @ResponseBody
     public List<String> getAllGenre() {

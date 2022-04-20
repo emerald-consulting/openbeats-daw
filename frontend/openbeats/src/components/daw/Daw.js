@@ -42,7 +42,7 @@ const Daw = () => {
                         <p className=" p-5 mb-1 " style={{textAlign:'center', backgroundColor: "#10b981"}}>Session ID : {session.sessionId}</p>
                         <p className=" p-5 mb-1 " style={{textAlign:'center', backgroundColor: "#10b981"}}>Collaborators</p>
                         {/* <Dynamicdiv/> */}
-                        {session.participants.map((p)=>(<p className="p-2 bg-gr4 mb-1">{p.firstName}</p>))}
+                        {session.participants.map((p)=>(<p className="p-2 bg-white mb-1">{p.firstName}</p>))}
                         {/* <button onClick={connect}>Connect</button> */}
                     </div>
                 </div>

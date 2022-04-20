@@ -7,9 +7,9 @@ import axios from "axios";
 import { url } from "../../utils/constants";
 
 const LikeButton = ({ details, token }) => {
-  // console.log("result ",details)
   const [totalLikes, setTotalLikes] = useState(details.totalLikes);
   const [checked, setChecked] = useState(false);
+
   const updateReaction = (isChecked) => {
     setChecked(isChecked);
     axios
@@ -51,8 +51,9 @@ const LikeButton = ({ details, token }) => {
       style={{
         display: "block",
         width: "fit-content",
-        float: "right",
+        marginLeft: "auto",
         marginTop: "-30px",
+        width: "60px",
       }}
     >
       <FormControlLabel
