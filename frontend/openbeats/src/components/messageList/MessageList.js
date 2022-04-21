@@ -114,7 +114,6 @@ const MessageList = ({ details }) => {
   };
 
   const connect = (conversationId = details.conversationId) => {
-    // if (subscription) subscription.unsubscribe();
     let socket = new SockJS(url + "/studioSession");
     let stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {

@@ -30,5 +30,8 @@ public class AudioTrack {
     @Column(name="offset")
     private Integer offset;
 
+    @Column(name = "file_display_name")
+    private String fileDisplayName;
+
     private String owner;
 }
