@@ -230,6 +230,7 @@ public class SessionMgmtService {
         audioTrack.setSessionId(sessionId);
         audioTrack.setFile(newFileName);
         audioTrack.setOwner(owner);
+        audioTrack.setFileDisplayName(file.getOriginalFilename());
         audioTracks.add(audioTrack);
         audioTrack.setAudioTrackId(fileDetails.getFileId());
         log.info("Storing audio tracks in session");

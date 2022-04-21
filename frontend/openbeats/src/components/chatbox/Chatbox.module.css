@@ -1,0 +1,41 @@
+.username {
+    font-size: 20px;
+    color: black;
+    font-family: initial;
+    
+  }
+
+  .profileIcon {
+    width: 50px;
+    border-radius: 50px;
+    height: 50px;
+  }
+  .author {
+    line-height: 20px;
+    margin-left: 10px;
+  }
+  .author a {
+      color: #10b981;
+      cursor: pointer;
+      font-size: 18px;
+  }
+
+  .new {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+
+  .new button {
+    font: inherit;
+    background-color: #10b981;
+    color: white;
+    border: 1px solid #10b981;
+    padding: 0.5rem 1.5rem;
+    border-radius: 5rem;
+    cursor: pointer;
+  }
+
+  .new button:disabled {
+    cursor: no-drop;
+  }
