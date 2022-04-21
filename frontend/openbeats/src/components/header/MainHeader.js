@@ -44,9 +44,7 @@ const MainHeader = (props) => {
   const profile = () => {
     history.push({
       pathname: "/profile/" + state.user?.username,
-      state: { emailId: state.user?.emailId, userid: state.user?.userid },
     });
-    history.go();
   };
 
   const navigationHandler = (event) => {
@@ -55,6 +53,7 @@ const MainHeader = (props) => {
     } else {
       history.push("/" + event.target.value.toString().toLowerCase());
     }
+    history.go();
   };
 
   const logout = () => {
