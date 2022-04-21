@@ -31,7 +31,7 @@ const SearchItem = ({ details, searchText, onSelectItem }) => {
 
     return (
         <div className="mb-5">
-            <div style={{ display: "flex", alignItems: "flex-start", flexDirection: 'column', justifyContent: 'center', cursor: 'pointer', paddingLeft: '10px', border: '1px solid lightgray' }} onClick={selectItem} >
+            <div style={{ display: "flex", alignItems: "flex-start", flexDirection: 'column', justifyContent: 'center', cursor: 'pointer', paddingLeft: '10px', border: '1px solid lightgray',background:`${(postDetails.username && postDetails.username !== '-1') ? 'lightgray':'white'}` }} onClick={selectItem} >
                 {
                     postDetails.username === '-1' ? (
                         <Typography color='primary'>{postDetails.userid === '-2' ? 'No Results found' : `Show all for ${searchText}`} </Typography>

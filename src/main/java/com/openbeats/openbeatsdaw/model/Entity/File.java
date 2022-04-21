@@ -37,4 +37,7 @@ public class File {
     @Column(name = "offset")
     private Integer offset;
 
+    @Column(name = "file_display_name")
+    private String fileDisplayName;
+
 }

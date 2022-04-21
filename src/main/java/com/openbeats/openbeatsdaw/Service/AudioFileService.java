@@ -41,6 +41,14 @@ public class AudioFileService {
         return true;
     }
 
+    public boolean updateAudioFileDisplayName(Long fileId, String newFileDisplayName){
+
+        File fileDetails = fileRepository.getById(fileId);
+        fileDetails.setFileDisplayName(newFileDisplayName);
+        fileRepository.save(fileDetails);
+        return true;
+    }
+
     public boolean updateAudioFileOffset(Long fileId, Integer offset){
 
         fileRepository.updateFileOffset(fileId, offset);

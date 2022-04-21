@@ -16,7 +16,7 @@ import { url } from "../../utils/constants";
 import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
-import { useLocation } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 const Profile = (props) => {
   const [profileUrl, setProfileUrl] = useState(null);
@@ -29,6 +29,7 @@ const Profile = (props) => {
   const [currentUser, setCurrentUser] = useState({});
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
+  let history = useHistory();
 
   let token = localStorage.getItem("auth-token");
   const [isLoading,setIsLoading]=useState(false);
@@ -224,6 +225,21 @@ const Profile = (props) => {
       });
   };
 
+  const messageHandler = async() =>{
+    const res = await axios
+    .post(url + "/startConversation/" + currentUser.userid,null, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    history.push("/inbox?conversationId=" + res.data.conversationId);
+  }
+
   return (
     <div>
       <div>
@@ -286,6 +302,22 @@ const Profile = (props) => {
               disabled={props.isCurrentUser}
             >
               Unfollow
+            </Button>
+          )}
+          {!props.isCurrentUser && (
+            <Button
+              variant="contained"
+              onClick={messageHandler}
+              style={{
+                float: "right",
+                marginTop: "20px",
+                marginRight: "10px",
+                backgroundColor: "#1E90FF",
+                color: "black",
+              }}
+              disabled={props.isCurrentUser}
+            >
+              Message
             </Button>
           )}
 
@@ -355,7 +387,12 @@ const Profile = (props) => {
                 {props.followingList &&
                   props.followingList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a
+                        href={"/profile/" + val}
+                        style={{ cursor: "pointer", color: "#66CDAA" }}
+                      >
+                        @{val}
+                      </a>
                     </DialogContentText>
                   ))}
               </DialogContent>
@@ -386,7 +423,12 @@ const Profile = (props) => {
                 {props.followersList &&
                   props.followersList.map((val) => (
                     <DialogContentText id="alert-dialog-description">
-                      <a href={"/profile/"+val} style={{cursor:"pointer",color:"#66CDAA"}}>@{val}</a>
+                      <a
+                        href={"/profile/" + val}
+                        style={{ cursor: "pointer", color: "#66CDAA" }}
+                      >
+                        @{val}
+                      </a>
                     </DialogContentText>
                   ))}
               </DialogContent>

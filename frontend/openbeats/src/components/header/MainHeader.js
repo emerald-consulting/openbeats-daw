@@ -109,7 +109,8 @@ const MainHeader = (props) => {
 
   const getPosts = async (searchText) => {
     let token = localStorage.getItem("auth-token");
-    const res = await axios.get(url + "/search/" + searchText, {
+    const finalUrl=`${url}/search/${searchText}`
+    const res = await axios.get(finalUrl, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
