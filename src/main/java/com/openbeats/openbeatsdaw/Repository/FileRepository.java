@@ -24,4 +24,9 @@ public interface FileRepository extends JpaRepository<File,Long> {
     @Query("UPDATE File f SET f.offset = ?2 where f.fileId = ?1")
     void updateFileOffset(Long fileId, Integer offset);
 
+    @Transactional
+    @Modifying
+    @Query("UPDATE File f SET f.fileDisplayName = ?2 where f.fileId = ?1")
+    void updateFileDisplayName(Long fileId, String fileDisplayName);
+
 }

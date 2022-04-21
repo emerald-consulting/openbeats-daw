@@ -272,6 +272,30 @@ public class StudioSessionController {
         return true;
     }
 
+    @PutMapping("/updateFileDisplayName")
+    public boolean updateFileDisplayName(@RequestParam(value = "fileId") Long fileId,
+                                         @RequestParam(value = "sessionId") String sessionId,
+                                         @RequestParam(value = "newFileDisplayName") String newFileDisplayName) {
+
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        audioTracks.forEach(audioTrack -> {
+            if(audioTrack.getAudioTrackId() == fileId){
+                audioTrack.setFileDisplayName(newFileDisplayName);
+            }
+        });
+        boolean res = audioFileService.updateAudioFileDisplayName(fileId, newFileDisplayName);
+        StudioSessionResponse studioSessionResponse = new StudioSessionResponse();
+        studioSessionResponse.setSessionId(studioSession.getSessionId());
+        studioSessionResponse.setSessionName(studioSession.getSessionName());
+        studioSessionResponse.setParticipants(studioSession.getParticipants());
+        studioSessionResponse.setAudioTracks(studioSession.getAudioTracks());
+        studioSessionResponse.setBucketName(studioSession.getBucketName());
+        studioSessionResponse.setNoRefresh(true);
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + sessionId, studioSessionResponse);
+        return res;
+    }
+
     /*@GetMapping(value = "/download/{filename}")
     public ResponseEntity<byte[]> downloadFile(@PathVariable String filename) {
         ByteArrayOutputStream downloadInputStream = sessionMgmtService.downloadFile(filename);
