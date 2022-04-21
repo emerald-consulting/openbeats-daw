@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "conversations")
@@ -24,6 +25,9 @@ public class Conversations {
 
     @Column(name = "user2_id", insertable = false, updatable = false)
     private Long userId2;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user1_id", referencedColumnName = "user_id", nullable = false)
