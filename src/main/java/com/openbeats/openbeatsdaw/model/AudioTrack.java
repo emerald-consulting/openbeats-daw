@@ -6,31 +6,31 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "file")
+// @Entity
+// @Table(name = "file")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class AudioTrack {
 
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "audio_id")
+    // @Id
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @Column(name = "audio_id")
     private Long audioTrackId;
 
-    @Column(name="session_id")
+    // @Column(name="session_id")
     private String sessionId;
     //private transient MultipartFile file;
 
-    @Column(name="file_name")
+    // @Column(name="file_name")
     private String file;
 
 
-    @Column(name="offset")
+    // @Column(name="offset")
     private Integer offset;
 
-    @Column(name = "file_display_name")
+    // @Column(name = "file_display_name")
     private String fileDisplayName;
 
     private String owner;
