@@ -58,7 +58,7 @@ public class StudioSessionController {
             user=userOptional.get();
             if("free".equalsIgnoreCase(user.getSubscriptionType())){
                 List<Long> sessionIds=collaboratorMgmtService.findAllSessionsFromEmailAndRole(email,"OWNER");
-                if(sessionIds.size()>=3){
+                if(sessionIds.size()>=5){
                     return false;
                 }
             }

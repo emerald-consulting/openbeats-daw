@@ -65,10 +65,7 @@ const MainHeader = (props) => {
 
   const logout = () => {
     dispatch({ type: 'CLEAR_ALL_SEARCH' })
-    localStorage.removeItem("auth-token");
-    localStorage.removeItem("emailId");
-    localStorage.removeItem("playlist");
-    localStorage.removeItem("versions");
+    localStorage.clear();
     window.location.href = "/login";
   };
 
@@ -94,6 +91,7 @@ const MainHeader = (props) => {
       }
     );
     setUserDetails(res.data);
+    localStorage.setItem("currentUserId", res.data.userid);
   };
 
   const onSearch = (e) => {

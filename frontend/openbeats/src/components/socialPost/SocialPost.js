@@ -17,7 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditPostDialog from './EditPostDialog'
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 
-const SocialPost = ({ details,removePost, updatePost  }) => {
+const SocialPost = ({ details, removePost, updatePost }) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
@@ -84,7 +84,7 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
 
   const profile = () => {
     history.push({
-      pathname: "/profile/"+author?.username,
+      pathname: "/profile/" + author?.username,
       state: { emailId: author?.emailId, userid: author?.userid },
     });
     history.go()
@@ -117,9 +117,8 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
   };
   const convertISOStringToViewableDay = () => {
     const tempDate = new Date(details.createdAt).toString().split(" ");
-    const formattedDate = `${tempDate[1]} ${+tempDate[2]} ${
-      tempDate[3]
-    } at ${tempDate[4].slice(0, 5)}`;
+    const formattedDate = `${tempDate[1]} ${+tempDate[2]} ${tempDate[3]
+      } at ${tempDate[4].slice(0, 5)}`;
     return formattedDate;
   };
   const createdAt = convertISOStringToViewableDay();
@@ -133,12 +132,12 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
     <>
       {author && (
         <Card className={classes.card}>
-           <Card.Header >
-            <div style={{ display: "flex", alignItems: "center" , justifyContent:'space-between'}} >
+          <Card.Header >
+            <div style={{ display: "flex", alignItems: "center", justifyContent: 'space-between' }} >
               <div style={{ display: "flex", alignItems: "center" }}>
                 <img
                   alt="Harry"
-                  src="https://www.goldderby.com/wp-content/uploads/2019/10/Ryan-Reynolds.jpg"
+                  src={author?.profilePictureFileName || profileImg}
                   className={classes.profileIcon}
                 />
                 <span className={classes.author}>
@@ -163,8 +162,8 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
                     'aria-labelledby': 'basic-button',
                   }}
                 >
-                  <MenuItem style={{display:'block',marginLeft:'20px',minWidth:'70px',marginBottom:'5px'}} onClick={toggleEditPostDialog}>Edit</MenuItem>
-                  <MenuItem style={{display:'block',marginLeft:'20px',minWidth:'70px',marginBottom:'5px'}} onClick={deletePost}>Delete</MenuItem>
+                  <MenuItem style={{ display: 'block', marginLeft: '20px', minWidth: '70px', marginBottom: '5px' }} onClick={toggleEditPostDialog}>Edit</MenuItem>
+                  <MenuItem style={{ display: 'block', marginLeft: '20px', minWidth: '70px', marginBottom: '5px' }} onClick={deletePost}>Delete</MenuItem>
                 </Menu>
               </>
             </div>
@@ -190,8 +189,8 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
               details.pictureFileName
                 ? details.pictureFileName
                 : details.trackFileName
-                ? soundImg
-                : null
+                  ? soundImg
+                  : null
             }
             className={classes.cargImg}
           />
@@ -208,8 +207,8 @@ const SocialPost = ({ details,removePost, updatePost  }) => {
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
           </Card.Footer> */}
-          <div style={{display:'flex',justifyContent:'flex-end',marginTop:'-30px',marginRight:'-22px'}}>
-          <LikeButton details={details} token={token} />
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-30px', marginRight: '-22px' }}>
+            <LikeButton details={details} token={token} />
           </div>
         </Card>
       )}
