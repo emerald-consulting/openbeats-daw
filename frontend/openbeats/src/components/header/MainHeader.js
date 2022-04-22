@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import logo from "../newLogo.png";
 import { useSelector } from "react-redux";
@@ -21,13 +21,17 @@ import { UserContext } from "../../model/user-context/UserContext";
 import { ListItem } from "@mui/material";
 import axios from "axios";
 import { url } from "../../utils/constants";
+import { NotificationItem } from "../notifications/NotificationItem";
 
 const settings = ["Profile", "Account", "Logout"];
 
 const MainHeader = (props) => {
   const [state, dispatch] = useContext(UserContext);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
   const [userDetails, setUserDetails] = useState();
+  const [notifications, setNotifications] = useState([]);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
   const history = useHistory();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
@@ -41,6 +45,12 @@ const MainHeader = (props) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const [refresh, setRefresh] = useState(0);
+  const refreshPosts = () => {
+    setRefresh((prev) => prev + 1);
+  };
+
   const profile = () => {
     history.push({
       pathname: "/profile/" + state.user?.username,
@@ -65,11 +75,46 @@ const MainHeader = (props) => {
     window.location.href = "/login";
   };
 
+  const handleToggle = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+
+  const handleClose = (event) => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleListKeyDown(event) {
+    if (event.key === "Tab") {
+      event.preventDefault();
+      setOpen(false);
+    } else if (event.key === "Escape") {
+      setOpen(false);
+    }
+  }
+
+  // return focus to the button when we transitioned from !open -> open
+  const prevOpen = React.useRef(open);
+  useEffect(() => {
+    if (prevOpen.current === true && open === false) {
+      anchorRef.current.focus();
+    }
+
+    prevOpen.current = open;
+  }, [open]);
+
   useEffect(() => {
     if (isUserLoggedin) {
       getUserDetails();
     }
   }, [state]);
+
+  useEffect(() => {
+    getFollowNotifications();
+  }, []);
 
   const getUserDetails = async () => {
     let token = localStorage.getItem("auth-token");
@@ -87,6 +132,21 @@ const MainHeader = (props) => {
       }
     );
     setUserDetails(res.data);
+  };
+
+  const getFollowNotifications = async () => {
+    let token = localStorage.getItem("auth-token");
+    const res = await axios.get(url + "/getNotifications/0", {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    setNotifications(res.data.content);
   };
 
   const addedClasses = props.className + "custom-header";
@@ -149,7 +209,18 @@ const MainHeader = (props) => {
                   style={{ marginRight: "15px" }}
                 >
                   <Badge badgeContent={17} color="error">
-                    <NotificationsIcon />
+                    <IconButton ref={anchorRef} onClick={handleToggle}>
+                      <NotificationsIcon />
+                    </IconButton>
+                    {open && (
+                      <NotificationItem
+                        handleClose={handleClose}
+                        handleListKeyDown={handleListKeyDown}
+                        anchorRef={anchorRef}
+                        open={open}
+                        notifications={notifications}
+                      />
+                    )}
                   </Badge>
                 </IconButton>
               </Tooltip>
