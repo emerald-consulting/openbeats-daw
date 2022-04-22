@@ -73,8 +73,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
         //config.setAllowedOrigins(ImmutableList.of("http://openbeats--frontend.s3-website.us-east-2.amazonaws.com/"));
-        //config.setAllowedOrigins(ImmutableList.of("http://localhost:3000"));
-        config.setAllowedOrigins(ImmutableList.of("https://d3bd7i1jol9mgp.cloudfront.net/"));
+        config.setAllowedOrigins(ImmutableList.of("http://localhost:3000"));
+        // config.setAllowedOrigins(ImmutableList.of("https://d3bd7i1jol9mgp.cloudfront.net/"));
         config.setAllowCredentials(true);
         //config.setAllowedMethods(ImmutableList.of("HEAD","GET", "POST", "PUT", "DELETE", "PATCH"));
         config.setAllowedMethods(ImmutableList.of("*"));

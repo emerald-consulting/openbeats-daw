@@ -4,6 +4,7 @@ import { url } from "../../utils/constants";
 import SocialPost from "../socialPost/SocialPost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
+import { Facebook } from 'react-spinners-css';
 
 const PostList = ({ uriParam, refresh }) => {
   const [posts, setPosts] = useState([]);
@@ -57,7 +58,7 @@ const PostList = ({ uriParam, refresh }) => {
   };
 
   return (
-    <LoadingOverlay active={isLoading} spinner>
+    <LoadingOverlay active={isLoading} spinner={<Facebook color="#10b981"/>}>
       <div div="scrollablePosts">
         <InfiniteScroll
           dataLength={posts.length}

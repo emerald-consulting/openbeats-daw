@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Link } from "react-router-dom";
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import { Facebook } from 'react-spinners-css';
 import Snackbar from '@material-ui/core/Snackbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -78,8 +79,7 @@ const Signup = () => {
   return (
     <LoadingOverlay
     active={isLoaded}
-    spinner
-    text='Please wait...'
+    spinner={<Facebook color="#10b981"/>}
     >
       <div className='h-screen flex bg-gray-bg1 flex-col'>
           <div className='w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-3 px-5'>
