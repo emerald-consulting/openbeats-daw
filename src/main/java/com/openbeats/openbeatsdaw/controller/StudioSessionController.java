@@ -58,7 +58,7 @@ public class StudioSessionController {
             user=userOptional.get();
             if("free".equalsIgnoreCase(user.getSubscriptionType())){
                 List<Long> sessionIds=collaboratorMgmtService.findAllSessionsFromEmailAndRole(email,"OWNER");
-                if(sessionIds.size()>=3){
+                if(sessionIds.size()>=5){
                     return false;
                 }
             }
@@ -270,6 +270,30 @@ public class StudioSessionController {
         }
         simpMessagingTemplate.convertAndSend("/topic/session-progress/" + studioSession.getSessionId(), studioSession);
         return true;
+    }
+
+    @PutMapping("/updateFileDisplayName")
+    public boolean updateFileDisplayName(@RequestParam(value = "fileId") Long fileId,
+                                         @RequestParam(value = "sessionId") String sessionId,
+                                         @RequestParam(value = "newFileDisplayName") String newFileDisplayName) {
+
+        StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
+        List<AudioTrack> audioTracks = studioSession.getAudioTracks();
+        audioTracks.forEach(audioTrack -> {
+            if(audioTrack.getAudioTrackId() == fileId){
+                audioTrack.setFileDisplayName(newFileDisplayName);
+            }
+        });
+        boolean res = audioFileService.updateAudioFileDisplayName(fileId, newFileDisplayName);
+        StudioSessionResponse studioSessionResponse = new StudioSessionResponse();
+        studioSessionResponse.setSessionId(studioSession.getSessionId());
+        studioSessionResponse.setSessionName(studioSession.getSessionName());
+        studioSessionResponse.setParticipants(studioSession.getParticipants());
+        studioSessionResponse.setAudioTracks(studioSession.getAudioTracks());
+        studioSessionResponse.setBucketName(studioSession.getBucketName());
+        studioSessionResponse.setNoRefresh(true);
+        simpMessagingTemplate.convertAndSend("/topic/session-progress/" + sessionId, studioSessionResponse);
+        return res;
     }
 
     /*@GetMapping(value = "/download/{filename}")

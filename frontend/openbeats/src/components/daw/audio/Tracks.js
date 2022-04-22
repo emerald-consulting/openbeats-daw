@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import { useLocation } from "react-router-dom";
@@ -113,7 +119,7 @@ function Tracks() {
   const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selected, setSelected] = useState([]);
-  const [allSelected, setAllSelected] = useState(false);
+  const [allSelected, setAllSelected] = useState(true);
   const [error, setError] = useState(null);
   const [changeRecordLabel, setChangeRecordLabel] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -136,6 +142,8 @@ function Tracks() {
   const [fileVersions, setFileVersions] = useState([]);
   const [offsetValue, setOffsetValue] = useState(0);
   
+  const [subscription, setSubscription] = useState(null);
+
   const playHandler = () => {
     setIsPlaying(true);
     interval = setInterval(() => {
@@ -162,6 +170,14 @@ function Tracks() {
     setplayHeadPos(offset);
     steps = (6 * offset) / 30;
   };
+
+  useEffect(() => {
+    return () => {
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
+  }, []);
 
   const [state, dispatch] = useContext(UserContext);
 
@@ -385,21 +401,78 @@ function Tracks() {
     }
   };
 
+  const handleHotKeys = useCallback(
+    (e) => {
+      const keyCode = e.which;
+      console.log(keyCode);
+
+      switch (keyCode) {
+        case 32:
+          if (isPlaying) {
+            stopHanlder();
+          } else {
+            playHandler();
+          }
+          break;
+        case 82:
+          if (!recording) handleRecord();
+          break;
+      }
+    },
+    [isPlaying]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleHotKeys);
+    return () => document.removeEventListener("keydown", handleHotKeys);
+  }, [handleHotKeys]);
+
   const handleRecord = () => {
     recording = !recording;
     setChangeRecordLabel(!changeRecordLabel);
 
     if (recording == true) {
+      document.removeEventListener("keydown", handleHotKeys);
       document.addEventListener("keydown", handleKeydown);
       console.log("Recording");
     }
 
     if (recording == false) {
       document.removeEventListener("keydown", handleKeydown);
-      download();
+      document.addEventListener("keydown", handleHotKeys);
+      if (soundsPLayed.length) {
+        download();
+        setError("Please wait while the recorded track renders!!");
+      }
       soundsPLayed = new Array();
-      setError("Please wait while the recorded track renders!!");
     }
+  };
+
+  const enteredTitleBlurHandler = (index, newFileDisplayName) => {
+    updateFileDisplayName(index, newFileDisplayName);
+  };
+
+  const enteredTitleFocusHandler = () => {
+    document.removeEventListener("keydown", handleKeydown);
+  };
+
+  const updateFileDisplayName = (index, newFileDisplayName) => {
+    document.addEventListener("keydown", handleKeydown);
+    const formData = new FormData();
+    formData.append("fileId", session.audioTracks[index].audioTrackId);
+    formData.append("sessionId", session.sessionId);
+    formData.append("newFileDisplayName", newFileDisplayName);
+
+    axios.put(url + "/updateFileDisplayName", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
   };
 
   async function exportAsWav() {
@@ -472,7 +545,7 @@ function Tracks() {
     }
     setFiles(fileArray);
     setPlayTracks(boolArray);
-    setSelected(boolArray);
+    setSelected(boolArray.map((r) => true));
     setCropRegion(regionArray);
     setPlayRegion(regionArray);
     setCutRegion(regionArray);
@@ -593,13 +666,15 @@ function Tracks() {
   }
 
   const connect = (sessionId = session.sessionId) => {
-    console.log("connecting to the session");
+    if (subscription) {
+      subscription.unsubscribe();
+    }
     let socket = new SockJS(url + "/studioSession");
     //{headers : {"Access-Control-Allow-Origin": "*" }}
     let stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
       console.log("connected to the frame: " + frame);
-      stompClient.subscribe(
+      const subscription = stompClient.subscribe(
         "/topic/session-progress/" + sessionId,
         function (response) {
           let data = JSON.parse(response.body);
@@ -613,6 +688,7 @@ function Tracks() {
           // displayResponse(data);
         }
       );
+      setSubscription(subscription);
     });
   };
 
@@ -744,14 +820,34 @@ function Tracks() {
                 }}
               ></div>
               {files.map((file, index) => (
-                <div style={{ height: "100px" }}>
+                <div key={`contoller+${index}`} style={{ height: "100px" }}>
                   <Checkbox
                     style={{ color: "#10b981" }}
                     checked={selected[index] || false}
                     onChange={(e) => toggleSelectOne(e, index)}
                   />
+                  <Tooltip title="delete">
+                  <button onClick={() => remove(index)} className="mx-5 mt-1">
+                    <CancelIcon />
+                    </button>
+                  </Tooltip>
                   <div className="px-3">
-                    <span>{session.audioTracks[index]?.file.slice(13)}</span>
+                    <span>
+                      <input
+                        type="text"
+                        id="title"
+                        defaultValue={
+                          session.audioTracks[index]?.fileDisplayName ||
+                          session.audioTracks[index]?.file.slice(13)
+                        }
+                        // onFocus={enteredTitleFocusHandler}
+                        // onBlur={(e) =>
+                        //   enteredTitleBlurHandler(index, e.target.value)
+                        // }
+                        placeholder="Title"
+                        readOnly
+                      />
+                    </span>
                     <span className="float-right">
                       {session.audioTracks[index]?.owner}
                     </span>
@@ -798,12 +894,6 @@ function Tracks() {
                         handleVolumeChange(index, value)
                       }
                     />
-                    <button
-                      onClick={() => remove(index)}
-                      className="float-right px-2 mt-1"
-                    >
-                      <CancelIcon />
-                    </button>
                   </div>
                   <hr />
                 </div>
@@ -846,6 +936,7 @@ function Tracks() {
                       }}
                       className={isPlaying ? "" : "cursor-pointer"}
                       onClick={(e) => !isPlaying && changeBarStartHandler(e)}
+                      key={`timer+${index}`}
                     >
                       <span>{index + 1}</span>
                     </Box>
@@ -854,7 +945,7 @@ function Tracks() {
 
                 <div>
                   {files.map((file, index) => (
-                    <div>
+                    <div key={`song+${index}`}>
                       <AudioPlayer
                         isSelected={selected[index]}
                         isMusicPlaying={isPlaying}
