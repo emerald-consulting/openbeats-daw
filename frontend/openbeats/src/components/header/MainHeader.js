@@ -57,10 +57,7 @@ const MainHeader = (props) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("auth-token");
-    localStorage.removeItem("emailId");
-    localStorage.removeItem("playlist");
-    localStorage.removeItem("versions");
+    localStorage.clear();
     window.location.href = "/login";
   };
 
@@ -86,6 +83,7 @@ const MainHeader = (props) => {
       }
     );
     setUserDetails(res.data);
+    localStorage.setItem("currentUserId", res.data.userid);
   };
 
   const addedClasses = props.className + "custom-header";
