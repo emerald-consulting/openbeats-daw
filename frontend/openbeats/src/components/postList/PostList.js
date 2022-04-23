@@ -14,7 +14,7 @@ const PostList = ({ uriParam, refresh }) => {
 
   useEffect(() => {
     getPosts();
-  }, [refreshNumber]);
+  }, [refreshNumber, uriParam]);
 
   useEffect(() => {
     if (refreshNumber == 0) {

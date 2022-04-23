@@ -17,6 +17,8 @@ import { useSelector } from "react-redux";
 import ProfilePicture from "./ProfilePicture";
 import UserProfileForm from "./UserProfileForm";
 import { useHistory, useLocation } from "react-router";
+import Nav from "react-bootstrap/Nav";
+import PostList from "../postList/PostList";
 
 const Profile = (props) => {
   const [profileUrl, setProfileUrl] = useState(null);
@@ -31,6 +33,8 @@ const Profile = (props) => {
   const [showFollowers, setShowFollowers] = useState(false);
   const [existUser, setExistUser] = useState(false);
   let history = useHistory();
+  const [refresh, setRefresh] = useState(0);
+  const [postsUri, setPostsUri] = useState("getPostsByUser");
 
   let token = localStorage.getItem("auth-token");
   const user = useSelector((_state) => _state.user);
@@ -206,20 +210,27 @@ const Profile = (props) => {
       });
   };
 
-  const messageHandler = async() =>{
-    const res = await axios
-    .post(url + "/startConversation/" + currentUser.userid,null, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + token,
-      },
-    });
+  const messageHandler = async () => {
+    const res = await axios.post(
+      url + "/startConversation/" + currentUser.userid,
+      null,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     history.push("/inbox?conversationId=" + res.data.conversationId);
-  }
+  };
+
+  const refreshPosts = () => {
+    setRefresh((prev) => prev + 1);
+  };
 
   return (
     <div>
@@ -422,6 +433,23 @@ const Profile = (props) => {
           )}
         </div>
       </div>
+      <Nav justify variant="tabs" defaultActiveKey="1">
+        <Nav.Item onClick={(e) => setPostsUri("getPostsByUser")}>
+          <Nav.Link eventKey="1">Posts</Nav.Link>
+        </Nav.Item>
+        <Nav.Item onClick={(e) => setPostsUri("getMediaPostsByUser")}>
+          <Nav.Link eventKey="2">Media</Nav.Link>
+        </Nav.Item>
+        <Nav.Item onClick={(e) => setPostsUri("getPostsLikedByUser")}>
+          <Nav.Link eventKey="3">Likes</Nav.Link>
+        </Nav.Item>
+      </Nav>
+      {currentUser.userid && (
+        <PostList
+          uriParam={`${postsUri}/${currentUser.userid}`}
+          refresh={refresh}
+        />
+      )}
     </div>
   );
 };
