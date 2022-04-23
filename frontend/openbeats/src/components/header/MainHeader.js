@@ -49,7 +49,7 @@ const MainHeader = (props) => {
 
   const navigationHandler = (event) => {
     if (event.target.value == "DAW") {
-      history.push("dashboard");
+      history.push("/dashboard");
     } else {
       history.push("/" + event.target.value.toString().toLowerCase());
     }
