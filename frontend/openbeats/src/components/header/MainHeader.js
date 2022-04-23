@@ -53,7 +53,6 @@ const MainHeader = (props) => {
     } else {
       history.push("/" + event.target.value.toString().toLowerCase());
     }
-    history.go();
   };
 
   const logout = () => {
