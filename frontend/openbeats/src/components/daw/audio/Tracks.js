@@ -140,8 +140,6 @@ function Tracks() {
   const [cutRegion, setCutRegion] = useState([]);
   const [volumes, setVolumes] = useState([]);
   const [fileVersions, setFileVersions] = useState([]);
-  const [offsetValue, setOffsetValue] = useState(0);
-  
   const [subscription, setSubscription] = useState(null);
 
   const playHandler = () => {
@@ -493,13 +491,11 @@ function Tracks() {
       }
     });
     let expBuffer = await crunker.fetchAudio(...temp);
-    let mergedBuffer = await crunker.mergeAudio(expBuffer);
-    let paddedBuffer = await crunker.padAudio(
-      mergedBuffer,
-      0,
-      offsetValue / 30
-    );
-    let exportedAudio = await crunker.export(paddedBuffer, "audio/wav");
+    const tempBuffer = expBuffer.map((buffer, index) => {
+      return crunker.padAudio(buffer, 0, session.audioTracks[index]?.offset / 30)
+    });
+    let mergedBuffer = await crunker.mergeAudio(tempBuffer);
+    let exportedAudio = await crunker.export(mergedBuffer, "audio/wav");
     await crunker.download(exportedAudio.blob, "merged");
     setIsLoading(false);
   }
@@ -711,7 +707,6 @@ function Tracks() {
   };
 
   const updadeFileOffsets = (data) => {
-    setOffsetValue(data.offset);
     const reqData = {
       ...data,
       sessionId: session.sessionId,
