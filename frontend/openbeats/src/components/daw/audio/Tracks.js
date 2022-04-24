@@ -491,7 +491,10 @@ function Tracks() {
       }
     });
     let expBuffer = await crunker.fetchAudio(...temp);
-    let mergedBuffer = await crunker.mergeAudio(expBuffer);
+    const tempBuffer = expBuffer.map((buffer, index) => {
+      return crunker.padAudio(buffer, 0, session.audioTracks[index]?.offset / 30)
+    });
+    let mergedBuffer = await crunker.mergeAudio(tempBuffer);
     let exportedAudio = await crunker.export(mergedBuffer, "audio/wav");
     await crunker.download(exportedAudio.blob, "merged");
     setIsLoading(false);
