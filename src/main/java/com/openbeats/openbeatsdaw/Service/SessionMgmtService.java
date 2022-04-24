@@ -220,21 +220,20 @@ public class SessionMgmtService {
             throw new Exception("Session not found");
         }
 
-        log.info("Getting studio session");
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
-
         String newFileName = awsStorageService.uploadFile(file,bucketName);
+
         File fileDetails = audioFileService.saveAudioFileDetails(newFileName,email,"mp3",sessionId,owner);
+
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         AudioTrack audioTrack = new AudioTrack();
         audioTrack.setSessionId(sessionId);
         audioTrack.setFile(newFileName);
         audioTrack.setOwner(owner);
-        audioTracks.add(audioTrack);
         audioTrack.setAudioTrackId(fileDetails.getFileId());
-        log.info("Storing audio tracks in session");
+         audioTrack.setFileDisplayName(file.getOriginalFilename());
+        audioTracks.add(audioTrack);
         SessionStorage.getInstance().setStudioSession(studioSession);
-
         return studioSession;
 
 

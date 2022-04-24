@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import { MIDI } from "./midi";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-import MidiWriter from 'midi-writer-js';
+import MidiWriter from 'midi-writer-js'; 
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
@@ -16,15 +16,14 @@ import PauseIcon from "@material-ui/icons/Pause";
 import Checkbox from "@material-ui/core/Checkbox";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
-import Box from "@mui/material/Box";
-import classes from "./Tracks.module.css";
+import Box from "@mui/material/Box"; 
+import classes from "./Tracks.module.css"; 
 import VolumeDown from "@material-ui/icons/VolumeDown";
 import Slider from "@material-ui/core/Slider";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import CropIcon from "@mui/icons-material/Crop";
 import Tooltip from "@mui/material/Tooltip";
 import UndoIcon from "@mui/icons-material/Undo";
-
 import { useSelector, useDispatch } from "react-redux";
 import {
   setAudioTracks,
@@ -66,49 +65,8 @@ import audio_Ab from "./components/AudioPlayer/Ab.mp3";
 import audio_A from "./components/AudioPlayer/A.mp3";
 import audio_Bb from "./components/AudioPlayer/Bb.mp3";
 import audio_B from "./components/AudioPlayer/B.mp3";
-import Crunker from "crunker";
-//import { WebUSB } from 'usb';
-//    const customWebUSB = new WebUSB({
-//        // Bypass cheking for authorised devices
-//        allowAllDevices: true
-//    });
-//
-//    // Uses blocking calls, so is async
-//    const devices = customWebUSB.getDevices();
-//
-//    for (const device of devices) {
-//        console.log(device); // WebUSB device
-//    }
-//import usb from "usb";
-//import getDeviceList from "usb";
-//const devices: usb.Device[] = getDeviceList();
-//console.log(devices);
-//import usbDetect from 'usb-detection';
-
-//usbDetect.startMonitoring();
-//let button = document.getElementById('request-device');
-//button.addEventListener('click', async () => {
-//  let devize;
-////  let usbDeviceProperties = { name: "Bixolon", vendorId: 5380, productId: 31 };
-//  try {
-//    devize = await navigator.usb.requestDevice({ filters: [] });
-//    console.log(devize);
-//  } catch (error) {
-//    alert('Error: ' + error.message);
-//  }
-//});
-//navigator.usb.requestDevice({filters:[]}).then(function(device){
-//   console.log(device);
-//});
-//navigator.usb.getDevices()
-//.then(devices => {
-//  console.log("Total devices: " + devices.length);
-//  devices.forEach(device => {
-//    console.log("Product name: " + device.productName + ", serial number " + device.serialNumber);
-//  });
-//});
-//overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
-//usbDetect.on('change', function(device) { console.log('change', device); });
+import Crunker from "crunker"; 
+var expect = require('chai').expect;  
 var recording = false;
 const map1 = new Map();
 var context = new AudioContext();
@@ -163,26 +121,55 @@ midi.initialize().then(() => {
   console.log("initialized!");
   notify();
 });
-
+let audios = [];
 let selected_device = '';
 function handleEvent(event) {
   console.log(event);
   const { device, type, a, b } = event;
 
-//  device_name = device.map(device=>{
-//  return device?.name})
-//  device_name = device.name;
   console.log('***', selected_device);
   device_name.add(device.name);
-  console.log('qwerty, ', device_name);
+  console.log('qwerty, ', device_name); 
   types.add(type);
   console.log([...types][0]);
-  if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && i ){
+  if (a!= null && type === 'note_on' && (a.value === 36 || a.value === 37 || a.value === 38 || a.value === 39 || a.value === 40 || a.value === 41 || a.value === 42 || a.value === 43 || a.value === 44)){
+    
+    if (a.value === 36){
+      audios.push(audioFile_Z);
+    }
+    else if (a.value === 37){
+      audios.push(audioFile_N);
+    }
+    else if (a.value === 38){
+      audios.push(audioFile_X);
+    }
+    else if (a.value === 39){
+      audios.push(audioFile_C);
+    }
+    else if (a.value === 40){
+      audios.push(audioFile_V);
+    }
+    else if (a.value === 41){
+      audios.push(audioFile_B);
+    }
+    else if (a.value === 42){
+      audios.push(audioFile_M);
+    }
+    else if (a.value === 43){
+      audios.push(audioFile_comma);
+    }
+    else if (a.value === 44){
+      audios.push(audioFile_dot);
+    }
+
+  }
+  else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device ){
       track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
       console.log(a.value);
     }
   if(type === "device_disconnected"){
     device_name.delete(device.name);
+    window.location.reload(false);
     console.log(device_name);
   }
 
@@ -209,7 +196,6 @@ function notify() {
   };
   setInterval(loop, 100);
 }
-//
 
 function Tracks() {
   const [files, setFiles] = useState([]);
@@ -244,19 +230,6 @@ function Tracks() {
   const [toBeRemoved, setToBeRemoved] = useState(false);
   const [fileVersions, setFileVersions] = useState([]);
   const [devices, setdevices] = useState([]);
-//(async () => {
-//    const customWebUSB = new WebUSB({
-//        // Bypass cheking for authorised devices
-//        allowAllDevices: true
-//    });
-//
-//    // Uses blocking calls, so is async
-//    const devices = await customWebUSB.getDevices();
-//
-//    for (const device of devices) {
-//        console.log(device); // WebUSB device
-//    }
-//})()
 
   useEffect(() => {
       if(record){
@@ -265,7 +238,16 @@ function Tracks() {
       }
       else{
         i = false;
-        midi_handle();
+        if(audios.length>=1){
+          audio_handle();
+          track = null;
+        }
+        
+        else{
+          setTimeout(() => { console.log("World!"); }, 2000);
+          midi_handle();
+        }
+        
       }
 
   }, [record])
@@ -279,8 +261,23 @@ function Tracks() {
     setToBeRemoved(true);
   };
 
+  const audio_handle = async()=>{
+    if(audios.length >=1){ 
+      let crunker = new Crunker();
+      let expBuffer = await crunker.fetchAudio(...audios);
+      let concatBuffer = await crunker.concatAudio(expBuffer);
+      let exportedAudio = await crunker.export(concatBuffer, "audio/wav");
+      let newblob = exportedAudio.blob
+      const url_new = URL.createObjectURL(newblob);
+      pushFile(url_new);
+      uploadMidi(newblob);
+      audios.length = 0;
+      console.log(audios)
+    }
+  }
+
   const midi_handle = async() => {
-    if (!record  && toBeRemoved && [...types].pop() != 'device_disconnected') {
+    if (!record  && toBeRemoved && [...types].pop() != 'device_disconnected' && track != null) {
       console.log([...types].pop());
       const write = new MidiWriter.Writer(track);
       track = null;
@@ -288,9 +285,6 @@ function Tracks() {
       console.log(mid_uri);
       let testBlob = await fetch(mid_uri).then(r => r.blob());
       let crunker = new Crunker();
-      // await crunker.download(blobObject, "midi");
-      // await crunker.download(testBlob, "test");
-      // console.log(blobObject);
       const formData = new FormData();
       let _file = null;
       _file = new File([testBlob], "audio.mid");
@@ -917,13 +911,12 @@ function Tracks() {
       console.log(device);
   })
   }
-//<<<<<<< Updated upstream
   const handleVolumeChange = (index, value) => {
     const temp = [...volumes];
     temp[index] = value;
     setVolumes(temp);
   };
-//=======
+
   const action = (
     <React.Fragment>
       <IconButton
@@ -939,7 +932,7 @@ function Tracks() {
     console.log("device name in react compo",device_name)
    const vertical = 'top';
    const horizontal = 'right'
-//>>>>>>> Stashed changes
+
 
   return (
     <>

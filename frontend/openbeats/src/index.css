@@ -179,3 +179,34 @@ wave::-webkit-scrollbar-thumb {
 .text-white{
   color: #ffff;
 }
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.nav-justified .nav-item, .nav-justified>.nav-link {
+  flex-basis: 0;
+  flex-grow: 1;
+  text-align: center;
+}
+
+.nav-tabs .nav-link.active{
+  color: #115e59;
+  background-color: #fff;
+  border-color: #dee2e6 #dee2e6 #fff;
+}
+
+.nav-link {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #10b981;
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
