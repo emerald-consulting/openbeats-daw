@@ -128,7 +128,7 @@ public class AWSStorageService {
 
     public URL getUrl (String bucketName, String fileName){
 
-        return s3Client.generatePresignedUrl(bucketName, fileName, new Date(System.currentTimeMillis() + 3600000));
+        return s3Client.generatePresignedUrl(bucketName, fileName, new Date(System.currentTimeMillis() + 36000000));
     }
 
 }

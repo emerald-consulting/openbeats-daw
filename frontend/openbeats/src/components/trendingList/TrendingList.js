@@ -5,14 +5,14 @@ import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
 import TrendingListItem from "./trendingListItem/TrendingListItem";
 
-const TrendingList = ({refresh}) => {
+const TrendingList = (props) => {
   let token = localStorage.getItem("auth-token");
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
 
   useEffect(() => {
     getTrending();
-  }, [refresh]);
+  }, []);
 
   const getTrending = async () => {
     setIsLoading(true);
@@ -35,7 +35,7 @@ const TrendingList = ({refresh}) => {
         Trending
       </h2>
       {list.map((item) => (
-        <TrendingListItem details={item} key={item.postId}/>
+        <TrendingListItem details={item} />
       ))}
     </LoadingOverlay>
   );

@@ -36,20 +36,13 @@ const Profile = (props) => {
   const [postsUri, setPostsUri] = useState("getPostsByUser");
 
   let token = localStorage.getItem("auth-token");
-  const [isLoading,setIsLoading]=useState(false);
   const user = useSelector((_state) => _state.user);
   let jwtToken = `${user.jwtToken}`;
-  
-  const currentUserId=+window.location.pathname.split('/')[2];
-  
   const location = useLocation();
   // const eId = location.state?.emailId;
 
   const handleClickOpen = () => {
-    if(!currentUserId){
-
-      setOpen(true);
-    }
+    setOpen(true);
   };
 
   const handleClose = () => {
@@ -104,26 +97,6 @@ const Profile = (props) => {
   };
 
   const getPicture = async () => {
-    if(currentUserId){
-      const res = await axios.get(
-        url + "/getAuthorDetails/" + currentUserId,
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            Authorization: "Bearer " + token,
-          },
-        }
-      );
-
-    setCurrentUser(res.data);
-    setProfileUrl(res.data.profilePictureFileUrl);
-    setCoverUrl(res.data.coverPictureFileUrl);
-    }
-    else{
     const res = await axios.get(url + "/getPicture/" + props.username, {
       headers: {
         Accept: "application/json",
@@ -137,7 +110,6 @@ const Profile = (props) => {
     setCurrentUser(res.data);
     setProfileUrl(res.data.profilePictureFileUrl);
     setCoverUrl(res.data.coverPictureFileUrl);
-  }
   };
 
   const addProfilePicture = async () => {
@@ -187,10 +159,8 @@ const Profile = (props) => {
   }, []);
 
   useEffect(() => {
-    if(!currentUserId){
-      getPicture();
-    }
-  }, [location,props.isFollowing]);
+    getPicture();
+  }, [location, props.isFollowing]);
 
   useEffect(() => {
     addProfilePicture();
