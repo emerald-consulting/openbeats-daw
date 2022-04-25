@@ -83,9 +83,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
   };
 
   const profile = () => {
-    history.push({
-      pathname: "/profile/" + author?.username,
-    });
+    history.push("/profile/" + author?.username);
   };
 
   const deletePost = async () => {
@@ -135,7 +133,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
             style={{ cursor: "pointer" }}
             onClick={profile}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: 'space-between' }} >
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ display: "flex", alignItems: "center" }} onClick={profile}>
                 <img
                   alt="Harry"
                   src={author?.profilePictureFileName || profileImg}
@@ -210,7 +208,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
           </Card.Footer> */}
           <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-10px', marginRight: '-20px' }}>
             <LikeButton details={details} token={token} />
-          </div>
+            </div>
         </Card>
       )}
       {

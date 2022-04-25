@@ -5,10 +5,12 @@ import classes from "./TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../../likeButton/LikeButton";
 import profileImg from "../../profileIcon.png";
+import { useHistory } from "react-router";
 
 const TrendingListItem = ({ details }) => {
   const [author, setAuthor] = useState();
   let token = localStorage.getItem("auth-token");
+  const history =  useHistory();
 
   useEffect(() => {
     getAuthorDetails();
@@ -32,9 +34,14 @@ const TrendingListItem = ({ details }) => {
     });
     setAuthor(res.data);
   };
+
+  const goToProfile = () => {
+    history.push("/profile/" + author?.username);
+  };
+
   return (
     <div className="mb-5">
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center" }} onClick={goToProfile}>
         <img
           alt="Harry"
           src={author?.profilePictureFileName || profileImg}

@@ -46,23 +46,23 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    dispatcher({ type: 'CLEAR_ALL_SEARCH' })
+    // dispatcher({ type: 'CLEAR_ALL_SEARCH' })
     history.push({
       pathname: "/profile/" + state.user?.username,
     });
   };
 
   const navigationHandler = (event) => {
-    dispatch({ type: 'CLEAR_ALL_SEARCH' })
+    // dispatch({ type: 'CLEAR_ALL_SEARCH' })
     if (event.target.value == "DAW") {
-      history.push("/dashboard");
+      history.push("dashboard");
     } else {
-      history.push("/" + event.target.value.toString().toLowerCase());
+      history.push(event.target.value.toString().toLowerCase());
     }
   };
 
   const logout = () => {
-    dispatch({ type: 'CLEAR_ALL_SEARCH' })
+    // dispatch({ type: 'CLEAR_ALL_SEARCH' })
     localStorage.clear();
     window.location.href = "/login";
   };
