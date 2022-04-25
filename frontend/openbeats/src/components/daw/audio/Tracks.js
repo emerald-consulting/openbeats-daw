@@ -911,7 +911,7 @@ function Tracks() {
                   <h1
                     style={{
                       left: `${steps < 100 ? barOffset : barOffset + 250}px`,
-                      height: "500px",
+                      height: "480px",
                       borderRight: "2px solid red",
                       position: `${steps < 100 ? "absolute" : "fixed"}`,
                       zIndex: 20,
@@ -936,9 +936,6 @@ function Tracks() {
                       <span>{index + 1}</span>
                     </Box>
                   ))}
-                </div>
-
-                <div>
                   {files.map((file, index) => (
                     <div key={`song+${index}`}>
                       <AudioPlayer

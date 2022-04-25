@@ -32,6 +32,7 @@ public class UserController {
             @RequestHeader(name = "Authorization") String token) {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
         User user = userService.uploadOrEditPicture(currentUser.getEmailId(), profilePicture, coverPicture);
+        user.setPassword(null);
         return user;
     }
 
@@ -42,6 +43,7 @@ public class UserController {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
         // User user = userService.getPicture(currentUser.getEmailId());
         User user = userService.getPicture(emailId);
+        user.setPassword(null);
         return user;
     }
 
@@ -49,6 +51,7 @@ public class UserController {
     @ResponseBody
     public User updateUserProfile(@RequestBody User user) {
         User updatedUser = userService.updateUser(user);
+        updatedUser.setPassword(null);
         return updatedUser;
     }
 
