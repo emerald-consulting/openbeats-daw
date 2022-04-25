@@ -117,6 +117,9 @@ public class UserManagementService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmailId(email);
+        if(user.isPresent()){
+            user.get().setPassword(null);
+        }
         user.orElseThrow(()-> new UsernameNotFoundException("User does not exist"));
 
         return user.map(MyUserDetails::new).get();

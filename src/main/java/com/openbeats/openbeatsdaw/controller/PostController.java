@@ -6,12 +6,13 @@ import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.PostDTO;
+import com.openbeats.openbeatsdaw.model.UserAndPosts;
 import com.openbeats.openbeatsdaw.model.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,6 +42,23 @@ public class PostController {
         postDTO.setUserId(currentUser.get().getUserid());
         Post post = postMapper.postDTOToMetadata(postDTO);
         return postService.addPost(post, track, picture);
+    }
+
+
+
+    @PutMapping("/post")
+    @ResponseBody
+    public Post updatePost(@RequestPart("json") String json,
+                           @RequestParam(value = "track", required = false) MultipartFile track,
+                           @RequestParam(value = "picture", required = false) MultipartFile picture,
+                           @RequestHeader (name="Authorization") String token ) throws JsonProcessingException {
+
+        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+        ObjectMapper mapper = new ObjectMapper();
+        PostDTO postDTO = mapper.readValue(json, PostDTO.class);
+        postDTO.setUserId(currentUser.get().getUserid());
+        Post post = postMapper.postDTOToMetadata(postDTO);
+        return postService.updatePost(post, track, picture);
     }
 
     @PutMapping("/removePost/{postId}")
@@ -90,6 +108,25 @@ public class PostController {
     @ResponseBody
     public List<Post> getAnnouncements() {
         return postService.getAnnouncements();
+    }
+
+    @GetMapping("/getNewlyReleased")
+    @ResponseBody
+    public List<Post> getNewlyReleased() {
+        return postService.getNewlyReleased();
+    }
+
+    @GetMapping("/search/{searchText}")
+    @ResponseBody
+    public UserAndPosts search(@PathVariable("searchText") String searchText,@RequestHeader(name = "Authorization") String token) {
+        User currentUser = tokenProvider.getLoggedinUser(token).get();
+        return postService.search(searchText,currentUser.getUserid());
+    }
+
+    @GetMapping("/allSearchPosts/{searchText}")
+    @ResponseBody
+    public List<Post> allSearchPosts(@PathVariable("searchText") String searchText) {
+        return postService.allSearchPosts(searchText);
     }
 
 }

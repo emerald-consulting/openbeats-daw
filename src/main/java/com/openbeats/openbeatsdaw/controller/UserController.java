@@ -37,6 +37,7 @@ public class UserController {
             @RequestHeader(name = "Authorization") String token) {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
         User user = userService.uploadOrEditPicture(currentUser.getEmailId(), profilePicture, coverPicture);
+        user.setPassword(null);
         return user;
     }
 
@@ -47,6 +48,7 @@ public class UserController {
         User currentUser = tokenProvider.getLoggedinUser(token).get();
         // User user = userService.getPicture(currentUser.getEmailId());
         User user = userService.getPicture(emailId);
+        user.setPassword(null);
         return user;
     }
 
@@ -57,6 +59,7 @@ public class UserController {
         Long count = userRepository.countByUsername(user.getUsername());
         if(count==1){
         
+        updatedUser.setPassword(null);
         return updatedUser;
         }
         else{
