@@ -208,7 +208,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
           </Card.Footer> */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-30px', marginRight: '-22px' }}>
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-10px', marginRight: '-20px' }}>
             <LikeButton details={details} token={token} />
           </div>
         </Card>
