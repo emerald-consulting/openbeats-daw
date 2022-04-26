@@ -128,10 +128,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
     <>
       {author && (
         <Card className={classes.card}>
-          <Card.Header 
-            className="mb-2"
-            style={{ cursor: "pointer" }}
-            onClick={profile}>
+          <Card.Header className="mb-2" style={{cursor: "pointer"}}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: 'space-between' }} >
               <div style={{ display: "flex", alignItems: "center" }} onClick={profile}>
                 <img
@@ -206,9 +203,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
           </Card.Footer> */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-10px', marginRight: '-20px' }}>
             <LikeButton details={details} token={token} />
-            </div>
         </Card>
       )}
       {
