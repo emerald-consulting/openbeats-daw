@@ -1,5 +1,7 @@
 package com.openbeats.openbeatsdaw.controller;
 
+import com.amazonaws.services.cognitoidp.model.UsernameExistsException;
+import com.openbeats.openbeatsdaw.Repository.UserRepository;
 import com.openbeats.openbeatsdaw.Service.UserService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.model.Entity.User;
@@ -17,6 +19,9 @@ public class UserController {
 
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping("/getAuthorDetails/{userId}")
     @ResponseBody
@@ -49,10 +54,17 @@ public class UserController {
 
     @PutMapping("/updateUserProfile")
     @ResponseBody
-    public User updateUserProfile(@RequestBody User user) {
+    public User updateUserProfile(@RequestBody User user) throws UsernameExistsException {
         User updatedUser = userService.updateUser(user);
+        Long count = userRepository.countByUsername(user.getUsername());
+        if(count==1){
+        
         updatedUser.setPassword(null);
         return updatedUser;
+        }
+        else{
+            throw new UsernameExistsException("User already exists");
+        }
     }
 
 }
