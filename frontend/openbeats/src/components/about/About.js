@@ -12,21 +12,14 @@ const About = () => {
         }
 
   return (
-    <div ref={titleRef} className="bg-gr3 h-screen pl-40 pt-40 flex flex-col pb-40">
-      <div className="flex flex-row ">
-        <div>
-          <div className="text-4xl pt-2 font-mono">About OpenBeats</div>
-          <div className="pt-2">
+    <div ref={titleRef} className="bg-gr3 h-screen pt-40 flex flex-col pb-40">
+      
+          <div className="pt-2" style={{color: "white", textAlign:"center"}}>
+            <h1 className="text-4xl pb-10 font-mono">About OpenBeats</h1>
             <p>Open Beats, is a Digital Audio Workstation (DAW) that aims to allow artists, </p>
             <p>to collaborate with others on music synchronously and remotely.</p>
-
-            <p className="pt-2"> Start a Studio session, Invite your friends, Collaborate live and more.. </p>
+            <p> Start a Studio session, Invite your friends, Collaborate live and more.. </p>
           </div>
-        </div>
-        {/* <div className="">
-          <img src={pic}></img>
-        </div> */}
-        </div>
     </div>
     
   );

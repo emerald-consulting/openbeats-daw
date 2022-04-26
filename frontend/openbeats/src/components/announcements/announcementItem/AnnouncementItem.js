@@ -35,7 +35,7 @@ const AnnouncementItem = ({ details }) => {
 
   return (
     <div className="mb-5">
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div style={{ display: "flex", alignItems: "center", display: "flex", flexDirection: "row", flexWrap: "wrap"  }}>
         <img
           alt="Harry"
           src={author?.profilePictureFileName || profileImg}
@@ -45,13 +45,9 @@ const AnnouncementItem = ({ details }) => {
           <strong
             className={classes.username}
           >{`${author?.firstName} ${author?.lastName}`}</strong>
-          <a className="ml-2">@{author?.username}</a>
-          <br />
-          <small className={classes.description}>
-            <ReactHashtag>{description}</ReactHashtag>
-          </small>
-          <br />
-        </span>
+          <div style={{ marginTop: "5px" }}>
+          <a className="ml-2" style={{ fontSize: "13px" }}>@{author?.username}</a>
+          
         <button
           style={{
             marginLeft: "auto",
@@ -60,6 +56,17 @@ const AnnouncementItem = ({ details }) => {
         >
          <LikeButton details={details} token={token} />
         </button>
+        </div>
+        </span>
+        <br />
+        <div>
+        <small className={classes.description}>
+            <ReactHashtag>{description}</ReactHashtag>
+          </small></div>
+          <br />
+
+
+        <div className={classes.borderBottom}></div>
       </div>
     </div>
   );

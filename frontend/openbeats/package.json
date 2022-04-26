@@ -42,6 +42,7 @@
     "react-h5-audio-player": "^3.8.3",
     "react-hashtag": "^2.1.2",
     "react-howler": "^5.2.0",
+    "react-icons": "^4.3.1",
     "react-infinite-scroll-component": "^6.1.0",
     "react-loading-overlay": "^1.0.1",
     "react-media-recorder": "^1.6.1",

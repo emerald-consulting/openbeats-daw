@@ -1,6 +1,7 @@
 import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
-import classes from "./ProfilePage.module.css";
+import classes from "./SocialHomePage.module.css";
+// import classes from "./ProfilePage.module.css";
 import Profile from "../profile/Profile";
 import { useState, useEffect, useContext } from "react";
 import { url } from "../../utils/constants";
@@ -110,7 +111,7 @@ const ProfilePage = () => {
 
   return (
     <div className={classes.container}>
-      <div className="p-5">
+      {/* <div className="p-5"> */}
         <div className={classes.leftpane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>
@@ -143,7 +144,7 @@ const ProfilePage = () => {
             </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
     </div>
   );
 };

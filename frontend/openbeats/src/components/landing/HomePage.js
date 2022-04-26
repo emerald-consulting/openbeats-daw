@@ -20,8 +20,7 @@ const HomePage = () => {
       >
         <div>
           <h1
-            className="text-white text-7xl "
-            style={{ position: "absolute", top: "80%", width: "100%", textAlign:"center", fontWeight: "900" }}
+            className={classes.title}
           >
             The <span className="text-emrald-gr">Music Studio</span> in the cloud...
           </h1>

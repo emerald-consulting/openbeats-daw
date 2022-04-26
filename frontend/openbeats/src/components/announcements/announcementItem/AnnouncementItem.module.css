@@ -35,3 +35,12 @@
     color: black;
     font-family: initial;
   }
+  .borderBottom{
+    content: ""; 
+    display: block; 
+    margin: 0 auto; 
+    width: 95%; 
+    padding-top: 20px; 
+    border-bottom: 1px solid #c8c8c8
+    ; 
+  }

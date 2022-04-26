@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
+import { Facebook } from 'react-spinners-css';
 import { url } from "../../utils/constants";
 import ConversationListItem from "./conversationListItem/ConversationListItem";
 
@@ -29,7 +30,8 @@ const ConversationList = ({onSelectConversationHandler}) => {
     setIsLoading(false);
   };
   return (
-    <LoadingOverlay active={isLoading} spinner>
+    <LoadingOverlay active={isLoading} 
+    spinner={<Facebook color="#10b981"/>}>
       <h2 className="mb-1" style={{ color: "#000" }}>
         Messages
       </h2>
