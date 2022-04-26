@@ -52,9 +52,9 @@ const MainHeader = (props) => {
   const navigationHandler = (event) => {
     // dispatch({ type: 'CLEAR_ALL_SEARCH' })
     if (event.target.value == "DAW") {
-      history.push("dashboard");
+      history.push("/dashboard");
     } else {
-      history.push(event.target.value.toString().toLowerCase());
+      history.push("/"+event.target.value.toString().toLowerCase());
     }
   };
 
