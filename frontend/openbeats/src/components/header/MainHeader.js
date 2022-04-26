@@ -46,12 +46,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    // dispatcher({ type: 'CLEAR_ALL_SEARCH' })
-    history.push({
-      pathname: "/profile/" + state.user?.username,
-      // state: { emailId: state.user?.emailId, userid: state.user?.userid },
-    });
-    // history.go();
+    history.push("/profile/" + state.user?.username);
   };
 
   const navigationHandler = (event) => {
