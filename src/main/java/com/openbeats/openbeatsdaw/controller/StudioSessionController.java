@@ -11,7 +11,7 @@ import com.openbeats.openbeatsdaw.Service.SessionMgmtService;
 import com.openbeats.openbeatsdaw.Service.UserManagementService;
 import com.openbeats.openbeatsdaw.model.*;
 import com.openbeats.openbeatsdaw.model.SessionStorage;
-
+import org.springframework.http.HttpStatus;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
+
+import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 @RestController
 @RequestMapping("/")
@@ -312,4 +319,29 @@ public class StudioSessionController {
         log.info("Adding new track to the session: {}", sessionId);
         return ResponseEntity.ok(sessionMgmtService.addTrackToSession(sessionId));
     }*/
+    @PostMapping("/midiUpload")
+    @ResponseBody
+    public void addmidi(@RequestParam(value = "track", required = true) MultipartFile track) throws IOException, UnsupportedAudioFileException {
+
+        var fileName = "testing";
+        java.io.File convFile = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+fileName);
+        track.transferTo(convFile);
+
+        AudioInputStream stream = AudioSystem.getAudioInputStream(convFile);
+        java.io.File newfile = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+"sound.wav");
+        AudioSystem.write(stream, AudioFileFormat.Type.WAVE, newfile);
+        stream.close();
+
+    }
+    @RequestMapping(value = "/putmidi", method = RequestMethod.GET)
+    public ResponseEntity<byte[]> updatemidi() throws Exception {
+        java.io.File f = new java.io.File(System.getProperty("java.io.tmpdir")+"/"+"sound.wav");
+        byte[] file = Files.readAllBytes(f.toPath());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Disposition", "attachment; filename=\"" + f.getName() +".wav\"");
+        ResponseEntity<byte[]> response = new ResponseEntity(file, headers, HttpStatus.OK);
+
+        return response;
+    }
 }

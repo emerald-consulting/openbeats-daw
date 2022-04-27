@@ -8,10 +8,10 @@ import React, {
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import { useLocation } from "react-router-dom";
-
+import { MIDI } from "./midi";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
-
+import MidiWriter from 'midi-writer-js'; 
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from "@material-ui/icons/Cancel";
 import Microphone from "./components/Microphone/Microphone";
@@ -72,6 +72,22 @@ import audio_Ab from "./components/AudioPlayer/Ab.mp3";
 import audio_A from "./components/AudioPlayer/A.mp3";
 import audio_Bb from "./components/AudioPlayer/Bb.mp3";
 import audio_B from "./components/AudioPlayer/B.mp3";
+import audio_1 from "./components/AudioPlayer/Kick_1_Ibiza.mp3";
+import audio_2 from "./components/AudioPlayer/Snare_1_Ibiza.mp3";
+import audio_3 from "./components/AudioPlayer/Click_Ibiza.mp3";
+import audio_4 from "./components/AudioPlayer/Clap_1_Ibiza.mp3";
+import audio_5 from "./components/AudioPlayer/Hi-Hat_1_Ibiza.mp3";
+import audio_6 from "./components/AudioPlayer/Hi-Hat_2_Ibiza.mp3";
+import audio_7 from "./components/AudioPlayer/Hi-Hat_Open_Ibiza.mp3";
+import audio_8 from "./components/AudioPlayer/Crash_Ibiza.mp3";
+import audio_9 from "./components/AudioPlayer/Ride_Ibiza.mp3";
+import audio_10 from "./components/AudioPlayer/Tom_Low_Ibiza.mp3";
+import audio_11 from "./components/AudioPlayer/Tom_Low_Ibiza.mp3";
+import audio_12 from "./components/AudioPlayer/Tom_High_Ibiza.mp3";
+import audio_13 from "./components/AudioPlayer/Tambourine_1_Ibiza.mp3";
+import audio_14 from "./components/AudioPlayer/Landing_Ibiza.mp3";
+import audio_15 from "./components/AudioPlayer/Vinyl_Ibiza.mp3";
+import audio_16 from "./components/AudioPlayer/Machine_Ibiza.mp3";
 
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
 import Crunker from "crunker";
@@ -113,6 +129,118 @@ const divStyle = {
 const arr = Array.from(Array(300).keys());
 let interval;
 let steps = 0;
+const KNOB = 9;
+const PAD = 48;
+const DEVICE = "MPD218 Port A";
+let ratio = 1;
+let on = false;
+let i = false;
+//let device_name = ['hello','hi','test','foo','bar'];
+//let device_name = '';
+let device_name = new Set();
+let track;
+let types = new Set();
+const midi = new MIDI(handleEvent);
+midi.initialize().then(() => {
+  console.log("initialized!");
+  notify();
+});
+let audios = [];
+let selected_device = '';
+function handleEvent(event) {
+  console.log(event);
+  const { device, type, a, b } = event;
+
+  console.log('***', selected_device);
+  device_name.add(device.name);
+  console.log('qwerty, ', device_name); 
+  types.add(type);
+  console.log([...types][0]);
+  if (a!= null && type === 'note_on' && (a.value === 36 || a.value === 37 || a.value === 38 || a.value === 39 || a.value === 40 || a.value === 41 || a.value === 42 || a.value === 43 || a.value === 44|| a.value === 45|| a.value === 46|| a.value === 47|| a.value === 48|| a.value === 49|| a.value === 50|| a.value === 51) && device.name === 'MPD218'){
+    console.log(a.value);
+    if (a.value === 36){
+      audios.push(audio_1);
+    }
+    else if (a.value === 37){
+      audios.push(audio_2);
+    }
+    else if (a.value === 38){
+      audios.push(audio_3);
+    }
+    else if (a.value === 39){
+      audios.push(audio_4);
+    }
+    else if (a.value === 40){
+      audios.push(audio_5);
+    }
+    else if (a.value === 41){
+      audios.push(audio_6);
+    }
+    else if (a.value === 42){
+      audios.push(audio_7);
+    }
+    else if (a.value === 43){
+      audios.push(audio_8);
+    }
+    else if (a.value === 44){
+      audios.push(audio_9);
+    }
+    else if (a.value === 45){
+      audios.push(audio_10);
+    }
+    else if (a.value === 46){
+      audios.push(audio_11);
+    }
+    else if (a.value === 47){
+      audios.push(audio_12);
+    }
+    else if (a.value === 48){
+      audios.push(audio_13);
+    }
+    else if (a.value === 49){
+      audios.push(audio_14);
+    }
+    else if (a.value === 50){
+      audios.push(audio_15);
+    }
+    else if (a.value === 51){
+      audios.push(audio_16);
+    }
+
+  }
+  else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device ){
+      track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
+      console.log(a.value);
+    }
+  if(type === "device_disconnected"){
+    device_name.delete(device.name);
+    window.location.reload(false);
+    console.log(device_name);
+  }
+
+  if (device.name !== DEVICE) return;
+  if (type === "mode_change" && a.value === KNOB) {
+    ratio = b.ratio;
+  } else if (type === "note_on" && a.value === PAD) {
+    on = true;
+  } else if (type === "note_off" && a.value === PAD) {
+    on = false;
+  } else if (type === "aftertouch" && on) {
+    ratio = a.ratio;
+  }
+}
+
+function notify() {
+  const loop = () => {
+    const noteOff = 128;
+    const noteOn = 144;
+    if (!on) midi.notify([noteOn, PAD, 127], DEVICE);
+    setTimeout(() => {
+      if (!on) midi.notify([noteOff, PAD, 0], DEVICE);
+    }, 100);
+  };
+  setInterval(loop, 100);
+}
 
 function Tracks() {
   const [files, setFiles] = useState([]);
@@ -132,7 +260,10 @@ function Tracks() {
   const maxDuration = _audio ? _audio.maxDuration : 1;
   const search = useLocation().search;
   const rulerRef = useRef();
-
+  const [record, setRecord] = useState(false);
+  const [val, setVal] = useState('None');
+  const [device, setDevice] = useState({});
+  const [open, setOpen] = useState(false);
   const [barOffset, setBarOffset] = useState(0);
   const [playHeadPos, setplayHeadPos] = useState(0);
   const [playRegion, setPlayRegion] = useState([]);
@@ -141,6 +272,136 @@ function Tracks() {
   const [volumes, setVolumes] = useState([]);
   const [fileVersions, setFileVersions] = useState([]);
   const [subscription, setSubscription] = useState(null);
+  const [toBeRemoved, setToBeRemoved] = useState(false);
+  const [devices, setdevices] = useState([]);
+
+  useEffect(() => {
+    if(record){
+      handlemidi();
+      i = true;
+    }
+    else{
+      i = false;
+      if(audios.length>=1){
+        audio_handle();
+        track = null;
+      }
+      
+      else{
+        setTimeout(() => { console.log("World!"); }, 2000);
+        midi_handle();
+      }
+      
+    }
+
+}, [record])
+
+const setNewDevices = (dev) => {
+  setdevices([...devices, dev])
+}
+
+const handlemidi = () => {
+  track = new MidiWriter.Track();
+  setToBeRemoved(true);
+};
+
+const audio_handle = async()=>{
+  if(audios.length >=1){ 
+    let crunker = new Crunker();
+    let expBuffer = await crunker.fetchAudio(...audios);
+    let concatBuffer = await crunker.concatAudio(expBuffer);
+    let exportedAudio = await crunker.export(concatBuffer, "audio/wav");
+    let newblob = exportedAudio.blob
+    const url_new = URL.createObjectURL(newblob);
+    pushFile(url_new);
+    uploadMidi(newblob);
+    audios.length = 0;
+    console.log(audios)
+  }
+}
+
+const midi_handle = async() => {
+  if (!record  && toBeRemoved && [...types].pop() != 'device_disconnected' && track != null) {
+    console.log([...types].pop());
+    const write = new MidiWriter.Writer(track);
+    track = null;
+    const mid_uri = write.dataUri();
+    console.log(mid_uri);
+    let testBlob = await fetch(mid_uri).then(r => r.blob());
+    let crunker = new Crunker();
+    const formData = new FormData();
+    let _file = null;
+    _file = new File([testBlob], "audio.mid");
+
+
+    formData.append(
+      'track', _file
+    );
+    axios.post(url + "/midiUpload", formData, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + jwtToken,
+      },
+    });
+  setTimeout(() => { console.log("World!"); }, 2000);
+  const { data } =  await axios.get(url+"/putmidi", {
+          responseType: 'arraybuffer',
+          headers: { 'Accept': '*/*', 'Content-Type': 'audio/wav' }
+      }).then(resp => resp);
+      const blob = new Blob([data], {
+          type: 'audio/wav'
+      })
+      const url_new = URL.createObjectURL(blob);
+
+      let final_blob =fetch(url_new).then(res => res.blob());
+//         await crunker.download(final_blob, "test");
+  pushFile(url_new);
+  uploadMidi(blob);
+  };
+
+  }
+const uploadMidi = (blob) => {
+  const formData = new FormData();
+
+  formData.append("fileName", "hello");
+  let _file = null;
+//    console.log(file.blob);
+  if (blob) {
+    _file = new File([blob], "audio.mp3");
+  }
+  formData.append("file", _file);
+
+  formData.append("sessionId", session.sessionId);
+
+  formData.append("bucketName", session.bucketName);
+
+  formData.append("owner", state.user.firstName);
+
+  formData.append("email", state.user.emailId);
+
+  let requestsParams =
+    "fileName=hello&file=" +
+    _file +
+    "&sessionId=" +
+    session.sessionId +
+    "&bucketName=" +
+    session.bucketName;
+  axios.post(url + "/studioSession", formData, {
+    headers: {
+      // axios.post(url+"/studioSession",formData,{headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+      Authorization: "Bearer " + jwtToken,
+    },
+  });
+};
 
   const playHandler = () => {
     setIsPlaying(true);
@@ -755,9 +1016,47 @@ function Tracks() {
     temp[index] = value;
     setVolumes(temp);
   };
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
 
+    setOpen(false);
+  };
+  const handleClick=(device)=>{
+    setVal(device);
+    [...device_name].map(device=>{
+      console.log(device);
+  })
+  };
+  const handleChange = (device) =>{
+    setVal(device);
+    selected_device = device;
+  };
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
+  const vertical = 'top';
+  const horizontal = 'right'
   return (
     <>
+      <Snackbar
+        anchorOrigin={{ vertical, horizontal }}
+        open={open}
+        onClose={handleClose}
+        action={action}
+        message={`Please start recording`}
+        key={vertical + horizontal}
+    />
       <LoadingOverlay active={isLoading} spinner text="Please wait...">
         <div style={divStyle}>
           <div
@@ -794,9 +1093,31 @@ function Tracks() {
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
-            <div className=" p-4 ml-0.5 pt-5">
-              <button onClick={handleRecord} style={{ height: "100%" }}>
-                {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
+            <div className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
+              <label>
+                        <select value = {val} onClick={(e)=>handleClick(e.target.value)} onChange={(e) => handleChange(e.target.value)}>
+                          <option>Pick a midi device</option>
+                          {console.log([...device_name])}
+                            {[...device_name].map(device=>{
+                                return <option value={device}>{device}</option>
+                            })}
+                            {/*<option value="device">{device_name}</option>*/}
+
+                        </select>
+              </label>
+
+            </div>
+            <div>
+              <button
+                onClick={() => {
+                  setRecord(!record)
+                  setOpen(true)
+                }}
+                style={{ height: "100%" }}
+                className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3"
+              >{!record ? 'record midi' : 'stop'}
+
+                {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
               </button>
             </div>
             <div className="p-4 pt-5 ml-0.5">
