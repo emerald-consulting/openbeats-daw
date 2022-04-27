@@ -158,6 +158,10 @@ const Profile = (props) => {
     getPicture();
   }, []);
 
+  useEffect(()=>{
+    refreshPosts()
+  },[window.location.pathname])
+
   useEffect(() => {
     getPicture();
   }, [location, props.isFollowing]);

@@ -20,6 +20,7 @@ import { UserContext } from "../../model/user-context/UserContext";
 import { ListItem, TextField, Autocomplete, InputAdornment, Menu, MenuItem } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import SearchItem from "./SearchItem";
+import {clearAllSearch, updateSearch} from "../../model/search/searchReducer";
 
 const settings = ["Profile", "Account", "Logout"];
 
@@ -46,7 +47,7 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
-    // dispatcher({ type: 'CLEAR_ALL_SEARCH' })
+    dispatcher(clearAllSearch())
     history.push({
       pathname: "/profile/" + state.user?.username,
       // state: { emailId: state.user?.emailId, userid: state.user?.userid },
@@ -55,16 +56,16 @@ const MainHeader = (props) => {
   };
 
   const navigationHandler = (event) => {
-    // dispatch({ type: 'CLEAR_ALL_SEARCH' })
+    dispatcher(clearAllSearch())
     if (event.target.value == "DAW") {
-      history.push("dashboard");
+      history.push("/dashboard");
     } else {
-      history.push(event.target.value.toString().toLowerCase());
+      history.push("/"+event.target.value.toString().toLowerCase());
     }
   };
 
   const logout = () => {
-    // dispatch({ type: 'CLEAR_ALL_SEARCH' })
+    dispatcher(clearAllSearch())
     localStorage.clear();
     window.location.href = "/login";
   };
@@ -96,7 +97,7 @@ const MainHeader = (props) => {
 
   const onSearch = (e) => {
     const search = e.target.value?.trim();
-    dispatcher({ type: 'UPDATE_SEARCH', value: search });
+    dispatcher(updateSearch(search));
     if (search) {
       getPosts(search);
     }
@@ -151,12 +152,12 @@ const MainHeader = (props) => {
               className=" flex flex-row "
               to={isUserLoggedin ? "/home" : "/"}
             >
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>
           {
-            window.location.pathname === '/home' && (
+            (window.location.pathname === '/home' || window.location.pathname.includes('/profile') ) && (
               <Autocomplete
                 freeSolo
                 autoComplete
@@ -185,7 +186,7 @@ const MainHeader = (props) => {
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             <Link className=" flex flex-row " to="/dashboard">
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <strong className="mt-2 ml-2">Open Beats</strong>
             </Link>
           </Typography>
