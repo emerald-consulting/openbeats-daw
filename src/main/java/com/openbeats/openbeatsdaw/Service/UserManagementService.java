@@ -3,6 +3,7 @@ package com.openbeats.openbeatsdaw.Service;
 
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.Repository.UserRepository;
+import com.openbeats.openbeatsdaw.exception.UsernameExistsException;
 import com.openbeats.openbeatsdaw.model.MyUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.utility.RandomString;
@@ -48,6 +49,7 @@ public class UserManagementService implements UserDetailsService {
             log.info("UserName : "+tempUser.getUsername());
             log.info(String.valueOf(user.getUsername().equals(tempUser.getUsername())));
             if(user.getEmailId().equals(tempUser.getEmailId())) throw  new Exception("User Already Exists");
+            else if (user.getUsername().equals(tempUser.getUsername())) throw new UsernameExistsException("Username Already Exists");
         }
 
         String encodedPassword=passwordEncoder.encode(user.getPassword());
