@@ -7,7 +7,7 @@ import { useHistory } from "react-router";
 import axios from "axios";
 import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import { useSelector, useDispatch } from 'react-redux'
-import { setSession, setSessionId, setSessionName, setParticipants, setBucketName, setNoRefresh } from "../../model/session/Session";
+import { setSession, setSessionId, setSessionName, setParticipants, setBucketName, setNoRefresh, setAudioTracks } from "../../model/session/Session";
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -136,6 +136,7 @@ const Dashboard = () => {
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
             dispatch2(setNoRefresh(response.data.noRefresh));
+            dispatch2(setAudioTracks([]));
            history.push('/daw?sessionId='+response.data.sessionId);
             }
 
@@ -175,6 +176,7 @@ const Dashboard = () => {
                 dispatch2(setParticipants(response.data.participants));
                 dispatch2(setBucketName(response.data.bucketName));
                 dispatch2(setNoRefresh(response.data.noRefresh));
+                dispatch2(setAudioTracks([]));
                 history.push('/daw?sessionId='+response.data.sessionId);
             }
          })
@@ -212,6 +214,7 @@ const Dashboard = () => {
             dispatch2(setParticipants(response.data.participants));
             dispatch2(setBucketName(response.data.bucketName));
             dispatch2(setNoRefresh(response.data.noRefresh));
+            dispatch2(setAudioTracks([]));
              history.push('/daw?sessionId='+response.data.sessionId);
             }
 
@@ -370,7 +373,7 @@ const Dashboard = () => {
                   <div className="overflow-y-auto overflow-x-hidden " style={{height:'38.5vh'}}>
                     {
                       sessionList.map((session)=>(
-                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px'}} className=" p-2 text-w w-full bg-gr3 createHover m-1 font-bold rounded" style={{fontSize:15}} >
+                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px',fontSize:15}} className=" p-2 text-w w-full bg-gr3 createHover m-1 font-bold rounded" >
                           {session.sessionId} : {session.sessionName}
                         </button>
                       ))

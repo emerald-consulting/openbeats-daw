@@ -5,7 +5,7 @@ export const userSlice = createSlice({
   initialState: {
     "userid":130,
     "username":"",
-    "password":"$2a$10$JPiZveE9IowoPsrQSyky5ec928qQhpR2xZbne1JqE4iJXouTP0oEe",
+    "password":"",
     "firstName":"testName",
     "lastName":"L",
     "preferredName":"testName",

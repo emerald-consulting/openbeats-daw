@@ -2,21 +2,19 @@ import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
 import classes from "./ProfilePage.module.css";
 import Profile from "../profile/Profile";
-import { useState, useEffect } from "react";
-import { useLocation } from "react-router";
+import { useState, useEffect, useContext } from "react";
 import { url } from "../../utils/constants";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Announcements from "../announcements/Announcements";
+import { UserContext } from "../../model/user-context/UserContext";
 
 const ProfilePage = () => {
-  const location = useLocation();
+  const [state, dispatch] = useContext(UserContext);
   const params = useParams();
-  // const authorId = location.state?.userid;
-  const eId = location.state?.emailId;
+  const userName = state.user.username;
   const username = params.username;
-  const loggedInUserEmailId = localStorage.getItem("emailId");
- 
+
   let token = localStorage.getItem("auth-token");
   const [followingList, setFollowingList] = useState([]);
   const [followersList, setFollowersList] = useState([]);
@@ -71,19 +69,16 @@ const ProfilePage = () => {
   };
 
   const followUser = async () => {
-    const res = await axios.post(
-      url + "/follow/" + username,null,
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const res = await axios.post(url + "/follow/" + username, null, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
     setFollow(true);
   };
 
@@ -107,6 +102,11 @@ const ProfilePage = () => {
     getFollowed();
   }, []);
 
+  useEffect(() => {
+    getFollowing();
+    getFollowed();
+  }, [follow]);
+
   return (
     <div className={classes.container}>
       <div className="p-5">
@@ -123,7 +123,7 @@ const ProfilePage = () => {
 
         <div className={classes.middlepane}>
           <Profile
-            isCurrentUser={eId === loggedInUserEmailId}
+            isCurrentUser={userName === username}
             followUser={followUser}
             unfollowUser={unfollowUser}
             isFollowing={follow}
@@ -132,7 +132,7 @@ const ProfilePage = () => {
             username={username}
           />
         </div>
-        <div className={classes.rightpane}>
+        <div className={classes.rightPane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>Suggestions</div>
             <div className={classes.bottomPane}>
