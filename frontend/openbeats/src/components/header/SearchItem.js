@@ -2,6 +2,7 @@ import { Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import './MainHeader.module.css'
+import { showAllSearch, selectPost, selectProfile } from "../../model/search/searchReducer";
 
 const SearchItem = ({ details, searchText, onSelectItem }) => {
 
@@ -14,16 +15,16 @@ const SearchItem = ({ details, searchText, onSelectItem }) => {
             if (postDetails.userid === '-2') {
                 return;
             }
-            dispatch({ type: 'SHOW_ALL_SEARCH' })
+            dispatch(showAllSearch())
         }
         else {
             if (postDetails.username) {
-                console.log('prof ',postDetails)
-                dispatch({ type: 'SELECT_PROFILE', value: postDetails.userid })
-                history.push(`profile/${postDetails.userid}`);
+                dispatch(selectProfile(postDetails.userid))
+                history.push(`/profile/${postDetails.username}`);
+
             }
             else {
-                dispatch({ type: 'SELECT_POST', value: postDetails })
+                dispatch(selectPost(postDetails))
             }
         }
         onSelectItem()
@@ -31,7 +32,7 @@ const SearchItem = ({ details, searchText, onSelectItem }) => {
 
     return (
         <div className="mb-5">
-            <div style={{ display: "flex", alignItems: "flex-start", flexDirection: 'column', justifyContent: 'center', cursor: 'pointer', paddingLeft: '10px', border: '1px solid lightgray',background:`${(postDetails.username && postDetails.username !== '-1') ? 'lightgray':'white'}` }} onClick={selectItem} >
+            <div style={{ display: "flex", alignItems: "flex-start", flexDirection: 'column', justifyContent: 'center', cursor: 'pointer', paddingLeft: '10px', border: '1px solid lightgray', background: `${(postDetails.username && postDetails.username !== '-1') ? 'lightgray' : 'white'}` }} onClick={selectItem} >
                 {
                     postDetails.username === '-1' ? (
                         <Typography color='primary'>{postDetails.userid === '-2' ? 'No Results found' : `Show all for ${searchText}`} </Typography>

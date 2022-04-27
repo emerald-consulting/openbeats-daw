@@ -10,12 +10,13 @@ const PostList = ({ uriParam, refresh, refreshPosts }) => {
   const [posts, setPosts] = useState([]);
   const [refreshNumber, setRefreshNumber] = useState(0);
   const [morePostsExist, setMorePostsExist] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   let token = localStorage.getItem("auth-token");
   const searchText = useSelector(state => state.search.searchText)
   const searchDetails = useSelector(state => state.search)
   const selectedPost = searchDetails.selectedPost;
-  const showAllSearchCount=searchDetails.showAllSearchCount;
+  const showAllSearchCount = searchDetails.showAllSearchCount;
+  const selectedUserId=searchDetails.selectedUserId
 
   useEffect(() => {
     if (selectedPost && !selectedPost.username) {
@@ -24,7 +25,7 @@ const PostList = ({ uriParam, refresh, refreshPosts }) => {
     else {
       getPosts();
     }
-  }, [refreshNumber, selectedPost,showAllSearchCount]);
+  }, [refreshNumber, selectedPost, showAllSearchCount]);
 
   useEffect(() => {
     if (selectedPost && !selectedPost.username) {
@@ -37,48 +38,62 @@ const PostList = ({ uriParam, refresh, refreshPosts }) => {
         setRefreshNumber(0);
       }
     }
-  }, [refresh, selectedPost,showAllSearchCount]);
+  }, [refresh, selectedPost, showAllSearchCount]);
+
+  useEffect(() => {
+    getPosts()
+  }, [searchText,selectedUserId])
 
   const getPosts = async () => {
-    let postsUrl=url + "/" + uriParam + "/" + refreshNumber;
-    if(showAllSearchCount !== 0){
-      postsUrl=url + "/allSearchPosts/"+searchText;
-      let searchRes = await axios.get(postsUrl, {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Headers": "Content-Type",
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-          Authorization: "Bearer " + token,
-        },
-      });
-      setPosts(searchRes.data)
-      setIsLoading(false);
-    }
-    else{
-    const res = await axios.get(postsUrl, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + token,
-      },
-    });
-    setPosts((prevPosts) => {
-      if (refreshNumber == 0) {
-        return [...res.data.content];
+    try {
+      let postsUrl = url + "/" + uriParam + "/" + refreshNumber;
+      if (showAllSearchCount !== 0) {
+        postsUrl = url + "/allSearchPosts/" + searchText;
+        setIsLoading(true)
+        let searchRes = await axios.get(postsUrl, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            Authorization: "Bearer " + token,
+          },
+        });
+        setPosts(searchRes.data)
+        setIsLoading(false);
       }
-      return [...prevPosts, ...res.data.content];
-    });
-    setMorePostsExist(!res.data.last);
-    if (isLoading) {
-      setIsLoading(false);
-      console.log("making it false");
+      else {
+        if (searchText) {
+          return;
+        }
+        setIsLoading(true)
+        if(selectedUserId){
+          postsUrl=`${url}/getPostsByUser/${selectedUserId}/${refreshNumber}`
+        }
+        const res = await axios.get(postsUrl, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            Authorization: "Bearer " + token,
+          },
+        });
+        setPosts((prevPosts) => {
+          if (refreshNumber == 0) {
+            return [...res.data.content];
+          }
+          return [...prevPosts, ...res.data.content];
+        });
+        setMorePostsExist(!res.data.last);
+        setIsLoading(false);
+      }
     }
-  }
+    catch (err) {
+      setIsLoading(true)
+    }
   };
 
   const nextHandler = () => {
