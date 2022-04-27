@@ -50,7 +50,6 @@ const MainHeader = (props) => {
     dispatcher(clearAllSearch())
     history.push({
       pathname: "/profile/" + state.user?.username,
-      // state: { emailId: state.user?.emailId, userid: state.user?.userid },
     });
     // history.go();
   };

@@ -42,6 +42,8 @@ public interface UserRepository extends JpaRepository<User,Long> {
     " from User u where u.userid = :userid")
     UserFetchDTO getUserDetailsByUserId(@Param("userid") Long userid);
 
+    Long countByUsername(@Param("username") String username);
+    
     @Query("SELECT new com.openbeats.openbeatsdaw.model.UserFetchDTO(u.userid, u.username, u.firstName, u.lastName, u.profilePictureFileName,u.coverPictureFileName,u.profilePictureFileUrl,u.coverPictureFileUrl, u.bucketName, u.emailId, u.totalFollowers, u.totalFollowing)" +
             " from User u where u.username like %:searchText%")
     List<UserFetchDTO> getUsersByUsername(@Param("searchText")String searchText);
