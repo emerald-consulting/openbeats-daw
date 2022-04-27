@@ -43,7 +43,7 @@ const Signup = () => {
         let preferredName=e.target.elements.fname?.value;
         let subscriptionType='free';
         let emailVerified=false;
-        let username=firstName;
+        let username=e.target.elements.username?.value;
         let formdata = JSON.stringify({
             emailId:email,
             username: username,
@@ -70,7 +70,6 @@ const Signup = () => {
             setIsLoaded(false)
          })
         .catch((error)=>{
-            console.log(error);
             setError(error)
             setIsLoaded(false)
         });
@@ -105,6 +104,18 @@ const Signup = () => {
                           required
                           placeholder='Last Name'
                       />
+                  </div>
+                  <div>
+                      {/* <label htmlFor='email'>Email</label> */}
+                    <small style={{fontSize: "x-small",display: "block",color:"red"}} class="form-text text-muted">{error?error:""}</small>
+                      <input
+                          type='username'
+                          className={`w-full p-2 text-primary border border-gr4 rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
+                          id='username'
+                          required
+                          placeholder='Username'
+                      />
+                     
                   </div>
                   <div>
                       {/* <label htmlFor='email'>Email</label> */}
