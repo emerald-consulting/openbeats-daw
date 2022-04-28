@@ -103,10 +103,10 @@ public class PostController {
         return postService.getTrending();
     }
 
-    @GetMapping("/getAnnouncements")
+    @GetMapping("/getAnnouncements/{username}")
     @ResponseBody
-    public List<Post> getAnnouncements() {
-        return postService.getAnnouncements();
+    public List<Post> getAnnouncements(@PathVariable("username") String username) {
+        return postService.getAnnouncements(username);
     }
 
 }

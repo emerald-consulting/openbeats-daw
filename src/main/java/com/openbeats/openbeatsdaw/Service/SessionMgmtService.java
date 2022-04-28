@@ -152,7 +152,7 @@ public class SessionMgmtService {
         List<User> participants = new ArrayList<>();
         Optional<User> user = userManagementService.findUser(creator.getEmail());
         if(user.isPresent()){
-            user.get().setPassword(null);
+            user.get().setPassword("  ");
         }
         user.orElseThrow(()-> new UsernameNotFoundException("User does not exist"));
 
