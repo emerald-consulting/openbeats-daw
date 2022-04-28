@@ -21,7 +21,7 @@ public interface PostService {
 
     public List<Post> getTrending();
 
-    List<Post> getAnnouncements();
+    List<Post> getAnnouncements(String username);
 
     public List<Post> getNewlyReleased();
 

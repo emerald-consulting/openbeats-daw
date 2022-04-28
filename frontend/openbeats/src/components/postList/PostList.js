@@ -38,7 +38,7 @@ const PostList = ({ uriParam, refresh, refreshPosts }) => {
         setRefreshNumber(0);
       }
     }
-  }, [refresh, selectedPost, showAllSearchCount]);
+  }, [refresh, selectedPost, showAllSearchCount, uriParam]);
 
   useEffect(() => {
     getPosts()
