@@ -5,6 +5,12 @@
   overflow: hidden;
 }
 
+.container div::-webkit-scrollbar {
+  width: 0px;
+  background-color: #fff;
+  height: 5px;
+}
+
 .leftpane,
 .rightpane {
   width: 25%;

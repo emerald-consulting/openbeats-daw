@@ -8,6 +8,7 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import Announcements from "../announcements/Announcements";
 import { UserContext } from "../../model/user-context/UserContext";
+import TrendingList from "../trendingList/TrendingList";
 
 const ProfilePage = () => {
   const [state, dispatch] = useContext(UserContext);
@@ -134,9 +135,11 @@ const ProfilePage = () => {
         </div>
         <div className={classes.rightPane}>
           <div className={classes.splitScreen}>
-            <div className={classes.topPane}>Suggestions</div>
+            <div className={classes.topPane}>
+            <TrendingList refresh={refresh} />
+            </div>
             <div className={classes.bottomPane}>
-              <Announcements refresh={refresh} />
+              <Announcements refresh={refresh} username={username} />
             </div>
           </div>
         </div>

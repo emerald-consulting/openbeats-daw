@@ -162,9 +162,10 @@ public class PostsServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAnnouncements() {
+    public List<Post> getAnnouncements(String username) {
         Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.findFirst10ByIsAnnouncementOrderByCreatedAtDesc(true, pageable);
+        Long userid = userRepository.findByUsername(username).get().getUserid();
+        return postRepository.findFirst10ByUserIdAndIsAnnouncementOrderByCreatedAtDesc(userid, true, pageable);
     }
 
     @Override

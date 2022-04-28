@@ -4,18 +4,18 @@ import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
 import AnnouncementItem from "./announcementItem/AnnouncementItem";
 
-const Announcements = ({refresh}) => {
+const Announcements = ({refresh, username}) => {
   let token = localStorage.getItem("auth-token");
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
 
   useEffect(() => {
     getAnnouncements();
-  }, [refresh]);
+  }, [refresh, username]);
 
   const getAnnouncements = async () => {
     setIsLoading(true);
-    const res = await axios.get(url + "/getAnnouncements", {
+    const res = await axios.get(url + "/getAnnouncements/"+ username , {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
