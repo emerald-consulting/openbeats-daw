@@ -71,8 +71,8 @@
     "websocket": "^1.0.34"
   },
   "scripts": {
-    "start": "carco start",
-    "build": "carco build",
+    "start": "craco start",
+    "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
   },

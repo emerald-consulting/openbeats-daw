@@ -15,7 +15,7 @@ public class AWSStorageConfig {
     @Bean
     @Scope("singleton")
     public AmazonS3 s3Client(){
-        AWSCredentials awsCredentials = new BasicAWSCredentials("AKIAWWCXI2RZJVGIAH6C", "WCNQR+QhxCe7Wpnv88br5C3Ag1O2ycaI6FfRK35r");
+        AWSCredentials awsCredentials = new BasicAWSCredentials("D", "4");
         return (AmazonS3)((AmazonS3ClientBuilder)((AmazonS3ClientBuilder)AmazonS3ClientBuilder.standard().withRegion("us-east-1")).withCredentials(new AWSStaticCredentialsProvider(awsCredentials))).build();
     }
 
