@@ -13,12 +13,6 @@
   height: 5px;
 }
 
-.container div::-webkit-scrollbar {
-  width: 0px;
-  background-color: #fff;
-  height: 5px;
-}
-
 .leftpane,
 .rightpane {
   position: fixed;
