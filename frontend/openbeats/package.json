@@ -29,6 +29,7 @@
     "kurento-utils": "^6.16.0",
     "lodash": "^4.17.21",
     "material-ui-icons": "^1.0.0-beta.36",
+    "midi-writer-js": "^2.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-audio-player": "^0.17.0",
