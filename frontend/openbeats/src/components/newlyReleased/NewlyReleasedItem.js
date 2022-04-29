@@ -1,16 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { url } from "../../../utils/constants";
-import classes from "./TrendingListItem.module.css";
+import { url } from "../../utils/constants";
+import classes from "../../components/trendingList/trendingListItem/TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
-import LikeButton from "../../likeButton/LikeButton";
-import profileImg from "../../profileIcon.png";
-import { useHistory } from "react-router";
+import LikeButton from "../likeButton/LikeButton";
+import soundImg from "../sound.jpeg";
 
-const TrendingListItem = ({ details }) => {
+const NewlyReleasedItem = ({ details }) => {
   const [author, setAuthor] = useState();
   let token = localStorage.getItem("auth-token");
-  const history =  useHistory();
 
   useEffect(() => {
     getAuthorDetails();
@@ -34,17 +32,16 @@ const TrendingListItem = ({ details }) => {
     });
     setAuthor(res.data);
   };
-
-  const goToProfile = () => {
-    history.push("/profile/" + author?.username);
-  };
-
   return (
     <div className="mb-5">
-      <div style={{ display: "flex", alignItems: "center" }} onClick={goToProfile}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <img
           alt="Harry"
-          src={author?.profilePictureFileName || profileImg}
+          src={
+            details.pictureFileName
+            ? details.pictureFileName
+            : soundImg
+          }
           className={classes.profileIcon}
         />
         <span className={classes.author}>
@@ -71,4 +68,4 @@ const TrendingListItem = ({ details }) => {
   );
 };
 
-export default TrendingListItem;
+export default NewlyReleasedItem;

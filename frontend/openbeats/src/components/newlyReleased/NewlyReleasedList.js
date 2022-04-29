@@ -1,21 +1,22 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
-import AnnouncementItem from "./announcementItem/AnnouncementItem";
+import NewlyReleasedItem from "./NewlyReleasedItem";
 
-const Announcements = ({refresh, username}) => {
+const NewlyReleasedList = ({refresh}) => {
   let token = localStorage.getItem("auth-token");
   const [isLoading, setIsLoading] = useState(true);
   const [list, setList] = useState([]);
 
   useEffect(() => {
-    getAnnouncements();
-  }, [refresh, username]);
+    getNewlyReleased();
+  }, [refresh]);
 
-  const getAnnouncements = async () => {
+  const getNewlyReleased = async () => {
     setIsLoading(true);
-    const res = await axios.get(url + "/getAnnouncements/"+ username , {
+    const res = await axios.get(url + "/getNewlyReleased", {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -31,13 +32,13 @@ const Announcements = ({refresh, username}) => {
   return (
     <LoadingOverlay active={isLoading} spinner>
       <h2 className="mb-1" style={{ color: "#000" }}>
-        Announcements
+        Newly Released
       </h2>
       {list.map((item) => (
-        <AnnouncementItem details={item} />
+        <NewlyReleasedItem details={item} key={item.postId}/>
       ))}
     </LoadingOverlay>
   );
 };
 
-export default Announcements;
+export default NewlyReleasedList;

@@ -94,6 +94,7 @@ export default function UserProfileForm(props) {
                 name="username"
                 defaultValue={props.user.username}
                 onChange={props.handleInputChange}
+                helperText={props.existUser ? <div style={{color:"red"}}>Username already exists</div> : ""}
               />
               <TextField
                 id="outlined-disabled"

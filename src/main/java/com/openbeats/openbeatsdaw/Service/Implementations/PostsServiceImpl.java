@@ -1,11 +1,17 @@
 package com.openbeats.openbeatsdaw.Service.Implementations;
 
 import com.openbeats.openbeatsdaw.Repository.PostRepository;
+import com.openbeats.openbeatsdaw.Repository.ReactionsRepository;
+import com.openbeats.openbeatsdaw.Repository.UserRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.PostService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.common.Constants;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
+import com.openbeats.openbeatsdaw.model.Entity.Reactions;
+import com.openbeats.openbeatsdaw.model.Entity.User;
+import com.openbeats.openbeatsdaw.model.UserAndPosts;
+import com.openbeats.openbeatsdaw.model.UserFetchDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.*;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +35,12 @@ public class PostsServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ReactionsRepository reactionsRepository;
 
     @Autowired
     private TokenProvider tokenProvider;
@@ -52,19 +65,74 @@ public class PostsServiceImpl implements PostService {
         return postRepository.saveAndFlush(post);
     }
 
+
+    @Override
+    public Post updatePost(Post post, MultipartFile track, MultipartFile picture ) {
+        Post existingpost = postRepository.getById(post.getPostId());
+        Post newPost=new Post();
+        if(existingpost == null){
+            return null;
+        }
+        else {
+            String bucketName = existingpost.getBucketName();
+
+            if(track != null && existingpost.getTrackFileName() != null && existingpost.getTrackFileName().length() > 0){
+                awsStorageService.deleteFile(bucketName, existingpost.getTrackFileName());
+            }
+            if(picture != null && existingpost.getPictureFileName() != null && existingpost.getPictureFileName().length() > 0){
+                awsStorageService.deleteFile(bucketName, existingpost.getPictureFileName());
+            }
+            if (track != null) {
+                String trackName = awsStorageService.uploadFile(track, Constants.SM_BUCKET_NAME);
+                existingpost.setTrackFileName(trackName);
+                existingpost.setIsMediaAdded(true);
+            }
+            if (picture != null) {
+                String pictureName = awsStorageService.uploadFile(picture, Constants.SM_BUCKET_NAME);
+                existingpost.setPictureFileName(pictureName);
+                existingpost.setIsMediaAdded(true);
+            }
+            if (existingpost.getIsMediaAdded()) {
+                existingpost.setBucketName(Constants.SM_BUCKET_NAME);
+            }
+            existingpost.setDescription(post.getDescription());
+            existingpost.setTitle(post.getTitle());
+            existingpost.setGenre(post.getGenre());
+            existingpost.setUpdatedAt(new Date());
+            postRepository.saveAndFlush(existingpost);
+            newPost.setPostId(existingpost.getPostId());
+            newPost.setDescription(existingpost.getDescription());
+            newPost.setGenre(existingpost.getGenre());
+            newPost.setTitle(existingpost.getTitle());
+            if(existingpost.getPictureFileName() != null && existingpost.getPictureFileName().length() > 0) {
+                newPost.setPictureFileName(awsStorageService.getUrl(existingpost.getBucketName(),
+                        existingpost.getPictureFileName()).toString());
+            }
+            if(existingpost.getTrackFileName() != null && existingpost.getTrackFileName().length() > 0) {
+                newPost.setTrackFileName(awsStorageService.getUrl(existingpost.getBucketName(),
+                        existingpost.getTrackFileName()).toString());
+            }
+            return newPost;
+        }
+    }
+
+
+
     @Override
     public boolean removePost(Long postId) {
         Post postDetails = postRepository.getById(postId);
-
-        if(postDetails.getIsMediaAdded()){
-            String bucketName = postDetails.getBucketName();
-            if(postDetails.getTrackFileName() != null && postDetails.getTrackFileName().length() > 0){
-                awsStorageService.deleteFile(bucketName, postDetails.getTrackFileName());
-            }
-            if(postDetails.getPictureFileName() != null && postDetails.getPictureFileName().length() > 0){
-                awsStorageService.deleteFile(bucketName, postDetails.getPictureFileName());
-            }
+        Long userId = postDetails.getUserId();
+        Reactions reaction = reactionsRepository.findByPostIdAndUserId(postId, userId).get();
+        reactionsRepository.delete(reaction);
+        //if(postDetails.getIsMediaAdded()){
+        String bucketName = postDetails.getBucketName();
+        if(postDetails.getTrackFileName() != null && postDetails.getTrackFileName().length() > 0){
+            awsStorageService.deleteFile(bucketName, postDetails.getTrackFileName());
         }
+        if(postDetails.getPictureFileName() != null && postDetails.getPictureFileName().length() > 0){
+            awsStorageService.deleteFile(bucketName, postDetails.getPictureFileName());
+        }
+        //}
         // reactions to be deleted as well
         postRepository.deleteById(postId);
         return true;
@@ -94,12 +162,68 @@ public class PostsServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> getAnnouncements() {
+    public List<Post> getAnnouncements(String username) {
         Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.findFirst10ByIsAnnouncementOrderByCreatedAtDesc(true, pageable);
+        Long userid = userRepository.findByUsername(username).get().getUserid();
+        return postRepository.findFirst10ByUserIdAndIsAnnouncementOrderByCreatedAtDesc(userid, true, pageable);
     }
 
     @Override
+    public List<Post> getNewlyReleased() {
+
+        List<Post> posts = postRepository.findFirst5ByOrderByCreatedAtDesc();
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+
+        return posts;
+
+    }
+
+     @Override
+    public UserAndPosts search(String searchText, Long userId) {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<UserFetchDTO> users = userRepository.getUsersByUsername(searchText);
+        Page<Post> posts = postRepository.searchPosts(searchText, pageable);
+
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+        UserAndPosts usersAndPosts = new UserAndPosts();
+        usersAndPosts.users=users;
+        usersAndPosts.posts=posts;
+        usersAndPosts.userId=userId;
+        return usersAndPosts;
+
+    }
+
+    @Override
+    public List<Post> allSearchPosts(String searchText) {
+        Pageable pageable = PageRequest.of(0, 100);
+        Page<Post> posts = postRepository.searchPosts(searchText, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+        return posts.getContent();
+
+    }
+
+
     public List<String> getAllGenre() {
         return postRepository.findDistinctByGenre();
     }
