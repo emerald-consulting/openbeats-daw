@@ -1093,7 +1093,7 @@ const uploadMidi = (blob) => {
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
-            <div className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3">
+            <div className=" p-4 mx-0.5 pt-5">
               <label>
                         <select value = {val} onClick={(e)=>handleClick(e.target.value)} onChange={(e) => handleChange(e.target.value)}>
                           <option>Pick a midi device</option>
@@ -1114,10 +1114,15 @@ const uploadMidi = (blob) => {
                   setOpen(true)
                 }}
                 style={{ height: "100%" }}
-                className=" p-4 ml-0.5 pt-5 bg-gr2 hover:bg-gr3"
-              >{!record ? 'record midi' : 'stop'}
+                className=" p-4 ml-0.5 pt-5"
+              >{!record ? 'Record midi' : 'stop'}
 
                 {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
+              </button>
+            </div>
+            <div className=" p-4 ml-0.5 pt-5">
+              <button onClick={handleRecord} style={{ height: "100%" }}>
+                {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
               </button>
             </div>
             <div className="p-4 pt-5 ml-0.5">
