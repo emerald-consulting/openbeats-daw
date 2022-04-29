@@ -1,26 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../newLogo.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
-
+import axios from "axios";
+import { url } from "../../utils/constants";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
 import { UserContext } from "../../model/user-context/UserContext";
-import { ListItem } from "@mui/material";
-import axios from "axios";
-import { url } from "../../utils/constants";
+import { ListItem, TextField, Autocomplete, InputAdornment, Menu, MenuItem } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
+import SearchItem from "./SearchItem";
+import {clearAllSearch, updateSearch} from "../../model/search/searchReducer";
 
 const settings = ["Profile", "Account", "Logout"];
 
@@ -29,6 +29,11 @@ const MainHeader = (props) => {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [userDetails, setUserDetails] = useState();
   const history = useHistory();
+  const [searchOptions, setSearchOptions] = useState([])
+  const searchText = useSelector(state => state.search.searchText);
+  const [autoCompleteState, setAutoCompleteState] = useState(false)
+  const dispatcher = useDispatch();
+
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
     ? ["HOME", "INBOX", "DAW"]
@@ -42,22 +47,24 @@ const MainHeader = (props) => {
     setAnchorElUser(null);
   };
   const profile = () => {
+    dispatcher(clearAllSearch())
     history.push({
       pathname: "/profile/" + state.user?.username,
-      state: { emailId: state.user?.emailId, userid: state.user?.userid },
     });
-    history.go();
+    // history.go();
   };
 
   const navigationHandler = (event) => {
+    dispatcher(clearAllSearch())
     if (event.target.value == "DAW") {
-      history.push("dashboard");
+      history.push("/dashboard");
     } else {
-      history.push("/" + event.target.value.toString().toLowerCase());
+      history.push("/"+event.target.value.toString().toLowerCase());
     }
   };
 
   const logout = () => {
+    dispatcher(clearAllSearch())
     localStorage.clear();
     window.location.href = "/login";
   };
@@ -87,6 +94,43 @@ const MainHeader = (props) => {
     localStorage.setItem("currentUserId", res.data.userid);
   };
 
+  const onSearch = (e) => {
+    const search = e.target.value?.trim();
+    dispatcher(updateSearch(search));
+    if (search) {
+      getPosts(search);
+    }
+    else {
+      setSearchOptions([])
+    }
+  }
+
+  const getPosts = async (searchText) => {
+    let token = localStorage.getItem("auth-token");
+    const finalUrl=`${url}/search/${searchText}`
+    const res = await axios.get(finalUrl, {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+        Authorization: "Bearer " + token,
+      },
+    });
+    const data = res.data;
+    const allItems = data.users?.filter(i=>i.userid != res.data.userId)?.concat(data.posts.content);
+    let userid = '-1'
+    if (allItems.length === 0) userid = '-2';
+    allItems.push({ username: '-1', userid: userid, postId: '-1', title: searchText })
+
+    setSearchOptions(allItems)
+  }
+
+  const onSelectItem = (item) => {
+    setAutoCompleteState(false)
+  }
+
   const addedClasses = props.className + "custom-header";
 
   return (
@@ -107,10 +151,32 @@ const MainHeader = (props) => {
               className=" flex flex-row "
               to={isUserLoggedin ? "/home" : "/"}
             >
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>
+          {
+            (window.location.pathname === '/home' || window.location.pathname.includes('/profile') ) && (
+              <Autocomplete
+                freeSolo
+                autoComplete
+                includeInputInList
+                options={searchOptions}
+                onInputChange={onSearch}
+                open={autoCompleteState}
+                onOpen={() => setAutoCompleteState(true)}
+                onClose={() => setAutoCompleteState(false)}
+                getOptionLabel={(option) => JSON.stringify(option)}
+                renderOption={(option, index) => {
+                  return <SearchItem key={index} details={option} searchText={searchText} onSelectItem={onSelectItem} />
+                }}
+                renderInput={(params) => <TextField  {...params} placeholder='Search for songs, artists and more...' size='small'
+                  style={{ minWidth: '320px', borderRadius: '30px', marginLeft: '150px' }}
+                />
+                }
+              />
+            )
+          }
           <Box sx={{ flexGrow: 1 }} />
           <Typography
             variant="h6"
@@ -119,10 +185,11 @@ const MainHeader = (props) => {
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             <Link className=" flex flex-row " to="/dashboard">
-              <img className="mt-1 h-10" src={logo} alt={"logo"} />
+              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
               <strong className="mt-2 ml-2">Open Beats</strong>
             </Link>
           </Typography>
+
           <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
             {pages.map((page) => (
               <Button

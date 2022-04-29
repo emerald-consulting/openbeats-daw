@@ -4,6 +4,8 @@ import { useSelector } from "react-redux";
 import useInput from "../../hooks/use-input";
 import { url } from "../../utils/constants";
 import classes from "./newPostForm.module.css";
+import { ListItem, TextField, Autocomplete, InputAdornment,Menu,MenuItem } from "@mui/material";
+import SearchIcon from '@mui/icons-material/Search';
 import { Typeahead } from "react-bootstrap-typeahead";
 
 const NewPostForm = ({ refreshPosts }) => {
@@ -154,6 +156,7 @@ const NewPostForm = ({ refreshPosts }) => {
 
   return (
     <form onSubmit={formSubmitHandler} className={classes.new}>
+
       <div className={enteredDescriptionClasses} style={{width: "inherit",marginBottom:"2%"}}>
         <textarea
           style={{ width: "100%" }}
@@ -240,6 +243,7 @@ const NewPostForm = ({ refreshPosts }) => {
           Post{isLoading ? "..." : null}
         </button>
       </div>
+
     </form>
   );
 };

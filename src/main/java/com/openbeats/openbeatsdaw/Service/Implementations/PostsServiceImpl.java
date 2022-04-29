@@ -2,12 +2,16 @@ package com.openbeats.openbeatsdaw.Service.Implementations;
 
 import com.openbeats.openbeatsdaw.Repository.PostRepository;
 import com.openbeats.openbeatsdaw.Repository.ReactionsRepository;
+import com.openbeats.openbeatsdaw.Repository.UserRepository;
 import com.openbeats.openbeatsdaw.Service.AWSStorageService;
 import com.openbeats.openbeatsdaw.Service.PostService;
 import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.common.Constants;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.Reactions;
+import com.openbeats.openbeatsdaw.model.Entity.User;
+import com.openbeats.openbeatsdaw.model.UserAndPosts;
+import com.openbeats.openbeatsdaw.model.UserFetchDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.*;
 import java.util.Date;
 import java.util.List;
 
@@ -30,6 +35,9 @@ public class PostsServiceImpl implements PostService {
 
     @Autowired
     private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ReactionsRepository reactionsRepository;
@@ -161,6 +169,61 @@ public class PostsServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> getNewlyReleased() {
+
+        List<Post> posts = postRepository.findFirst5ByOrderByCreatedAtDesc();
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+
+        return posts;
+
+    }
+
+     @Override
+    public UserAndPosts search(String searchText, Long userId) {
+        Pageable pageable = PageRequest.of(0, 5);
+        List<UserFetchDTO> users = userRepository.getUsersByUsername(searchText);
+        Page<Post> posts = postRepository.searchPosts(searchText, pageable);
+
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+        UserAndPosts usersAndPosts = new UserAndPosts();
+        usersAndPosts.users=users;
+        usersAndPosts.posts=posts;
+        usersAndPosts.userId=userId;
+        return usersAndPosts;
+
+    }
+
+    @Override
+    public List<Post> allSearchPosts(String searchText) {
+        Pageable pageable = PageRequest.of(0, 100);
+        Page<Post> posts = postRepository.searchPosts(searchText, pageable);
+        posts.forEach(post->{
+            if(post.getPictureFileName() != null && post.getPictureFileName().length() > 0){
+                post.setPictureFileName(awsStorageService.getUrl(post.getBucketName(), post.getPictureFileName()).toString());
+            }
+            if(post.getTrackFileName() != null && post.getTrackFileName().length() > 0){
+                post.setTrackFileName(awsStorageService.getUrl(post.getBucketName(), post.getTrackFileName()).toString());
+            }
+        });
+        return posts.getContent();
+
+    }
+
+
     public List<String> getAllGenre() {
         return postRepository.findDistinctByGenre();
     }

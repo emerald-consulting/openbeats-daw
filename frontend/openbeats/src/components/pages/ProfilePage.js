@@ -134,7 +134,7 @@ const ProfilePage = () => {
             username={username}
           />
         </div>
-        <div className={classes.rightpane}>
+        <div className={classes.rightPane}>
           <div className={classes.splitScreen}>
             <div className={classes.topPane}>
             <TrendingList refresh={refresh} />

@@ -1,16 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { url } from "../../../utils/constants";
-import classes from "./TrendingListItem.module.css";
+import { url } from "../../utils/constants";
+import classes from "../../components/trendingList/trendingListItem/TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
-import LikeButton from "../../likeButton/LikeButton";
-import profileImg from "../../profileIcon.png";
-import { useHistory } from "react-router";
+import LikeButton from "../likeButton/LikeButton";
+import soundImg from "../sound.jpeg";
 
-const TrendingListItem = ({ details }) => {
+const NewlyReleasedItem = ({ details }) => {
   const [author, setAuthor] = useState();
   let token = localStorage.getItem("auth-token");
-  const history =  useHistory();
 
   useEffect(() => {
     getAuthorDetails();
@@ -34,46 +32,40 @@ const TrendingListItem = ({ details }) => {
     });
     setAuthor(res.data);
   };
-
-  const goToProfile = () => {
-    history.push("/profile/" + author?.username);
-  };
-
   return (
     <div className="mb-5">
-      <div style={{ display: "flex", alignItems: "center", display: "flex", flexDirection: "row", flexWrap: "wrap" }} onClick={goToProfile}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <img
           alt="Harry"
-          src={author?.profilePictureFileName || profileImg}
+          src={
+            details.pictureFileName
+            ? details.pictureFileName
+            : soundImg
+          }
           className={classes.profileIcon}
         />
         <span className={classes.author}>
           <strong
             className={classes.username}
           >{`${author?.firstName} ${author?.lastName}`}</strong>
-            <div style={{ marginTop: "5px" }}>
-              <a className="ml-2" style={{ fontSize: "13px" }}>@{author?.username}</a>
-              <button
-              style={{
-                marginLeft: "auto",
-                color: "gray",
-              }}
-              >
-              <LikeButton details={details} token={token} />
-              </button>
-            </div>
-          </span>
+          <a className="ml-2">@{author?.username}</a>
           <br />
-          <div>
           <small className={classes.description}>
             <ReactHashtag>{description}</ReactHashtag>
-          </small></div>
+          </small>
           <br />
-
-        <div className={classes.borderBottom}></div>
+        </span>
+        <button
+          style={{
+            marginLeft: "auto",
+            color: "gray"
+          }}
+        >
+         <LikeButton details={details} token={token} />
+        </button>
       </div>
     </div>
   );
 };
 
-export default TrendingListItem;
+export default NewlyReleasedItem;

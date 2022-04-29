@@ -6,12 +6,13 @@ import com.openbeats.openbeatsdaw.Utils.TokenProvider;
 import com.openbeats.openbeatsdaw.model.Entity.Post;
 import com.openbeats.openbeatsdaw.model.Entity.User;
 import com.openbeats.openbeatsdaw.model.PostDTO;
+import com.openbeats.openbeatsdaw.model.UserAndPosts;
 import com.openbeats.openbeatsdaw.model.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,6 +108,25 @@ public class PostController {
     @ResponseBody
     public List<Post> getAnnouncements(@PathVariable("username") String username) {
         return postService.getAnnouncements(username);
+    }
+
+    @GetMapping("/getNewlyReleased")
+    @ResponseBody
+    public List<Post> getNewlyReleased() {
+        return postService.getNewlyReleased();
+    }
+
+    @GetMapping("/search/{searchText}")
+    @ResponseBody
+    public UserAndPosts search(@PathVariable("searchText") String searchText,@RequestHeader(name = "Authorization") String token) {
+        User currentUser = tokenProvider.getLoggedinUser(token).get();
+        return postService.search(searchText,currentUser.getUserid());
+    }
+
+    @GetMapping("/allSearchPosts/{searchText}")
+    @ResponseBody
+    public List<Post> allSearchPosts(@PathVariable("searchText") String searchText) {
+        return postService.allSearchPosts(searchText);
     }
 
 }
