@@ -266,7 +266,10 @@ const Profile = (props) => {
               style={{
                 float: "right",
                 marginTop: "20px",
-                backgroundColor: "#1E90FF",
+                backgroundColor: "#10b981",
+                color: "white",
+                padding: "5px",
+                borderRadius: "5px"
               }}
               disabled={!props.isCurrentUser}
             >
@@ -279,8 +282,10 @@ const Profile = (props) => {
               style={{
                 float: "right",
                 marginTop: "20px",
-                backgroundColor: "#1E90FF",
-                color: "black",
+                backgroundColor: "#10b981",
+                color: "white",
+                padding: "5px",
+                borderRadius: "5px"
               }}
               disabled={props.isCurrentUser}
             >
@@ -293,8 +298,10 @@ const Profile = (props) => {
               style={{
                 float: "right",
                 marginTop: "20px",
-                backgroundColor: "#1E90FF",
-                color: "black",
+                backgroundColor: "#10b981",
+                color: "white",
+                padding: "5px",
+                borderRadius: "5px"
               }}
               disabled={props.isCurrentUser}
             >
@@ -309,8 +316,10 @@ const Profile = (props) => {
                 float: "right",
                 marginTop: "20px",
                 marginRight: "10px",
-                backgroundColor: "#1E90FF",
-                color: "black",
+                backgroundColor: "#10b981",
+                color: "white",
+                padding: "5px",
+                borderRadius: "5px"
               }}
               disabled={props.isCurrentUser}
             >

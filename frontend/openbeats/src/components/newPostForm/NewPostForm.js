@@ -156,9 +156,9 @@ const NewPostForm = ({ refreshPosts }) => {
 
   return (
     <form onSubmit={formSubmitHandler} className={classes.new}>
-    
-      <div className={enteredDescriptionClasses}>
+      <div className={enteredDescriptionClasses} style={{width: "inherit",marginBottom:"2%"}}>
         <textarea
+          style={{ width: "100%" }}
           type="text"
           id="desc"
           onChange={inputChangeHandler}
@@ -168,7 +168,7 @@ const NewPostForm = ({ refreshPosts }) => {
           rows="4"
         />
       </div>
-      <div className={enteredTitleClasses} style={{ width: "45%" }}>
+      <div className={enteredTitleClasses} style={{ width: "45%", marginBottom:"2%" }}>
         <input
           type="text"
           id="title"
@@ -179,7 +179,7 @@ const NewPostForm = ({ refreshPosts }) => {
         />
       </div>
 
-      <div className="form-control" style={{ width: "45%" }}>
+      <div className="form-control" style={{ width: "45%",marginBottom:"2%"}}>
         <Typeahead
           allowNew
           id="basic-typeahead-single"
@@ -191,7 +191,7 @@ const NewPostForm = ({ refreshPosts }) => {
           selected={genre}
         />
       </div>
-      <div className={`form-control ${classes.fileUpload}`}>
+      <div className={`form-control ${classes.fileUpload}`} style={{marginBottom:"2%"}}>
         <label htmlFor="track-upload">
           {track ? track.name : "Upload track"}
         </label>
@@ -203,7 +203,7 @@ const NewPostForm = ({ refreshPosts }) => {
         />
       </div>
 
-      <div className={`form-control ${classes.fileUpload}`}>
+      <div className={`form-control ${classes.fileUpload}`} style={{marginBottom:"2%"}}>
         <label htmlFor="cover-upload">
           {cover ? cover.name : "Upload Cover"}
         </label>
@@ -214,7 +214,7 @@ const NewPostForm = ({ refreshPosts }) => {
           onChange={coverChangeHandler}
         />
       </div>
-      <div className={`form-control ${classes.checkbox}`}>
+      <div className={`form-control ${classes.checkbox}`} style={{marginBottom:"2%"}}>
         <label>
           Announcement?
           <input
@@ -226,7 +226,7 @@ const NewPostForm = ({ refreshPosts }) => {
           <span className={classes.checkmark}></span>
         </label>
       </div>
-      <div className="form-actions">
+      <div className="form-actions" style={{marginBottom:"2%"}}>
         <button
           type="button"
           className={classes.secondary}
@@ -242,7 +242,7 @@ const NewPostForm = ({ refreshPosts }) => {
           Post{isLoading ? "..." : null}
         </button>
       </div>
-    
+
     </form>
   );
 };

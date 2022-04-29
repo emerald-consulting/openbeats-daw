@@ -30,6 +30,8 @@
     white-space:nowrap;
     text-overflow:ellipsis;
     width: 100%;
+    padding-top: 8px;
+    font-size: 15px;
   }
   .username {
     font-size: 18px;
@@ -44,4 +46,24 @@
 
   .listItem:hover{
     cursor: pointer;
+  }
+
+  .borderBottom{
+    content: ""; 
+    display: block; 
+    margin: 0 auto; 
+    width: 95%; 
+    padding-top: 20px; 
+    border-bottom: 1px solid #c8c8c8
+    ; 
+  }
+
+  .borderBottom{
+    content: ""; 
+    display: block; 
+    margin: 0 auto; 
+    width: 95%; 
+    padding-top: 20px; 
+    border-bottom: 1px solid #c8c8c8
+    ; 
   }

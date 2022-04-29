@@ -120,7 +120,7 @@ map1.set(85, audio_Bb);
 map1.set(74, audio_B);
 
 const divStyle = {
-  height: "60vh",
+  height: "51vh",
   width: "100px%",
   overflow: "hidden",
   backgroundColor: "#e5e7eb",

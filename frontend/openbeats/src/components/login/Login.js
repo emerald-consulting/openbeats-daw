@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useHistory } from "react-router"
 import axios from "axios"
 import LoadingOverlay from 'react-loading-overlay';
+import { Facebook } from 'react-spinners-css';
 import { useSelector, useDispatch } from 'react-redux'
 import { loadUser, setUserEmail, setUserPassword , setUserToken } from "../../model/user/User";
 import UserContextProvider, { UserContext } from "../../model/user-context/UserContext";
@@ -105,8 +106,7 @@ const Login = () => {
   return (
     <LoadingOverlay
     active={isLoaded}
-    spinner
-    text='Please wait...'
+    spinner={<Facebook color="#10b981"/>}
     >
       <div className='h-screen flex bg-green-700 flex-col'>
           <div className='bg-green-300 w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-10 px-16'>

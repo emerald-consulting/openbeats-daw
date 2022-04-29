@@ -41,7 +41,7 @@ const Chatbox = ({ details }) => {
 
   return (
 <div>
-{!details && <div><p>Please select a conversation</p></div>}
+{!details && <div className={classes.conv}><div>Please select a conversation</div> <div className={classes.heart}></div></div>}
 
     {details && <div>
       <div style={{ display: "flex", alignItems: "center", width: "100%" }}>
@@ -63,13 +63,15 @@ const Chatbox = ({ details }) => {
 
       <div className="form-control mt-2" style={{ width: "75%" }}>
         <textarea
+          style={{width: "100%", resize: "none"}}
+          className={classes.textarea}
           type="text"
           id="desc"
           onChange={inputChangeHandler}
           value={enteredMessage}
           onBlur={inputBlurHandler}
           placeholder="Enter a message"
-          rows="3"
+          rows="2"
         />
       </div>
       <div className="form-actions mt-5" style={{ width: "20%" }}>

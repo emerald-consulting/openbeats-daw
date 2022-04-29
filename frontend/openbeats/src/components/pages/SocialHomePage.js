@@ -36,7 +36,7 @@ const SocialHomePage = () => {
       <div className={classes.middlepane}>
         <PostList uriParam="getPosts" refresh={refresh} refreshPosts={refreshPosts} />
       </div>
-      <div className={classes.rightPane}>
+      <div className={classes.rightpane}>
 
         <div className={classes.splitScreen}>
           <div className={classes.topPane}>

@@ -203,7 +203,8 @@ const SocialPost = ({ details, removePost, updatePost }) => {
             <FavoriteBorderIcon></FavoriteBorderIcon>{details.totalLikes}
             </button>
           </Card.Footer> */}
-            <LikeButton details={details} token={token} />
+          <LikeButton details={details} token={token} />
+          <div className={classes.borderBottom}></div>
         </Card>
       )}
       {

@@ -3,7 +3,8 @@ import Chatbox from "../chatbox/Chatbox";
 import ConversationList from "../conversationList/ConversationList";
 import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
-import classes from "./InboxPage.module.css";
+import inboxClasses from "./InboxPage.module.css";
+import classes from "./SocialHomePage.module.css";
 
 const InboxPage = () => {
 
@@ -31,10 +32,10 @@ const InboxPage = () => {
             </div>
           </div>
         </div>
-        <div className={classes.middlepane}>
+        <div className={inboxClasses.middlepane} >
           <ConversationList onSelectConversationHandler={onSelectConversationHandler}/>
         </div>
-        <div className={classes.rightpane}>
+        <div className={inboxClasses.rightpane} >
           <Chatbox details={selectedConversation?selectedConversation : null }/>
         </div>
     </div>

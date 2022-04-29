@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { url } from "../../utils/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
+import { Facebook } from 'react-spinners-css';
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import { useHistory, useLocation } from "react-router";
@@ -143,7 +144,7 @@ const MessageList = ({ details }) => {
   };
 
   return (
-    <LoadingOverlay active={isLoading} spinner>
+    <LoadingOverlay active={isLoading} spinner={<Facebook color="#10b981"/>}>
       <div div="scrollableChat">
         <InfiniteScroll
           dataLength={list.length}
