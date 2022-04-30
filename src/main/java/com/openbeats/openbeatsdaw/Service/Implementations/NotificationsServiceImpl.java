@@ -17,8 +17,14 @@ public class NotificationsServiceImpl implements NotificationsService {
 
     @Override
     public Page<Notifications> getNotifications(Long userid, int pageNo) {
-        Pageable pageable = PageRequest.of(pageNo, 10);
+        Pageable pageable = PageRequest.of(pageNo, 50);
         Page<Notifications> notifications = notificationsRepository.getNotifications(userid, pageable);
         return notifications;
+    }
+
+    @Override
+    public boolean markNotificationsAsRead(Long userid) {
+        notificationsRepository.markNotificationsAsRead(userid);
+        return true;
     }
 }

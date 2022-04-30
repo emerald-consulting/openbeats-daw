@@ -4,6 +4,8 @@ export const url = "http://localhost:5010"
 
 // inbox polling time in miliseconds
 export const inboxPolling = 10000;
+export const notificationsPolling = 1000;
+
 export const linkIdenfilier = "%$#!link@#$$";
 
 // export const url = "http://10.84.97.145:5000"

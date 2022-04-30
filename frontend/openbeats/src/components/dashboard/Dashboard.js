@@ -373,7 +373,7 @@ const Dashboard = () => {
                   <div className="overflow-y-auto overflow-x-hidden " style={{height:'38.5vh'}}>
                     {
                       sessionList.map((session)=>(
-                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{width:'50px',fontSize:15}} className=" p-2 text-w w-full bg-gr3 createHover m-1 font-bold rounded" >
+                        <button onClick={()=>joinSessionFromList(session.sessionId)} style={{fontSize:15}} className=" p-2 text-w w-full bg-gr3 createHover m-1 font-bold rounded" >
                           {session.sessionId} : {session.sessionName}
                         </button>
                       ))

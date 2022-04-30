@@ -1,0 +1,15 @@
+
+  .notifications{
+    position: absolute;
+    right: 5%;
+    top: 50px;
+    background-color: #fff;
+    border: 2px solid #10b981;
+    border-radius: 10px;
+    height: 400px;
+    width: 300px;
+    z-index: 1000;
+    padding: 10px;
+    overflow-y: scroll;
+    cursor: pointer;
+  }
