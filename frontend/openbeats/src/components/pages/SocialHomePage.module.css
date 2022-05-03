@@ -6,6 +6,11 @@
   display: flex;
   flex-direction: row;
 }
+.container div::-webkit-scrollbar {
+  width: 0px;
+  background-color: #fff;
+  height: 5px;
+}
 .typeahead{
   position: absolute;
 }
@@ -26,13 +31,13 @@
 
 .middlepane {
   width: 45%;
-  height: 613px;
+  height: 80vh;
   float: left;
   border-collapse: collapse;
   padding: 1rem; 
   margin: 1rem 2rem 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
   /* overflow: hidden; */
 }
@@ -45,7 +50,7 @@
 }
 
 .topPane{
-  height: 48vh !important;
+  height: 45vh !important;
 }
 .bottomPane {
   height: 25vh !important;
@@ -58,7 +63,7 @@
   padding: 1rem;
   margin: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
   overflow-y: auto;
   width: inherit;
@@ -87,7 +92,7 @@
   }
   
   .middlepane {
-    width: 92%;
+    width: 93%;
     height: auto;
     justify-content: center;
     margin: 1rem;

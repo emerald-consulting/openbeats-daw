@@ -159,7 +159,7 @@ const MainHeader = (props) => {
               className=" flex flex-row "
               to={isUserLoggedin ? "/home" : "/"}
             >
-              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
+              <img className="mt-1 h-10" src={logo} alt={"logo"} />
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>

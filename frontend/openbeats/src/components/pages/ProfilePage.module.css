@@ -1,8 +1,8 @@
 .container {
   width: 100%;
-  /* height: 82vh; */
+  height: 82vh;
   background-color: #10b981 !important;
-  /* overflow: hidden; */
+  overflow: hidden;
   display: flex;
   flex-direction: row;
 }
@@ -15,7 +15,6 @@
 
 .leftpane,
 .rightpane {
-  position: fixed;
   width: 25%;
   height: 100%;
   background-color: #10b981 !important;
@@ -27,26 +26,19 @@
 
 .rightpane{
   float: left;
-  margin-left: 75%;
 }
 
 .middlepane {
-  width: 46%;
-  /* height: 80vh; */
+  width: 45%;
+  height: 80vh;
   float: left;
   border-collapse: collapse;
   padding: 1rem; 
-  /* margin: 1rem 2rem 6rem 2rem; */
-  margin-top: 1rem;
-  margin-right: 2rem;
-  margin-bottom: 100px;
-  margin-left: 2rem;
+  margin: 1rem 2rem 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
-  margin-left: 27%;
   overflow-y: scroll;
-  overflow-x: hidden;
 }
 .splitScreen {
   display: flex;
@@ -57,7 +49,7 @@
 }
 
 .topPane{
-  height: 48vh !important;
+  height: 45vh !important;
 }
 .bottomPane {
   height: 25vh !important;
@@ -70,9 +62,8 @@
   padding: 1rem;
   margin: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
-  /* overflow-y: scroll; */
   overflow-y: auto;
   width: inherit;
 }
@@ -89,39 +80,6 @@
   .leftpane,
   .rightpane {
     width: 100%;
-    position: initial;
-  }
-  
-  .leftpane{
-    justify-content: center;
-  }
-  
-  .rightpane{
-    justify-content: center;
-    margin-left: 0;
-  }
-  
-  .middlepane {
-    width: 92%;
-    height: auto;
-    justify-content: center;
-    margin: 1rem;
-  }
-
-}
-
-@media screen and (max-width: 600px) {
-
-  .container {
-    height: 100%;
-    flex-direction: column;
-    overflow-y: auto;
-    margin-bottom: 70px;
-  }
-
-  .leftpane,
-  .rightpane {
-    width: 100%;
   }
   
   .leftpane{
@@ -133,10 +91,11 @@
   }
   
   .middlepane {
-    width: 92%;
+    width: 93%;
     height: auto;
     justify-content: center;
     margin: 1rem;
   }
 
 }
+
