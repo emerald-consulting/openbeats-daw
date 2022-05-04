@@ -25,6 +25,20 @@ import {clearAllSearch, updateSearch} from "../../model/search/searchReducer";
 // import { ClassNames } from "@emotion/react";
 import classes from "./MainHeader.module.css";
 
+import { makeStyles } from "@material-ui/core/styles";
+const useStyles = makeStyles(theme => ({
+  // root: {
+  //   backgroundColor: "yellow"
+  // },
+  clearIndicator: {
+    backgroundColor: "gray",
+    "& span": {
+      "& svg": {
+        backgroundColor: "red"
+      }
+    }
+  }
+}));
 
 
 const settings = ["Profile", "Account", "Logout"];
@@ -38,7 +52,9 @@ const MainHeader = (props) => {
   const searchText = useSelector(state => state.search.searchText);
   const [autoCompleteState, setAutoCompleteState] = useState(false)
   const dispatcher = useDispatch();
-
+  
+  
+  const muiClasses = useStyles();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
     ? ["Home", "Inbox", "Daw"]
@@ -167,9 +183,10 @@ const MainHeader = (props) => {
             (window.location.pathname === '/home' || window.location.pathname.includes('/profile') ) && (
               <Autocomplete
                 sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}
-                style={{ width: "45%" }}
+                style={{ width: "45%"}}
                 freeSolo
                 autoComplete
+                muiClasses={{clearIndicatorDirty: classes.clearIndicator}}
                 includeInputInList
                 options={searchOptions}
                 onInputChange={onSearch}
@@ -181,7 +198,7 @@ const MainHeader = (props) => {
                   return <SearchItem key={index} details={option} searchText={searchText} onSelectItem={onSelectItem} />
                 }}
                 renderInput={(params) => <TextField  {...params} placeholder='Search for songs, artists and more...' size='small'
-                  style={{ marginLeft: '40%' }}
+                  style={{ marginLeft: '33%' }}
                 />
                 }
               />
@@ -195,6 +212,7 @@ const MainHeader = (props) => {
                 style={{ width: "45%" }}
                 freeSolo
                 autoComplete
+                muiClasses={{clearIndicatorDirty: classes.clearIndicator}}
                 includeInputInList
                 options={searchOptions}
                 onInputChange={onSearch}
