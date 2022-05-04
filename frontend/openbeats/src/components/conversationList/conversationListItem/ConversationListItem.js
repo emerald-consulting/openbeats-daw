@@ -77,7 +77,7 @@ const ConversationListItem = ({ details, onSelectConversationHandler }) => {
         },
       }
     );
-    if (res.data.content.includes(linkIdenfilier)) {
+    if (res.data && res.data.content.includes(linkIdenfilier)) {
       res.data.content = 'Click here to join the session';
     }
     setLastMessage(res.data);
