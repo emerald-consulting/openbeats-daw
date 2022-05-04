@@ -151,9 +151,9 @@ public class SessionMgmtService {
         String sessionId = String.format("%06d", number);
         List<User> participants = new ArrayList<>();
         Optional<User> user = userManagementService.findUser(creator.getEmail());
-        if(user.isPresent()){
-            user.get().setPassword("  ");
-        }
+        // if(user.isPresent()){
+        //     user.get().setPassword("  ");
+        // }
         user.orElseThrow(()-> new UsernameNotFoundException("User does not exist"));
 
         participants.add(user.get());
@@ -195,7 +195,7 @@ public class SessionMgmtService {
         }
 
         User tempUser = user.get();
-        tempUser.setPassword(null);
+        // tempUser.setPassword(null);
 
         List<User> tempUsers = new ArrayList<>();
         boolean flag = true;
