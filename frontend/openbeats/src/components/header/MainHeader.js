@@ -137,11 +137,16 @@ const MainHeader = (props) => {
   }
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    let interval;
+
+    if(token && token.length){
+    interval = setInterval(() => {
       getNotifications();
     }, notificationsPolling);
+
     return () => clearInterval(interval);
-  }, []);
+  }
+  }, [token]);
 
   const getNotifications = async()=>{
     const res = await axios.get(
