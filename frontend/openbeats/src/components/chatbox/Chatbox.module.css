@@ -41,6 +41,15 @@
     cursor: no-drop;
   }
 
+  .NewSessionBtn{
+    background-color: #10b981;
+    color: white;
+    border: 1px solid #10b981;
+    padding: 10px 5px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+
   .conv{
     display: flex;
     flex-direction: row;
@@ -59,8 +68,8 @@
     transform: rotate(-45deg) scale(1);
     animation: pulse 2s linear infinite;
 }
-  
-  
+
+
 .heart::after {
     /* background:blue; */
     background:inherit;
@@ -76,16 +85,16 @@
 }
 .heart::before {
   /*  background:green; */
-    background:inherit; 
+    background:inherit;
     border-radius: 50%; /* To make circle */
     content:'';
     position:absolute;
-    top:0; 
+    top:0;
     right:-50%; /* Inherit properties of parent */
     height: 10px;
     width:10px;
 }
-  
+
 @keyframes pulse{
     0% {
         transform: rotate(-45deg) scale(1);

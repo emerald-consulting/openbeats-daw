@@ -9,3 +9,8 @@
 .right{
     margin-left: auto;
 } 
+
+.messageBody strong {
+    color: #10b981;
+    cursor: pointer;
+  }

@@ -1,16 +1,19 @@
+import { IconButton, Snackbar } from "@material-ui/core";
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import useInput from "../../hooks/use-input";
-import { UserContext } from "../../model/user-context/UserContext";
-import { url } from "../../utils/constants";
+import { linkIdenfilier, url } from "../../utils/constants";
 import MessageList from "../messageList/MessageList";
 import profileImg from "../profileIcon.png";
-import classes from './Chatbox.module.css';
+import classes from "./Chatbox.module.css";
+import CloseIcon from "@material-ui/icons/Close";
 
 const Chatbox = ({ details }) => {
-
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionLoading, setSessionLoading] = useState(false);
+  const [error, setError] = useState(null);
   let token = localStorage.getItem("auth-token");
+  let userEmail = localStorage.getItem("emailId");
 
   const {
     value: enteredMessage,
@@ -19,12 +22,12 @@ const Chatbox = ({ details }) => {
     reset: resetMessageBox,
   } = useInput((value) => true);
 
-  const onSendHandler = async()=>{
+  const onSendHandler = async (sessionId) => {
     setIsLoading(true);
-    const messageData={
+    const messageData = {
       conversationId: details.conversationId,
-      content: enteredMessage.trim(),
-    }
+      content: sessionId ? linkIdenfilier + sessionId : enteredMessage.trim(),
+    };
     const res = await axios.post(url + "/sendMessage", messageData, {
       headers: {
         Accept: "application/json",
@@ -37,8 +40,43 @@ const Chatbox = ({ details }) => {
     });
     resetMessageBox();
     setIsLoading(false);
+  };
+
+  function createWorkspace() {
+    setSessionLoading(true);
+    let room = `Session w/t ${details.author?.firstName} ${details.author?.lastName}`;
+    let formdata = JSON.stringify({
+      roomName: room,
+      email: userEmail,
+    });
+    axios
+      .post(url + "/start", formdata, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSessionLoading(false);
+        if (response.status == 202) {
+          setError("You have exceeded the number of Free Sessions!!");
+        } else {
+          onSendHandler(response.data.sessionId);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setSessionLoading(false);
+      });
   }
 
+  const handleOnclose = () => {
+    setError(null);
+  };
   return (
 <div>
 {!details && <div className={classes.conv}><div>Please select a conversation</div> <div className={classes.heart}></div></div>}
@@ -76,7 +114,7 @@ const Chatbox = ({ details }) => {
       </div>
       <div className="form-actions mt-5" style={{ width: "20%" }}>
       <button
-          
+
           className={classes.submitButton}
           disabled={enteredMessage.trim().length<1 || isLoading}
           onClick = {onSendHandler}
@@ -87,9 +125,28 @@ const Chatbox = ({ details }) => {
       </div>
 
     </div>}
+
+
+    <Snackbar
+            TransitionComponent="Fade"
+            autoHideDuration={6000}
+            onClose={handleOnclose}
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                sx={{ p: 0.5 }}
+                onClick={handleOnclose}
+              >
+                <CloseIcon />
+              </IconButton>
+            }
+            message={error}
+            open={error}
+          />
+
     </div>
   );
 };
 
 export default Chatbox;
-

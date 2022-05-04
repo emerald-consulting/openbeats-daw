@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { inboxPolling, url } from "../../../utils/constants";
+import { inboxPolling, linkIdenfilier, url } from "../../../utils/constants";
 import classes from "./ConversationListItem.module.css";
 import profileImg from "../../profileIcon.png";
 import { UserContext } from "../../../model/user-context/UserContext";
@@ -77,6 +77,9 @@ const ConversationListItem = ({ details, onSelectConversationHandler }) => {
         },
       }
     );
+    if (res.data.content.includes(linkIdenfilier)) {
+      res.data.content = 'Click here to join the session';
+    }
     setLastMessage(res.data);
   };
 

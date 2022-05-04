@@ -4,7 +4,7 @@ import logo from "../newLogo.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import axios from "axios";
-import { url } from "../../utils/constants";
+import { notificationsPolling, url } from "../../utils/constants";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -22,6 +22,8 @@ import { ListItem, TextField, Autocomplete, InputAdornment, Menu, MenuItem } fro
 import SearchIcon from '@mui/icons-material/Search';
 import SearchItem from "./SearchItem";
 import {clearAllSearch, updateSearch} from "../../model/search/searchReducer";
+import _ from "lodash";
+import NotificationList from "./notifications/NotificationList";
 // import { ClassNames } from "@emotion/react";
 import classes from "./MainHeader.module.css";
 
@@ -52,8 +54,14 @@ const MainHeader = (props) => {
   const searchText = useSelector(state => state.search.searchText);
   const [autoCompleteState, setAutoCompleteState] = useState(false)
   const dispatcher = useDispatch();
-  
-  
+  let token = localStorage.getItem("auth-token");
+  const [showNotification, setShowNotification] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
+
+
+
+
   const muiClasses = useStyles();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
@@ -100,7 +108,6 @@ const MainHeader = (props) => {
   }, [state]);
 
   const getUserDetails = async () => {
-    let token = localStorage.getItem("auth-token");
     const res = await axios.get(
       url + "/getAuthorDetails/" + state.user.userid,
       {
@@ -130,7 +137,6 @@ const MainHeader = (props) => {
   }
 
   const getPosts = async (searchText) => {
-    let token = localStorage.getItem("auth-token");
     const finalUrl=`${url}/search/${searchText}`
     const res = await axios.get(finalUrl, {
       headers: {
@@ -153,6 +159,56 @@ const MainHeader = (props) => {
 
   const onSelectItem = (item) => {
     setAutoCompleteState(false)
+  }
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      getNotifications();
+    }, notificationsPolling);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getNotifications = async()=>{
+    const res = await axios.get(
+      url + "/getNotifications/0",
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
+    let list = res.data.content;
+    let unread = list.filter(item => !item.isRead);
+    setUnreadNotificationsCount(unread.length)
+    setNotifications(list);
+  }
+
+  const onClickNotificationHandler = () =>{
+    if(!showNotification){
+      markNotificationsAsRead();
+    }
+    setShowNotification(prev=> !prev);
+  }
+
+  const markNotificationsAsRead = () =>{
+    const res = axios.put(
+      url + "/markNotificationsAsRead", null,
+      {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
   }
 
   const addedClasses = props.className + "custom-header";
@@ -327,12 +383,13 @@ const MainHeader = (props) => {
               <Tooltip title="Notifications">
                 <IconButton
                   size="large"
-                  aria-label="show 17 new notifications"
+                  aria-label="show notifications"
                   color="inherit"
                   className="m-5"
                   style={{ marginRight: "15px" }}
+                  onClick={onClickNotificationHandler}
                 >
-                  <Badge badgeContent={17} color="error">
+                  <Badge badgeContent={unreadNotificationsCount} color="error">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
@@ -410,6 +467,7 @@ const MainHeader = (props) => {
 
         </Toolbar>
       </Container>
+      {showNotification && <NotificationList data={notifications} onClickNotificationHandler={onClickNotificationHandler}/>}
     </AppBar>
   );
 };
