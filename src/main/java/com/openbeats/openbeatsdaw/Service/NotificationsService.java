@@ -7,4 +7,5 @@ public interface NotificationsService {
 
     public Page<Notifications> getNotifications(Long userid, int pageNo);
 
+    boolean markNotificationsAsRead(Long userid);
 }

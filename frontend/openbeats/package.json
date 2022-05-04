@@ -63,6 +63,7 @@
     "stompjs": "^2.3.3",
     "uuidv4": "^6.2.12",
     "wavesurfer.js": "^6.0.4",
+    "web-midi-api": "^2.1.5",
     "web-vitals": "^1.1.2",
     "webfontloader": "^1.6.28",
     "webrtc-adapter": "^8.1.0",

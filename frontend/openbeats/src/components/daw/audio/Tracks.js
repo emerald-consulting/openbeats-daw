@@ -1295,7 +1295,7 @@ const uploadMidi = (blob) => {
                       />
                     </div>
                   ))}
-                </div>
+                </div> 
               </Box>
             </div>
           </div>

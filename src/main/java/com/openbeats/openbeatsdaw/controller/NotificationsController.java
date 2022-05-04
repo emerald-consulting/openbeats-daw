@@ -28,4 +28,11 @@ public class NotificationsController {
         Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
         return notificationsService.getNotifications(currentUser.get().getUserid(), pageNo);
     }
+
+    @PutMapping("/markNotificationsAsRead")
+    @ResponseBody
+    public boolean markNotificationsAsRead(@RequestHeader(name="Authorization") String token){
+        Optional<User> currentUser = tokenProvider.getLoggedinUser(token);
+        return notificationsService.markNotificationsAsRead(currentUser.get().getUserid());
+    }
 }
