@@ -97,6 +97,7 @@ const Profile = (props) => {
       });
       setCurrentUser(res.data);
       handleProfileModalClose();
+      setExistUser(false);
     } catch (error) {
       if (error.response) {
         setExistUser(true);
