@@ -88,7 +88,6 @@ import audio_13 from "./components/AudioPlayer/Tambourine_1_Ibiza.mp3";
 import audio_14 from "./components/AudioPlayer/Landing_Ibiza.mp3";
 import audio_15 from "./components/AudioPlayer/Vinyl_Ibiza.mp3";
 import audio_16 from "./components/AudioPlayer/Machine_Ibiza.mp3";
-
 //overflowY: 'scroll', height: '400px', max-width: '100%', overflow-x: 'hidden'import Crunker from 'crunker'
 import Crunker from "crunker";
 var recording = false;
@@ -125,7 +124,6 @@ const divStyle = {
   overflow: "hidden",
   backgroundColor: "#e5e7eb",
 };
-
 const arr = Array.from(Array(300).keys());
 let interval;
 let steps = 0;
@@ -135,112 +133,11 @@ const DEVICE = "MPD218 Port A";
 let ratio = 1;
 let on = false;
 let i = false;
-//let device_name = ['hello','hi','test','foo','bar'];
-//let device_name = '';
 let device_name = new Set();
 let track;
 let types = new Set();
-const midi = new MIDI(handleEvent);
-midi.initialize().then(() => {
-  console.log("initialized!");
-  notify();
-});
 let audios = [];
 let selected_device = '';
-function handleEvent(event) {
-  console.log(event);
-  const { device, type, a, b } = event;
-
-  console.log('***', selected_device);
-  device_name.add(device.name);
-  console.log('qwerty, ', device_name); 
-  types.add(type);
-  console.log([...types][0]);
-  if (a!= null && type === 'note_on' && (a.value === 36 || a.value === 37 || a.value === 38 || a.value === 39 || a.value === 40 || a.value === 41 || a.value === 42 || a.value === 43 || a.value === 44|| a.value === 45|| a.value === 46|| a.value === 47|| a.value === 48|| a.value === 49|| a.value === 50|| a.value === 51) && device.name === 'MPD218'){
-    console.log(a.value);
-    if (a.value === 36){
-      audios.push(audio_1);
-    }
-    else if (a.value === 37){
-      audios.push(audio_2);
-    }
-    else if (a.value === 38){
-      audios.push(audio_3);
-    }
-    else if (a.value === 39){
-      audios.push(audio_4);
-    }
-    else if (a.value === 40){
-      audios.push(audio_5);
-    }
-    else if (a.value === 41){
-      audios.push(audio_6);
-    }
-    else if (a.value === 42){
-      audios.push(audio_7);
-    }
-    else if (a.value === 43){
-      audios.push(audio_8);
-    }
-    else if (a.value === 44){
-      audios.push(audio_9);
-    }
-    else if (a.value === 45){
-      audios.push(audio_10);
-    }
-    else if (a.value === 46){
-      audios.push(audio_11);
-    }
-    else if (a.value === 47){
-      audios.push(audio_12);
-    }
-    else if (a.value === 48){
-      audios.push(audio_13);
-    }
-    else if (a.value === 49){
-      audios.push(audio_14);
-    }
-    else if (a.value === 50){
-      audios.push(audio_15);
-    }
-    else if (a.value === 51){
-      audios.push(audio_16);
-    }
-
-  }
-  else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device ){
-      track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
-      console.log(a.value);
-    }
-  if(type === "device_disconnected"){
-    device_name.delete(device.name);
-    window.location.reload(false);
-    console.log(device_name);
-  }
-
-  if (device.name !== DEVICE) return;
-  if (type === "mode_change" && a.value === KNOB) {
-    ratio = b.ratio;
-  } else if (type === "note_on" && a.value === PAD) {
-    on = true;
-  } else if (type === "note_off" && a.value === PAD) {
-    on = false;
-  } else if (type === "aftertouch" && on) {
-    ratio = a.ratio;
-  }
-}
-
-function notify() {
-  const loop = () => {
-    const noteOff = 128;
-    const noteOn = 144;
-    if (!on) midi.notify([noteOn, PAD, 127], DEVICE);
-    setTimeout(() => {
-      if (!on) midi.notify([noteOff, PAD, 0], DEVICE);
-    }, 100);
-  };
-  setInterval(loop, 100);
-}
 
 function Tracks() {
   const [files, setFiles] = useState([]);
@@ -274,7 +171,16 @@ function Tracks() {
   const [subscription, setSubscription] = useState(null);
   const [toBeRemoved, setToBeRemoved] = useState(false);
   const [devices, setdevices] = useState([]);
-
+  const [mid, setmidi] = useState(false);
+  const [visible, setVisible] = useState(false);
+  useEffect(()=>{
+    if(mid){
+      let midi = new MIDI(handleEvent);
+      midi.initialize().then(() => {
+      console.log("initialized!");
+      });
+    }
+  }, [mid])
   useEffect(() => {
     if(record){
       handlemidi();
@@ -299,7 +205,88 @@ function Tracks() {
 const setNewDevices = (dev) => {
   setdevices([...devices, dev])
 }
-
+const handleEvent=(event)=>{
+    console.log(event);
+    const { device, type, a, b } = event;
+  
+    console.log('***', selected_device);
+    device_name.add(device.name);
+    console.log('qwerty, ', device_name); 
+    types.add(type);
+    console.log([...types][0]);
+    if (a!= null && type === 'note_on' && (a.value === 36 || a.value === 37 || a.value === 38 || a.value === 39 || a.value === 40 || a.value === 41 || a.value === 42 || a.value === 43 || a.value === 44|| a.value === 45|| a.value === 46|| a.value === 47|| a.value === 48|| a.value === 49|| a.value === 50|| a.value === 51) && device.name === 'MPD218'){
+      console.log(a.value);
+      if (a.value === 36){
+        audios.push(audio_1);
+      }
+      else if (a.value === 37){
+        audios.push(audio_2);
+      }
+      else if (a.value === 38){
+        audios.push(audio_3);
+      }
+      else if (a.value === 39){
+        audios.push(audio_4);
+      }
+      else if (a.value === 40){
+        audios.push(audio_5);
+      }
+      else if (a.value === 41){
+        audios.push(audio_6);
+      }
+      else if (a.value === 42){
+        audios.push(audio_7);
+      }
+      else if (a.value === 43){
+        audios.push(audio_8);
+      }
+      else if (a.value === 44){
+        audios.push(audio_9);
+      }
+      else if (a.value === 45){
+        audios.push(audio_10);
+      }
+      else if (a.value === 46){
+        audios.push(audio_11);
+      }
+      else if (a.value === 47){
+        audios.push(audio_12);
+      }
+      else if (a.value === 48){
+        audios.push(audio_13);
+      }
+      else if (a.value === 49){
+        audios.push(audio_14);
+      }
+      else if (a.value === 50){
+        audios.push(audio_15);
+      }
+      else if (a.value === 51){
+        audios.push(audio_16);
+      }
+  
+    }
+    else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && record){
+        track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
+        console.log(a.value);
+      }
+    if(type === "device_disconnected"){
+      device_name.delete(device.name);
+      // window.location.reload(false);
+      console.log(device_name);
+    }
+  
+    if (device.name !== DEVICE) return;
+    if (type === "mode_change" && a.value === KNOB) {
+      ratio = b.ratio;
+    } else if (type === "note_on" && a.value === PAD) {
+      on = true;
+    } else if (type === "note_off" && a.value === PAD) {
+      on = false;
+    } else if (type === "aftertouch" && on) {
+      ratio = a.ratio;
+    }
+};
 const handlemidi = () => {
   track = new MidiWriter.Track();
   setToBeRemoved(true);
@@ -1093,20 +1080,38 @@ const uploadMidi = (blob) => {
                 <StopIcon smooth={true} />
               </IconButton>
             </div>
-            <div className=" p-4 mx-0.5 pt-5">
-              <label>
-                        <select value = {val} onClick={(e)=>handleClick(e.target.value)} onChange={(e) => handleChange(e.target.value)}>
-                          <option>Pick a midi device</option>
-                          {console.log([...device_name])}
-                            {[...device_name].map(device=>{
-                                return <option value={device}>{device}</option>
-                            })}
-                            {/*<option value="device">{device_name}</option>*/}
+            
+              {!visible &&
+            <div className="p-4 pt-5 ml-0.5">
+              <button
+                onClick={() => {
+                  setmidi(!mid);
+                  setVisible(!visible);
+                }}
+                style={{ height: "100%" }}
+                
+              >Midi
 
-                        </select>
-              </label>
+                {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
+              </button>
+            </div>}
+              {visible &&
+              <div className=" p-4 mx-0.5 pt-5">
+                <label>
+                          <select value = {val} onClick={(e)=>handleClick(e.target.value)} onChange={(e) => handleChange(e.target.value)}>
+                            <option>Pick a midi device</option>
+                            {console.log([...device_name])}
+                              {[...device_name].map(device=>{
+                                  return <option value={device}>{device}</option>
+                              })}
+                              {/*<option value="device">{device_name}</option>*/}
 
-            </div>
+                          </select>
+                </label>
+
+              </div>}
+
+              {visible &&
             <div>
               <button
                 onClick={() => {
@@ -1114,12 +1119,13 @@ const uploadMidi = (blob) => {
                   setOpen(true)
                 }}
                 style={{ height: "100%" }}
-                className=" p-4 ml-0.5 pt-5"
-              >{!record ? 'Record midi' : 'stop'}
+                className=" p-4 pt-5 ml-0.5"
+              >{!record ? 'record midi' : 'stop'}
 
                 {/* {!changeRecordLabel ? "Record Instrument" : "Stop Recording"} */}
               </button>
-            </div>
+            </div>}
+           
             <div className=" p-4 ml-0.5 pt-5">
               <button onClick={handleRecord} style={{ height: "100%" }}>
                 {!changeRecordLabel ? "Record Instrument" : "Stop Recording"}
@@ -1289,7 +1295,7 @@ const uploadMidi = (blob) => {
                       />
                     </div>
                   ))}
-                </div>
+                </div> 
               </Box>
             </div>
           </div>
