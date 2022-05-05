@@ -136,7 +136,7 @@ const Chatbox = ({ details }) => {
               <button
                 className={classes.submitButton}
                 disabled={enteredMessage.trim().length < 1 || isLoading}
-                onClick={onSendHandler}
+                onClick={(e) => onSendHandler(null)}
               >
                 Send{isLoading ? "..." : null}
               </button>
