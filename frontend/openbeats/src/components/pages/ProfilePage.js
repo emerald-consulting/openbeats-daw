@@ -124,7 +124,7 @@ const ProfilePage = () => {
 
         <div className={classes.middlepane}>
           <Profile
-            isCurrentUser={userName === username}
+            isCurrentUser={userName.toLowerCase() === username.toLowerCase()}
             followUser={followUser}
             unfollowUser={unfollowUser}
             isFollowing={follow}
