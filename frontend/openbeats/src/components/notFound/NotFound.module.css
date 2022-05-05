@@ -10,3 +10,21 @@
 .layer {
   background-image: url("../waves.svg");
 }
+.title{
+  position: absolute;
+  top: 80%;
+  width: 100%;
+  text-align:center;
+  font-weight: 900;
+  color: white;
+  font-size: 4.5rem;
+  line-height: 1.5rem;
+}
+@media screen and (max-width: 1250px) {
+
+.title{
+  font-size: 1.5rem; /* 24px */
+line-height: 2rem; /* 32px */
+}
+
+}

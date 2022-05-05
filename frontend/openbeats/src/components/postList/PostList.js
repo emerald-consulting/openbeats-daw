@@ -4,6 +4,8 @@ import { url } from "../../utils/constants";
 import SocialPost from "../socialPost/SocialPost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
+import { Facebook } from 'react-spinners-css';
+import classes from "../pages/SocialHomePage.module.css"
 import { useSelector } from "react-redux";
 
 const PostList = ({ uriParam, refresh, refreshPosts }) => {
@@ -122,14 +124,14 @@ const PostList = ({ uriParam, refresh, refreshPosts }) => {
   }
 
   return (
-    <LoadingOverlay active={isLoading} spinner>
+    <LoadingOverlay active={isLoading} spinner={<Facebook color="#10b981"/>}>
       <div div="scrollablePosts">
         <InfiniteScroll
+          height={"75vh"}
           dataLength={posts.length}
           next={nextHandler}
           hasMore={morePostsExist}
           loader={<h4 style={{ textAlign: "center" }}>Loading...</h4>}
-          height={"75vh"}
           endMessage={
             <p style={{ textAlign: "center" }}>
               <b>Yay! You have seen it all</b>

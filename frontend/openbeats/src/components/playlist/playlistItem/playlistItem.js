@@ -25,8 +25,8 @@ const PlaylistItem = ({ details }) => {
         <button
           style={{
             borderRadius: "1em",
-            background: "grey",
-            color: "#ffff",
+            // background: "grey",
+            color: "#c8c8c8",
             marginLeft: "auto",
             height: "25px",
             width: "30px",
@@ -36,7 +36,9 @@ const PlaylistItem = ({ details }) => {
         >
           &#x2715;
         </button>
+        
         </div>
+        <div className={classes.borderBottom}></div>
       </div>
     </>
   );

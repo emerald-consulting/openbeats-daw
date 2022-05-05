@@ -55,8 +55,8 @@ BootstrapDialogTitle.propTypes = {
 const useStyles = makeStyles((theme) =>
   createStyles({
     disabledButton: {
-      backgroundColor: "green",
-      color: "black",
+      backgroundColor: "#10b981",
+      color: "white",
       width:"180px",
       height:"30px"
     },
@@ -140,7 +140,8 @@ export default function UserProfileForm(props) {
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus onClick={props.updateUser}>
+          <Button autoFocus onClick={props.updateUser} 
+          style={{ color : "#10b981" }}>
             Update Profile
           </Button>
         </DialogActions>

@@ -16,6 +16,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import Badge from "@mui/material/Badge";
+import DehazeIcon from '@mui/icons-material/Dehaze';
 import { UserContext } from "../../model/user-context/UserContext";
 import { ListItem, TextField, Autocomplete, InputAdornment, Menu, MenuItem } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
@@ -23,6 +24,24 @@ import SearchItem from "./SearchItem";
 import {clearAllSearch, updateSearch} from "../../model/search/searchReducer";
 import _ from "lodash";
 import NotificationList from "./notifications/NotificationList";
+// import { ClassNames } from "@emotion/react";
+import classes from "./MainHeader.module.css";
+
+import { makeStyles } from "@material-ui/core/styles";
+const useStyles = makeStyles(theme => ({
+  // root: {
+  //   backgroundColor: "yellow"
+  // },
+  clearIndicator: {
+    backgroundColor: "gray",
+    "& span": {
+      "& svg": {
+        backgroundColor: "red"
+      }
+    }
+  }
+}));
+
 
 const settings = ["Profile", "Account", "Logout"];
 
@@ -41,10 +60,13 @@ const MainHeader = (props) => {
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
 
+
+
+  const muiClasses = useStyles();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
-    ? ["HOME", "INBOX", "DAW"]
-    : ["ABOUT", "PRICING", "LOGIN", "SIGNUP"];
+    ? ["Home", "Inbox", "Daw"]
+    : ["About", "Pricing", "Login", "Signup"];
 
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
@@ -53,6 +75,7 @@ const MainHeader = (props) => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
   const profile = () => {
     dispatcher(clearAllSearch())
     history.push({
@@ -62,6 +85,8 @@ const MainHeader = (props) => {
   };
 
   const navigationHandler = (event) => {
+    // debugger;
+    // console.log(event.target.value.toString().toLowerCase());
     dispatcher(clearAllSearch())
     if (event.target.value == "DAW") {
       history.push("/dashboard");
@@ -200,26 +225,29 @@ const MainHeader = (props) => {
       sx={{ backgroundColor: "#ffff", color: "#10b981" }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters style={{ maxHeight: "80px" }}>
+        <Toolbar disableGutters style={{ maxHeight: "80px", display:"flex", flexDirection:"row"}}>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            sx={{ mr: 2}}
           >
             <Link
               className=" flex flex-row "
               to={isUserLoggedin ? "/home" : "/"}
             >
-              {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
+              <img className="mt-1 h-10" src={logo} alt={"logo"} />
               <h1 className="mt-2 ml-2">Open Beats</h1>
             </Link>
           </Typography>
           {
             (window.location.pathname === '/home' || window.location.pathname.includes('/profile') ) && (
               <Autocomplete
+                sx={{ flexGrow: 1, display: { xs: "none", sm: "flex" } }}
+                style={{ width: "45%"}}
                 freeSolo
                 autoComplete
+                muiClasses={{clearIndicatorDirty: classes.clearIndicator}}
                 includeInputInList
                 options={searchOptions}
                 onInputChange={onSearch}
@@ -231,27 +259,55 @@ const MainHeader = (props) => {
                   return <SearchItem key={index} details={option} searchText={searchText} onSelectItem={onSelectItem} />
                 }}
                 renderInput={(params) => <TextField  {...params} placeholder='Search for songs, artists and more...' size='small'
-                  style={{ minWidth: '320px', borderRadius: '30px', marginLeft: '150px' }}
+                  style={{ marginLeft: '33%' }}
                 />
                 }
               />
             )
           }
+
+{
+            (window.location.pathname === '/home' || window.location.pathname.includes('/profile') ) && (
+              <Autocomplete
+                sx={{ flexGrow: 1, display: { xs: "flex", sm: "none" } }}
+                style={{ width: "45%" }}
+                freeSolo
+                autoComplete
+                muiClasses={{clearIndicatorDirty: classes.clearIndicator}}
+                includeInputInList
+                options={searchOptions}
+                onInputChange={onSearch}
+                open={autoCompleteState}
+                onOpen={() => setAutoCompleteState(true)}
+                onClose={() => setAutoCompleteState(false)}
+                getOptionLabel={(option) => JSON.stringify(option)}
+                renderOption={(option, index) => {
+                  return <SearchItem key={index} details={option} searchText={searchText} onSelectItem={onSelectItem} />
+                }}
+                renderInput={(params) => <TextField  {...params} placeholder='Search for songs, artists and more...' size='small'
+                  style={{ marginLeft: '15%' }}
+                />
+                }
+              />
+            )
+          }
+
+
           <Box sx={{ flexGrow: 1 }} />
-          <Typography
+          {/* <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
-          >
-            <Link className=" flex flex-row " to="/dashboard">
+          > */}
+            {/* <Link className=" flex flex-row " to="/dashboard"> */}
               {/* <img className="mt-1 h-10" src={logo} alt={"logo"} /> */}
-              <strong className="mt-2 ml-2">Open Beats</strong>
-            </Link>
-          </Typography>
-
-          <Box sx={{ flexGrow: 0, display: { xs: "none", md: "flex" } }}>
+              {/* <strong className="mt-2 ml-2">Open Beats</strong> */}
+            {/* </Link> */}
+          {/* </Typography> */}
+          <Box className={classes.nav}>
             {pages.map((page) => (
+              // console.log(page),
               <Button
                 key={page}
                 value={page}
@@ -262,6 +318,70 @@ const MainHeader = (props) => {
               </Button>
             ))}
           </Box>
+
+          {!isUserLoggedin && (
+            <Box className={classes.responsiveNav}>
+          <Tooltip title="Open settings" className={classes.responsiveNav}>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }} >
+              <DehazeIcon />
+            </IconButton>
+          </Tooltip>
+
+
+          <Menu
+            sx={{ maxWidth: "150px" }}
+            id="menu-appbar"
+            anchorEl={anchorElUser}
+
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "right",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+
+                {pages.map((page) => (
+
+                <MenuItem>
+
+
+                  <Button
+                    key={page}
+                    value={page}
+                    onClick={navigationHandler}
+                    style={{textTransform: "capitalize", color:"inherit", fontSize: "inherit", padding:"6px 18px"}}
+                  >
+                    {page}
+                  </Button>
+
+                  </MenuItem>
+            ))}
+
+        </Menu>
+
+        </Box>
+          )}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           {isUserLoggedin && (
             <Box sx={{ flexGrow: 0 }}>
@@ -287,12 +407,14 @@ const MainHeader = (props) => {
                   />
                 </IconButton>
               </Tooltip>
+
               <Menu
-                sx={{ mt: "45px", maxWidth: "200px" }}
+                sx={{ maxWidth: "150px" }}
                 id="menu-appbar"
                 anchorEl={anchorElUser}
+
                 anchorOrigin={{
-                  vertical: "top",
+                  vertical: "bottom",
                   horizontal: "right",
                 }}
                 keepMounted
@@ -307,6 +429,27 @@ const MainHeader = (props) => {
                 <MenuItem onClick={profile}>
                   <ListItem>Profile</ListItem>
                 </MenuItem>
+
+                <Box className={classes.responsiveNav}>
+
+                  {pages.map((page) => (
+
+                  <MenuItem >
+
+
+                    <Button
+                      key={page}
+                      value={page}
+                      onClick={navigationHandler}
+                      style={{textTransform: "capitalize", color: "inherit", fontSize: "inherit", padding:"6px 18px"}}
+                    >
+                      {page}
+                    </Button>
+
+                    </MenuItem>
+              ))}
+                </Box>
+
                 <MenuItem onClick={logout}>
                   <ListItem>Logout</ListItem>
                 </MenuItem>
@@ -323,8 +466,10 @@ const MainHeader = (props) => {
                   </MenuItem>
                 ))} */}
               </Menu>
+
             </Box>
           )}
+
         </Toolbar>
       </Container>
       {showNotification && <NotificationList data={notifications} onClickNotificationHandler={onClickNotificationHandler}/>}

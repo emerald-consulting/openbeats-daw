@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import './MainHeader.module.css'
 import { showAllSearch, selectPost, selectProfile } from "../../model/search/searchReducer";
+import { textAlign } from "@mui/system";
 
 const SearchItem = ({ details, searchText, onSelectItem }) => {
 
@@ -35,7 +36,7 @@ const SearchItem = ({ details, searchText, onSelectItem }) => {
             <div style={{ display: "flex", alignItems: "flex-start", flexDirection: 'column', justifyContent: 'center', cursor: 'pointer', paddingLeft: '10px', border: '1px solid lightgray', background: `${(postDetails.username && postDetails.username !== '-1') ? 'lightgray' : 'white'}` }} onClick={selectItem} >
                 {
                     postDetails.username === '-1' ? (
-                        <Typography color='primary'>{postDetails.userid === '-2' ? 'No Results found' : `Show all for ${searchText}`} </Typography>
+                        <Typography style={{color:"#10b981", margin:"auto"}}>{postDetails.userid === '-2' ? 'No Results found' : `Show all for ${searchText}`} </Typography>
                     ) : (
                         <>
                             {
