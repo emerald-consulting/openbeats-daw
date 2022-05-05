@@ -31,6 +31,7 @@ const Profile = (props) => {
   const [currentUser, setCurrentUser] = useState({});
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
+  const [existUser, setExistUser] = useState(false)
   let history = useHistory();
   const [refresh, setRefresh] = useState(0);
   const [postsUri, setPostsUri] = useState("getPostsByUser");
@@ -327,6 +328,7 @@ const Profile = (props) => {
               handleInputChange={handleInputChange}
               updateUser={updateUser}
               upgradeUser={upgradeUser}
+              existUser={existUser}
             ></UserProfileForm>
           ) : null}
         </div>
