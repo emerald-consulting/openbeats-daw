@@ -31,6 +31,7 @@ const Profile = (props) => {
   const [currentUser, setCurrentUser] = useState({});
   const [showFollowing, setShowFollowing] = useState(false);
   const [showFollowers, setShowFollowers] = useState(false);
+  const [existUser, setExistUser] = useState(false)
   let history = useHistory();
   const [refresh, setRefresh] = useState(0);
   const [postsUri, setPostsUri] = useState("getPostsByUser");
@@ -82,18 +83,25 @@ const Profile = (props) => {
   };
 
   const updateUser = async () => {
-    const res = await axios.put(url + "/updateUserProfile", currentUser, {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-        Authorization: "Bearer " + token,
-      },
-    });
-    setCurrentUser(res.data);
-    handleProfileModalClose();
+    try {
+      const res = await axios.put(url + "/updateUserProfile", currentUser, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          Authorization: "Bearer " + token,
+        },
+      });
+      setCurrentUser(res.data);
+      handleProfileModalClose();
+      setExistUser(false);
+    } catch (error) {
+      if (error.response) {
+        setExistUser(true);
+      }
+    }
   };
 
   const getPicture = async () => {
@@ -320,6 +328,7 @@ const Profile = (props) => {
               handleInputChange={handleInputChange}
               updateUser={updateUser}
               upgradeUser={upgradeUser}
+              existUser={existUser}
             ></UserProfileForm>
           ) : null}
         </div>
