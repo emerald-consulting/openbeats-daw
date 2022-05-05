@@ -3,8 +3,17 @@
   height: 82vh;
   background-color: #10b981 !important;
   overflow: hidden;
+  display: flex;
+  flex-direction: row;
 }
-
+.container div::-webkit-scrollbar {
+  width: 0px;
+  background-color: #fff;
+  height: 5px;
+}
+.typeahead{
+  position: absolute;
+}
 .leftpane,
 .rightpane {
   width: 25%;
@@ -22,13 +31,13 @@
 
 .middlepane {
   width: 45%;
-  height: 85vh;
+  height: 80vh;
   float: left;
   border-collapse: collapse;
   padding: 1rem; 
   margin: 1rem 2rem 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
   /* overflow: hidden; */
 }
@@ -36,6 +45,7 @@
   display: flex;
   flex-flow: column wrap;
   justify-content: space-between;
+  width: -webkit-fill-available;
 
 }
 
@@ -53,7 +63,39 @@
   padding: 1rem;
   margin: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 6px;
   background-color: white;
-  overflow-y: scroll;
+  overflow-y: auto;
+  width: inherit;
+}
+
+@media screen and (max-width: 600px) {
+
+  .container {
+    height: 100%;
+    flex-direction: column;
+    overflow-y: auto;
+    margin-bottom: 70px;
+  }
+
+  .leftpane,
+  .rightpane {
+    width: 100%;
+  }
+  
+  .leftpane{
+    justify-content: center;
+  }
+  
+  .rightpane{
+    justify-content: center;
+  }
+  
+  .middlepane {
+    width: 93%;
+    height: auto;
+    justify-content: center;
+    margin: 1rem;
+  }
+
 }

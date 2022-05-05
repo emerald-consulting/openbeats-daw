@@ -13,9 +13,8 @@ const NotFound = () => {
         }}
       >
         <div>
-          <h1
-            className="text-white text-7xl "
-            style={{ position: "absolute", top: "80%", width: "100%", textAlign:"center", fontWeight: "900" }}
+        <h1
+            className={classes.title}
           >
             <span className="text-emrald-gr">Whoops!</span> Looks like the page can't be found.
           </h1>

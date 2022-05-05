@@ -114,7 +114,7 @@ const ConversationListItem = ({ details, onSelectConversationHandler }) => {
           <br />
         </span>
       </div>
-      <hr className="mt-2" style={{ color: "grey", height: "1px" }} />
+      <div className={classes.borderBottom}></div>
     </div>}
     </>
   );

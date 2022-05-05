@@ -12,6 +12,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import LoadingOverlay from "react-loading-overlay";
+import { Facebook } from 'react-spinners-css';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/CancelOutlined';
@@ -367,8 +368,7 @@ const Dashboard = () => {
                 <h1 className="text-2xl mb-4" >Saved sessions</h1>
                 <LoadingOverlay
                   active={isLoading}
-                  spinner
-                  text='Please wait...'
+                  spinner={<Facebook color="#10b981"/>}
                 >
                   <div className="overflow-y-auto overflow-x-hidden " style={{height:'38.5vh'}}>
                     {
