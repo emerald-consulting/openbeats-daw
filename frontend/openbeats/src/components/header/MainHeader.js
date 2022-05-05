@@ -65,7 +65,7 @@ const MainHeader = (props) => {
   const muiClasses = useStyles();
   const isUserLoggedin = state.user?.emailId.trim().length > 0;
   const pages = isUserLoggedin
-    ? ["Home", "Inbox", "Daw"]
+    ? ["Home", "Inbox", "DAW"]
     : ["About", "Pricing", "Login", "Signup"];
 
   const handleOpenUserMenu = (event) => {
