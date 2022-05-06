@@ -20,7 +20,7 @@ const NotificationListItem = ({ details, onClickNotificationHandler }) => {
       : details.content;
 
   if (description && description.includes(linkIdenfilier)) {
-    description = "Click here to join the session";
+    description = "sent a new text: Click here to join the session";
   }
 
   const getAuthorDetails = async () => {
