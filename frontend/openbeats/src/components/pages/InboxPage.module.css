@@ -20,6 +20,7 @@
   height: 80vh;
   width: 35%;
   background-color: white;
+  border-radius: 10px;
   padding: 1rem; 
   margin: 1rem;
 }
@@ -32,7 +33,7 @@
   padding: 1rem; 
   margin: 1rem 2rem 1rem 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border-radius: 10px;
   background-color: white;
   overflow-y: scroll;
 }
@@ -57,8 +58,23 @@
   padding: 1rem;
   margin: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  border-radius: 6px;
+  border-radius: 10px;
   background-color: white;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   width: inherit;
+}
+@media screen and (max-width: 600px) {
+
+  .middlepane{
+    width: 93%;
+    height: auto;
+    justify-content: center;
+    margin: 1rem;
+  }
+  .rightpane{
+    width: 93%;
+    height: auto;
+    justify-content: center;
+    margin: 1rem;
+  }
 }

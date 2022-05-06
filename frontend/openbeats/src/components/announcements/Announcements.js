@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
 import AnnouncementItem from "./announcementItem/AnnouncementItem";
+import classes from "../pages/SocialHomePage.module.css";
 
 const Announcements = ({refresh, username}) => {
   let token = localStorage.getItem("auth-token");
@@ -29,14 +30,18 @@ const Announcements = ({refresh, username}) => {
     setIsLoading(false);
   };
   return (
-    <LoadingOverlay active={isLoading} spinner>
+    <>
+    <div>
       <h2 className="mb-1" style={{ color: "#000" }}>
-        Announcements
-      </h2>
+          Announcements
+        </h2>
+    </div>
+    <LoadingOverlay active={isLoading} spinner className={classes.heading}>
       {list.map((item) => (
         <AnnouncementItem details={item} />
       ))}
     </LoadingOverlay>
+    </>
   );
 };
 

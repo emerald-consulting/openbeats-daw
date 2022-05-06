@@ -64,6 +64,7 @@ const NewlyReleasedItem = ({ details }) => {
          <LikeButton details={details} token={token} />
         </button>
       </div>
+      <div className={classes.borderBottom}></div>
     </div>
   );
 };

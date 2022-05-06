@@ -4,6 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
 import NewlyReleasedItem from "./NewlyReleasedItem";
+import classes from "../pages/SocialHomePage.module.css";
 
 const NewlyReleasedList = ({refresh}) => {
   let token = localStorage.getItem("auth-token");
@@ -30,14 +31,18 @@ const NewlyReleasedList = ({refresh}) => {
     setIsLoading(false);
   };
   return (
-    <LoadingOverlay active={isLoading} spinner>
-      <h2 className="mb-1" style={{ color: "#000" }}>
+    <>
+    <div>
+       <h2 className="mb-1" style={{ color: "#000" }}>
         Newly Released
       </h2>
+    </div>
+    <LoadingOverlay active={isLoading} spinner className={classes.heading}>
       {list.map((item) => (
         <NewlyReleasedItem details={item} key={item.postId}/>
       ))}
     </LoadingOverlay>
+    </>
   );
 };
 

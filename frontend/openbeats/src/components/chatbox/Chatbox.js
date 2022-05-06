@@ -121,8 +121,8 @@ const Chatbox = ({ details }) => {
           <div className={classes.new}>
             <div className="form-control mt-2" style={{ width: "75%" }}>
               <textarea
-                // style={{width: "100%", resize: "none"}}
-                // className={classes.textarea}
+                style={{width: "100%", resize: "none"}}
+                className={classes.textarea}
                 type="text"
                 id="desc"
                 onChange={inputChangeHandler}
