@@ -132,7 +132,7 @@ const PAD = 48;
 const DEVICE = "MPD218 Port A";
 let ratio = 1;
 let on = false;
-let i = false;
+let k = false;
 let device_name = new Set();
 let track;
 let types = new Set();
@@ -184,10 +184,10 @@ function Tracks() {
   useEffect(() => {
     if(record){
       handlemidi();
-      i = true;
+      k = true;
     }
     else{
-      i = false;
+      k = false;
       if(audios.length>=1){
         audio_handle();
         track = null;
@@ -214,6 +214,10 @@ const handleEvent=(event)=>{
     console.log('qwerty, ', device_name); 
     types.add(type);
     console.log([...types][0]);
+    if(type === "device_connected"){
+      setIsLoading(true);
+      setTimeout(() => { setIsLoading(false); }, 500);      
+    }
     if (a!= null && type === 'note_on' && (a.value === 36 || a.value === 37 || a.value === 38 || a.value === 39 || a.value === 40 || a.value === 41 || a.value === 42 || a.value === 43 || a.value === 44|| a.value === 45|| a.value === 46|| a.value === 47|| a.value === 48|| a.value === 49|| a.value === 50|| a.value === 51) && device.name === 'MPD218'){
       console.log(a.value);
       if (a.value === 36){
@@ -266,13 +270,14 @@ const handleEvent=(event)=>{
       }
   
     }
-    else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && record){
+    else if (a != null && (type === 'note_on' || type === 'note_off' || type === 'mode_change' || type === 'pitch_wheel control') && device.name === selected_device && k){
         track.addEvent(new MidiWriter.NoteEvent({pitch: [a.value],velocity: b.value, duration: '8', channel: 1}));
         console.log(a.value);
       }
     if(type === "device_disconnected"){
       device_name.delete(device.name);
-      // window.location.reload(false);
+      setIsLoading(true);
+      setTimeout(() => { setIsLoading(false); }, 1000);
       console.log(device_name);
     }
   
@@ -308,7 +313,7 @@ const audio_handle = async()=>{
 }
 
 const midi_handle = async() => {
-  if (!record  && toBeRemoved && [...types].pop() != 'device_disconnected' && track != null) {
+  if (!record  && toBeRemoved && track != null) {
     console.log([...types].pop());
     const write = new MidiWriter.Writer(track);
     track = null;
@@ -1034,6 +1039,14 @@ const uploadMidi = (blob) => {
   );
   const vertical = 'top';
   const horizontal = 'right'
+
+  const midiRecordHandle = ()=>{
+    setRecord(prev =>{
+      return !prev;
+    });
+    setOpen(true);
+  }
+
   return (
     <>
       <Snackbar
@@ -1114,10 +1127,7 @@ const uploadMidi = (blob) => {
               {visible &&
             <div>
               <button
-                onClick={() => {
-                  setRecord(!record)
-                  setOpen(true)
-                }}
+                onClick={midiRecordHandle}
                 style={{ height: "100%" }}
                 className=" p-4 pt-5 ml-0.5"
               >{!record ? 'record midi' : 'stop'}
