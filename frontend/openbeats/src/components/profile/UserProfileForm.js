@@ -35,7 +35,7 @@ const BootstrapDialogTitle = (props) => {
           onClick={onClose}
           sx={{
             position: "absolute",
-            left: 430,
+            right: 0,
             top: 2,
             color: (theme) => theme.palette.grey[500],
           }}

@@ -2,8 +2,6 @@ import NewPostForm from "../newPostForm/NewPostForm";
 import Playlist from "../playlist/Playlist";
 // import classes from "./SocialHomePage.module.css";
 import classes from "./ProfilePage.module.css";
-//import classes from "./SocialHomePage.module.css";
-// import classes from "./ProfilePage.module.css";
 import Profile from "../profile/Profile";
 import { useState, useEffect, useContext } from "react";
 import { url } from "../../utils/constants";
