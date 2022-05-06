@@ -324,7 +324,7 @@ const midi_handle = async() => {
     formData.append(
       'track', _file
     );
-    axios.post(url + "/midiUpload", formData, {
+  const res = await axios.post(url + "/midiUpload", formData, {
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -334,11 +334,11 @@ const midi_handle = async() => {
         Authorization: "Bearer " + jwtToken,
       },
     });
-  setTimeout(() => { console.log("World!"); }, 2000);
+  // setTimeout(() => { console.log("World!"); }, 2000);
   const { data } =  await axios.get(url+"/putmidi", {
           responseType: 'arraybuffer',
           headers: { 'Accept': '*/*', 'Content-Type': 'audio/wav' }
-      }).then(resp => resp);
+      })
       const blob = new Blob([data], {
           type: 'audio/wav'
       })
