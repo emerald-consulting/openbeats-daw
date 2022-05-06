@@ -4,6 +4,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingOverlay from "react-loading-overlay";
 import { url } from "../../utils/constants";
 import TrendingListItem from "./trendingListItem/TrendingListItem";
+import classes from "../pages/SocialHomePage.module.css";
 
 const TrendingList = (props) => {
   let token = localStorage.getItem("auth-token");
@@ -30,15 +31,18 @@ const TrendingList = (props) => {
     setIsLoading(false);
   };
   return (
-    <LoadingOverlay active={isLoading} spinner>
-      <h2 className="mb-1" style={{ color: "#000" }}>
-        Trending
-      </h2>
+    <>
+    <div>
+        <h2 className="mb-1" style={{ color: "#000" }}>
+          Trending
+        </h2>
+      </div>
+    <LoadingOverlay active={isLoading} spinner className={classes.heading}>
       {list.map((item) => (
         <TrendingListItem details={item} />
       ))}
     </LoadingOverlay>
-  );
+    </>  );
 };
 
 export default TrendingList;

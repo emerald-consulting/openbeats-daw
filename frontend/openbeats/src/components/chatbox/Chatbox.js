@@ -129,7 +129,7 @@ const Chatbox = ({ details }) => {
                 value={enteredMessage}
                 onBlur={inputBlurHandler}
                 placeholder="Enter a message"
-                rows="2"
+                rows="3"
               />
             </div>
             <div className="form-actions mt-5" style={{ width: "20%" }}>

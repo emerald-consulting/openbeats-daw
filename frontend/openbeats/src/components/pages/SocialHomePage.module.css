@@ -65,10 +65,21 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border-radius: 6px;
   background-color: white;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   width: inherit;
 }
 
+.topPane .heading{
+  margin-top: 10px;
+  height: 90% !important;
+  overflow-y: auto;
+}
+
+.bottomPane .heading{
+  margin-top: 10px;
+  height: 80% !important;
+  overflow-y: auto;
+}
 @media screen and (max-width: 600px) {
 
   .container {
