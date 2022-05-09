@@ -164,14 +164,12 @@ const Login = () => {
 
               </form>
           </div>
-          <div className=' bg-green-300 w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-10 px-16 flex justify-center items-center mt-6 flex-col'>
+          {/* <div className=' bg-green-300 w-full max-w-md m-auto bg-white rounded-lg border border-gr4 shadow-default py-10 px-16 flex justify-center items-center mt-6 flex-col'>
             <div>or login using</div>
             <div className='flex flex-row border-gr4'>
-              {/* <div className='p-4 hover:text-blue-700'><FontAwesomeIcon icon={['fab', 'apple']} /></div> */}
               <div className='p-4 hover:text-blue-400'><a href="http://openbeatsdaw-env.eba-4gscs2mn.us-east-2.elasticbeanstalk.com/oauth2/authorization/spotify"><FontAwesomeIcon icon={['fab', 'spotify']} /></a></div>
-              {/* <div className='p-4 hover:text-blue-400'><FontAwesomeIcon icon={['fab', 'google']} /></div> */}
             </div>
-          </div>
+          </div> */}
       </div>
       </LoadingOverlay>
   );
