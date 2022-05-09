@@ -1075,6 +1075,7 @@ const uploadMidi = (blob) => {
                 className="text-xs hidden"
                 style={{ maxWidth: "100%" }}
                 type="file"
+                accept="audio/*"
                 onChange={onFileChange}
               />
             </div>
