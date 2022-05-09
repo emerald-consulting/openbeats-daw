@@ -56,15 +56,17 @@ public class UserController {
 
     @PutMapping("/updateUserProfile")
     @ResponseBody
-    public User updateUserProfile(@RequestBody User user) throws UsernameExistsException {
+    public User updateUserProfile(@RequestBody User user, @RequestHeader(name = "Authorization") String token)
+            throws UsernameExistsException {
         List<User> users = userRepository.findAll();
-
+        User currentUser = tokenProvider.getLoggedinUser(token).get();
         for (User tempUser : users) {
             if (user.getUsername().equalsIgnoreCase(tempUser.getUsername()) && user.getUserid() != tempUser.getUserid())
                 throw new UsernameExistsException("Username Already Exists");
         }
-
+        user.setPassword(currentUser.getPassword());
         User updatedUser = userService.updateUser(user);
+        updatedUser.setPassword(null);
         return updatedUser;
     }
 
