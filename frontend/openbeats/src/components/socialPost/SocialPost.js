@@ -21,6 +21,8 @@ const SocialPost = ({ details, removePost, updatePost }) => {
   const [author, setAuthor] = useState();
   const [isLiked, setIsLiked] = useState(false);
   let token = localStorage.getItem("auth-token");
+  let currentUserEmail = localStorage.getItem("emailId");
+
   const playlistCntxt = useContext(PlaylistContext);
   const history = useHistory();
 
@@ -145,7 +147,7 @@ const SocialPost = ({ details, removePost, updatePost }) => {
                   <small className="text-muted">{createdAt}</small>
                 </span>
               </div>
-              <>
+              {currentUserEmail == author.emailId && <>
                 <IconButton onClick={openMenu} size='small'>
                   <MoreVertIcon fontSize="small" />
                 </IconButton>
@@ -161,10 +163,9 @@ const SocialPost = ({ details, removePost, updatePost }) => {
                   <MenuItem style={{ display: 'block', marginLeft: '20px', minWidth: '70px', marginBottom: '5px' }} onClick={toggleEditPostDialog}>Edit</MenuItem>
                   <MenuItem style={{ display: 'block', marginLeft: '20px', minWidth: '70px', marginBottom: '5px' }} onClick={deletePost}>Delete</MenuItem>
                 </Menu>
-              </>
+              </>}
             </div>
           </Card.Header>
-
           <Card.Text className={classes.description}>
             <ReactHashtag>{details.description}</ReactHashtag>
           </Card.Text>
