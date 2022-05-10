@@ -42,20 +42,21 @@ const TrendingListItem = ({ details }) => {
   return (
     <div className="mb-5">
       {/* <div style={{ display: "flex", alignItems: "center", display: "flex", flexDirection: "row", flexWrap: "wrap" }} onClick={goToProfile}> */}
-      <div style={{ display: "flex", alignItems: "center"}} onClick={goToProfile}>
+      <div style={{ display: "flex", alignItems: "center"}} >
         <img
           alt="Harry"
           src={author?.profilePictureFileName || profileImg}
           className={classes.profileIcon}
         />
-        <span className={classes.author}>
+        <span className={classes.author} >
           <strong
             className={classes.username}
+            onClick={goToProfile}
           >{`${author?.firstName} ${author?.lastName}`}</strong>
             {/* <div style={{ marginTop: "5px" }}>
               <a className="ml-2" style={{ fontSize: "13px" }}>@{author?.username}</a>
               <button */}
-              <a className="ml-2">@{author?.username}</a>
+              <a className="ml-2" onClick={goToProfile}>@{author?.username}</a>
               <br/>
               <small className={classes.description}>
                 <ReactHashtag>{description}</ReactHashtag>

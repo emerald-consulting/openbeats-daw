@@ -5,10 +5,12 @@ import classes from "../../components/trendingList/trendingListItem/TrendingList
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../likeButton/LikeButton";
 import soundImg from "../sound.jpeg";
+import { useHistory } from "react-router";
 
 const NewlyReleasedItem = ({ details }) => {
   const [author, setAuthor] = useState();
   let token = localStorage.getItem("auth-token");
+  const history =  useHistory();
 
   useEffect(() => {
     getAuthorDetails();
@@ -32,6 +34,12 @@ const NewlyReleasedItem = ({ details }) => {
     });
     setAuthor(res.data);
   };
+
+
+  const goToProfile = () => {
+    history.push("/profile/" + author?.username);
+  };
+
   return (
     <div className="mb-5">
       <div style={{ display: "flex", alignItems: "center" }}>
@@ -47,8 +55,9 @@ const NewlyReleasedItem = ({ details }) => {
         <span className={classes.author}>
           <strong
             className={classes.username}
+            onClick={goToProfile}
           >{`${author?.firstName} ${author?.lastName}`}</strong>
-          <a className="ml-2">@{author?.username}</a>
+          <a className="ml-2" onClick={goToProfile}>@{author?.username}</a>
           <br />
           <small className={classes.description}>
             <ReactHashtag>{description}</ReactHashtag>
