@@ -39,6 +39,7 @@
   border-radius: 6px;
   background-color: white;
   overflow-y: scroll;
+  overflow-x: hidden;
 }
 .splitScreen {
   display: flex;

@@ -104,7 +104,7 @@ const ProfilePage = () => {
     isFollowing();
     getFollowing();
     getFollowed();
-  }, []);
+  }, [username]);
 
   useEffect(() => {
     getFollowing();
