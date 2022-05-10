@@ -198,7 +198,7 @@ public class StudioSessionController {
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(request.getSessionId());
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         audioTracks.forEach(audioTrack -> {
-            if(audioTrack.getAudioTrackId() == request.getFileId()){
+            if(audioTrack.getAudioTrackId().equals(request.getFileId())){
                 audioTrack.setOffset(request.getOffset());
             }
         });
@@ -231,7 +231,7 @@ public class StudioSessionController {
         boolean res = audioFileService.updateAudioFileDetails(fileId, fileName);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         audioTracks.forEach(audioTrack -> {
-            if(audioTrack.getAudioTrackId() == fileId){
+            if(audioTrack.getAudioTrackId().equals(fileId) ){
                 audioTrack.setFile(fileName);
             }
         });
@@ -247,7 +247,7 @@ public class StudioSessionController {
         boolean res = audioFileService.updateAudioFileDetails(fileId, prevFileName);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         audioTracks.forEach(audioTrack -> {
-            if(audioTrack.getAudioTrackId() == fileId){
+            if(audioTrack.getAudioTrackId().equals(fileId)){
                 audioTrack.setFile(prevFileName);
             }
         });
@@ -265,7 +265,7 @@ public class StudioSessionController {
         int i = 0;
         int j = -1;
         for (AudioTrack audioTrack: audioTracks){
-            if(audioTrack.getAudioTrackId() == fileId){
+            if(audioTrack.getAudioTrackId().equals(fileId) ){
                 j = i;
                 break;
             }
@@ -287,7 +287,7 @@ public class StudioSessionController {
         StudioSession studioSession = SessionStorage.getInstance().getStudioSession().get(sessionId);
         List<AudioTrack> audioTracks = studioSession.getAudioTracks();
         audioTracks.forEach(audioTrack -> {
-            if(audioTrack.getAudioTrackId() == fileId){
+            if(audioTrack.getAudioTrackId().equals(fileId)){
                 audioTrack.setFileDisplayName(newFileDisplayName);
             }
         });
