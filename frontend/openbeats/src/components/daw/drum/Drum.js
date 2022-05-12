@@ -123,7 +123,7 @@ const firstSoundsGroup = [
     smoothPianoKit: secondSoundsGroup
   }
 
-  const KeyboardKey = ({ play, deactivateAudio, sound: { id, key, url, keyCode } }) => {
+  const KeyboardKey = ({ play, deactivateAudio, sound: { id, key, url, keyCode } , keystrokeSubscribe}) => {
     const handleKeydown = (e) => {
       if(keyCode === e.keyCode) {
         const audio = document.getElementById(key);
@@ -134,11 +134,15 @@ const firstSoundsGroup = [
     }
 
     React.useEffect(() => {
-        document.addEventListener('keydown', handleKeydown);
+        if(keystrokeSubscribe){
+          document.addEventListener('keydown', handleKeydown);
+        }else{
+          document.removeEventListener('keydown', handleKeydown);
+        }
         return () => {
           document.removeEventListener('keydown', handleKeydown);
         }
-    }, [])
+    }, [keystrokeSubscribe])
 
     return (
     <div className="outer-drum-pad">
@@ -150,11 +154,11 @@ const firstSoundsGroup = [
     );
   }
 
-  const Keyboard = ({ sounds, play, power, deactivateAudio }) =>  (
+  const Keyboard = ({ sounds, play, power, deactivateAudio, keystrokeSubscribe }) =>  (
     <div className="keyboard">
       {power
-        ? sounds.map((sound) => <KeyboardKey sound={sound} play={play} deactivateAudio={deactivateAudio} />)
-        : sounds.map((sound) => <KeyboardKey sound={{...sound, url: "#" }} play={play} deactivateAudio={deactivateAudio} />)
+        ? sounds.map((sound) => <KeyboardKey sound={sound} play={play} deactivateAudio={deactivateAudio} keystrokeSubscribe={keystrokeSubscribe} />)
+        : sounds.map((sound) => <KeyboardKey sound={{...sound, url: "#" }} play={play} deactivateAudio={deactivateAudio} keystrokeSubscribe={keystrokeSubscribe} />)
       }
     </div>
   );
@@ -176,7 +180,7 @@ const firstSoundsGroup = [
     </div>
   );
 
-  const App = () => {
+  const App = ({keystrokeSubscribe}) => {
     const [power, setPower] = React.useState(true);
     const [volume, setVolume] = React.useState(1);
     const [soundName, setSoundName] = React.useState("");
@@ -318,7 +322,7 @@ crunker.download(ds.blob);
         {setKeyVolume()}
         {/* <button className="rounded bg-gr4 p-1"  onClick={()=>download()}>Download</button> */}
         <div className="wrapper">
-          <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} />
+          <Keyboard sounds={sounds} play={play} power={power} deactivateAudio={deactivateAudio} keystrokeSubscribe={keystrokeSubscribe} />
           <DumControle
             stop={stop}
             power={power}
@@ -332,11 +336,11 @@ crunker.download(ds.blob);
   };
 
 //  ReactDOM.render(<App />, document.querySelector("#app"))
-const AppCall = () => {
+const AppCall = ({keystrokeSubscribe}) => {
 
   return (
   
-      <div className=""> <App /> </div>
+      <div className="" > <App  keystrokeSubscribe={keystrokeSubscribe}/> </div>
 
   
   );

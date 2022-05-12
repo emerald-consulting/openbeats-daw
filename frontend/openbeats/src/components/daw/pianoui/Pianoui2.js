@@ -159,7 +159,7 @@ class AppCall extends React.Component {
                   width={'600'}
                   playNote={playNote}
                   stopNote={stopNote}
-                  disabled={isLoading}
+                  disabled={isLoading || !this.props.keystrokeSubscribe}
                   keyboardShortcuts={keyboardShortcuts}
                 />
               )}

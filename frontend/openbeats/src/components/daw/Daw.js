@@ -1,4 +1,4 @@
-import React, {useContext, useRef, useEffect} from 'react'
+import React, {useContext, useRef, useEffect, useState} from 'react'
 import LogNavbar from '../logNavbar/LogNavbar'
 import Pianoui2 from './pianoui/Pianoui2'
 import Drum from './drum/Drum'
@@ -16,9 +16,14 @@ const Daw = () => {
     
     const session = useSelector(_state => _state.session);
     const user = useSelector(_state => _state.user);
+    const [keystrokeSubscribe, setKeystrokeSubscribe] = useState(true);
     const dispatch2 = useDispatch();
     let jwtToken = `${user.jwtToken}`;
     console.log("this is the jwt token"+jwtToken);
+
+    const changekeystrokeSubscribe =(val)=>{
+        setKeystrokeSubscribe(val);
+    }
 
     return (
       // <div><LogNavbar/>
@@ -33,7 +38,7 @@ const Daw = () => {
                         </div>
                         <div >
                           {/* <Dynamicdiv/> */}
-                          <Tracks />
+                          <Tracks changekeystrokeSubscribe = {changekeystrokeSubscribe} />
                         </div>
 
                     </div>
@@ -49,10 +54,10 @@ const Daw = () => {
                 <div style={{ borderTop: "4px solid #059669"}} ></div>
                 <div className="flex flex-row" style={{height:'20%'}}>
                     <div className=" pr-5 pl-10" style={{width:'30%',whiteSpace:"break-spaces"}}>
-                        <Drum/>
+                        <Drum keystrokeSubscribe={keystrokeSubscribe}/>
                     </div>
                     <div className="pt-5 pl-10" style={{width:'70%'}}>
-                        <Pianoui2/>
+                        <Pianoui2 keystrokeSubscribe={keystrokeSubscribe}/>
                     </div>
 
                 </div>

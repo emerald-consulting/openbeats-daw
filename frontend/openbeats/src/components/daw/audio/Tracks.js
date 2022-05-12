@@ -139,7 +139,7 @@ let types = new Set();
 let audios = [];
 let selected_device = '';
 
-function Tracks() {
+function Tracks({changekeystrokeSubscribe}) {
   const [files, setFiles] = useState([]);
   const [playTracks, setPlayTracks] = useState([]);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -700,11 +700,12 @@ const uploadMidi = (blob) => {
   };
 
   const enteredTitleBlurHandler = (index, newFileDisplayName) => {
+    changekeystrokeSubscribe(true);
     updateFileDisplayName(index, newFileDisplayName);
   };
 
   const enteredTitleFocusHandler = () => {
-    document.removeEventListener("keydown", handleKeydown);
+    changekeystrokeSubscribe(false);
   };
 
   const updateFileDisplayName = (index, newFileDisplayName) => {
@@ -1178,12 +1179,13 @@ const uploadMidi = (blob) => {
                           session.audioTracks[index]?.fileDisplayName ||
                           session.audioTracks[index]?.file.slice(13)
                         }
-                        // onFocus={enteredTitleFocusHandler}
-                        // onBlur={(e) =>
-                        //   enteredTitleBlurHandler(index, e.target.value)
-                        // }
+                        onFocus={enteredTitleFocusHandler}
+                        onBlur={(e) =>
+                          enteredTitleBlurHandler(index, e.target.value)
+                        }
                         placeholder="Title"
-                        readOnly
+                        // readOnly
+                        key={session.audioTracks[index]?.fileDisplayName}
                       />
                     </span>
                     <span className="float-right">
