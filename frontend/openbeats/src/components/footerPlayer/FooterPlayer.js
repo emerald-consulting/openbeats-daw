@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import AudioPlayer, { RHAP_UI } from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
-import soundImg from "../sound.jpeg";
+import soundImg from "../wave.svg";
 import classes from "./FooterPlayer.module.css";
 
 const FooterPlayer = (props) => {

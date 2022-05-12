@@ -7,7 +7,7 @@ import axios from "axios";
 import { url } from "../../utils/constants";
 import playButton from "../playBtn2.png";
 import PlaylistContext from "../../model/playlist-store/playlist-context";
-import soundImg from "../sound.jpeg";
+import soundImg from "../wave.svg";
 import profileImg from "../profileIcon.png";
 import Tooltip from "@mui/material/Tooltip";
 import ReactHashtag from "react-hashtag";

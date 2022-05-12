@@ -4,7 +4,7 @@ import { url } from "../../utils/constants";
 import classes from "../../components/trendingList/trendingListItem/TrendingListItem.module.css";
 import ReactHashtag from "react-hashtag";
 import LikeButton from "../likeButton/LikeButton";
-import soundImg from "../sound.jpeg";
+import soundImg from "../wave.svg";
 import { useHistory } from "react-router";
 
 const NewlyReleasedItem = ({ details }) => {

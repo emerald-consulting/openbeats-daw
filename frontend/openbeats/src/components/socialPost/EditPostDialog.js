@@ -7,7 +7,7 @@ import { url } from "../../utils/constants";
 import classes from "../newPostForm/newPostForm.module.css";
 import playButton from "../playBtn2.png";
 import classes2 from "./SocialPost.module.css";
-import soundImg from "../sound.jpeg";
+import soundImg from "../wave.svg";
 
 function EditPostDialog({ open, onClose, post, updatePost }) {
 

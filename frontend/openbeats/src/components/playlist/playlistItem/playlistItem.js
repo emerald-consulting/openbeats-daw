@@ -1,4 +1,4 @@
-import soundImg from "../../sound.jpeg";
+import soundImg from "../../wave.svg";
 import { useContext } from "react";
 import PlaylistContext from "../../../model/playlist-store/playlist-context";
 import classes from './PlaylistItem.module.css';
